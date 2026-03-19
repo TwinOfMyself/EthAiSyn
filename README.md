@@ -1,21 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mercedez Lopez - Mental Health and AI Writer - Human-AI Integration Architect</title>
-  <meta name="description" content="Mercedez Lopez is a writer and strategist specializing in mental health, AI psychology, and workplace wellbeing. Founder of Eth-ai-Syn, a framework for humane intelligence in praxis."/>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --cream: #E8E5DF;
-      --fog:   #DEDAD3;
-      --border:#C8C3BA;
-      --muted: #8A8880;
-      --ink:   #2A2825;
-      --slate: #5B7A96;
+# Mercedez Lopez — Personal Brand Site
+
+Personal website for Mercedez Lopez: writer, strategist, and Human-AI Integration Architect.
+
+Built around Eth•ai•Syn, an original framework for humane intelligence in applied praxis — at the intersection of mental health, AI psychology, and organizational design.
+
+## Live Site
+[mercedezlopez.com](https://twinofmyself.github.io/mercedez-lopez)
+
+## What's Here
+Single-page site (index.html) with four sections:
+- Writing — topic areas and selected work
+- About — background and credentials  
+- Eth•ai•Syn — framework, principles, and operating philosophy
+- Connect — contact form and professional links
+
+## Stack
+HTML · CSS · Vanilla JS
+No frameworks. No dependencies. One file.
+
+## To Update
+Open index.html, find the section you want to edit, update the text, re-upload.      --slate: #5B7A96;
       --teal:  #5A8F8F;
       --gold:  #A88B58;
       --white: #F2EFE9;
