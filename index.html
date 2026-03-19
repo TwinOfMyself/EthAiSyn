@@ -126,8 +126,8 @@
     .cred-desc{font-size:12px;font-weight:300;color:var(--muted);line-height:1.55;padding-left:14px}
 
     /* EAS */
-    .eas-grid{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:start}
-    .eas-left{display:flex;flex-direction:column;gap:14px;min-width:160px}
+    .eas-grid{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:start}
+    .eas-left{display:flex;flex-direction:column;gap:10px;min-width:140px;max-width:180px}
     .eas-bars{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
     .eas-bars span{display:block;border-radius:10px;height:5px}
     .eas-bars .b1{width:100px;background:var(--slate)}
@@ -135,11 +135,14 @@
     .eas-bars .b3{width:48px;background:var(--gold)}
     .eas-praxis{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);line-height:1.7}
     .eas-praxis em{font-style:italic;font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.08em;text-transform:none;color:var(--teal)}
-    .eas-quote{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:300;font-style:italic;line-height:1.75;padding:16px 0 16px 18px;border-left:2px solid var(--teal);margin-top:4px}
+    .eas-quote{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:300;font-style:italic;line-height:1.65;padding:12px 0 12px 14px;border-left:2px solid var(--teal);margin-top:2px}
     .eas-quote cite{display:block;margin-top:10px;font-style:normal;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal)}
-    .eas-intro{font-size:13px;font-weight:300;color:var(--muted);line-height:1.8;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
-    .pillars{display:flex;flex-direction:column;gap:18px}
-    .pillar-row{display:flex;gap:12px;align-items:flex-start}
+    .eas-intro{font-size:13px;font-weight:300;color:var(--muted);line-height:1.75;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+    .eas-in-practice{margin-top:20px;padding:18px 20px;background:var(--fog);border:1px solid var(--border);border-radius:3px}
+    .eip-label{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-bottom:8px}
+    .eip-body{font-size:12px;font-weight:300;color:var(--ink);line-height:1.75}
+    .pillars{display:flex;flex-direction:column;gap:14px}
+    .pillar-row{display:flex;gap:10px;align-items:flex-start}
     .pillar-badge{width:26px;height:26px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
     .pillar-badge.s{background:rgba(91,122,150,.12);color:var(--slate)}
     .pillar-badge.t{background:rgba(90,144,144,.12);color:var(--teal)}
@@ -171,6 +174,65 @@
     .footer-wm{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:15px;color:var(--muted);display:inline-flex;align-items:center}
     .footer-wm .dot{width:6px;height:6px}
     .footer-note{font-size:10px;letter-spacing:.12em;color:var(--border)}
+    /* RESEARCH PANEL */
+    .research-intro{font-size:14px;font-weight:300;color:var(--muted);line-height:1.85;margin-bottom:32px;max-width:600px}
+    .research-docs{display:flex;flex-direction:column;gap:2px}
+    .research-doc{border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:16px}
+    .research-doc-header{
+      display:grid;grid-template-columns:1fr auto;align-items:start;gap:20px;
+      padding:24px 24px;background:var(--fog);cursor:pointer;transition:background .2s;
+    }
+    .research-doc-header:hover{background:var(--white)}
+    .research-doc-header.open{background:var(--cream)}
+    .research-doc-label{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-bottom:8px}
+    .research-doc-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--ink);line-height:1.3;margin-bottom:6px}
+    .research-doc-meta{font-size:12px;font-weight:300;color:var(--muted)}
+    .research-doc-toggle{
+      width:30px;height:30px;border-radius:50%;border:1px solid var(--border);
+      flex-shrink:0;position:relative;transition:background .3s,border-color .3s;margin-top:4px;
+    }
+    .research-doc-toggle::before,.research-doc-toggle::after{
+      content:'';position:absolute;top:50%;left:50%;
+      background:var(--muted);border-radius:2px;
+      transition:transform .35s var(--ease),opacity .25s;
+    }
+    .research-doc-toggle::before{width:10px;height:1.5px;transform:translate(-50%,-50%)}
+    .research-doc-toggle::after{width:1.5px;height:10px;transform:translate(-50%,-50%)}
+    .research-doc-header.open .research-doc-toggle{background:var(--ink);border-color:var(--ink)}
+    .research-doc-header.open .research-doc-toggle::before,
+    .research-doc-header.open .research-doc-toggle::after{background:var(--cream)}
+    .research-doc-header.open .research-doc-toggle::after{transform:translate(-50%,-50%) rotate(90deg);opacity:0}
+    .research-doc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s var(--ease)}
+    .research-doc-body.open{grid-template-rows:1fr}
+    .research-doc-body-inner{overflow:hidden}
+    .research-doc-content{padding:24px;border-top:1px solid var(--border)}
+    .research-abstract{font-size:13px;font-weight:300;color:var(--ink);line-height:1.85;margin-bottom:24px;padding:20px;background:var(--fog);border-radius:3px;border-left:3px solid var(--teal)}
+    .research-section-label{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:24px 0 12px}
+    .construct-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:24px}
+    .construct-item{background:var(--cream);padding:16px 18px;transition:background .2s}
+    .construct-item:hover{background:var(--white)}
+    .construct-num{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--border);margin-bottom:6px}
+    .construct-name{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:4px}
+    .construct-desc{font-size:11px;font-weight:300;color:var(--muted);line-height:1.6}
+    .gap-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:12px}
+    .gap-table th{text-align:left;padding:10px 14px;background:var(--fog);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
+    .gap-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--ink);font-weight:300;line-height:1.6}
+    .gap-table tr:last-child td{border-bottom:none}
+    .gap-label{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.1em;padding:2px 8px;border-radius:2px;margin-right:4px}
+    .gap-resolved{background:rgba(90,144,144,.12);color:var(--teal)}
+    .gap-active{background:rgba(184,150,96,.12);color:var(--gold)}
+    .download-row{display:flex;align-items:center;gap:16px;padding:16px 0;border-top:1px solid var(--border);flex-wrap:wrap}
+    .download-row span{font-size:12px;font-weight:300;color:var(--muted);flex:1}
+    .btn-download{
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--ink);color:var(--cream);
+      font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;
+      letter-spacing:.1em;text-transform:uppercase;
+      padding:11px 22px;border-radius:2px;text-decoration:none;
+      transition:background .2s,transform .15s;flex-shrink:0;
+    }
+    .btn-download:hover{background:var(--teal);transform:translateY(-1px)}
+    .research-quote{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;font-style:italic;line-height:1.75;padding:18px 0 18px 18px;border-left:2px solid var(--slate);margin-bottom:24px;color:var(--ink)}
     .footer-copy{font-size:10px;color:var(--muted);width:100%;padding-top:10px;border-top:1px solid var(--border);text-align:center;letter-spacing:.04em}
 
     
@@ -217,6 +279,7 @@
   <a href="#p-writing"  onclick="closeNav();setTimeout(()=>toggle('p-writing'),300)">Writing</a>
   <a href="#p-about"    onclick="closeNav();setTimeout(()=>toggle('p-about'),300)">About</a>
   <a href="#p-ethaisyn" onclick="closeNav();setTimeout(()=>toggle('p-ethaisyn'),300)">Eth-ai-Syn</a>
+  <a href="#p-research"  onclick="closeNav();setTimeout(()=>toggle('p-research'),300)">Research</a>
   <a href="#p-connect"  onclick="closeNav();setTimeout(()=>toggle('p-connect'),300)">Connect</a>
 </div>
 
@@ -256,9 +319,9 @@
       </div>
       <div class="clips-label">Selected work</div>
       <div class="clips">
-        <a href="#" class="clip"><div class="clip-meta">Mental Health - Essay</div><div class="clip-title">You Are Still the One Who Has to Feel It</div><div class="clip-pub">EthAiSyn</div></a>
-        <a href="#" class="clip"><div class="clip-meta">AI Psychology - Article</div><div class="clip-title">When the Mind Outsources Itself: AI, Emotional Dependency, and the Cost of Cognitive Comfort</div><div class="clip-pub">EthAiSyn</div></a>
-        <a href="#" class="clip"><div class="clip-meta">Workplace Wellbeing - LinkedIn</div><div class="clip-title">Emotional Intelligence Is Your Greatest Workplace Asset</div><div class="clip-pub">LinkedIn</div></a>
+        <a href="#" class="clip"><div class="clip-meta">Mental Health - Essay</div><div class="clip-title">Add your first writing sample title here</div><div class="clip-pub">Publication or platform name</div></a>
+        <a href="#" class="clip"><div class="clip-meta">AI Psychology - Article</div><div class="clip-title">Add your second writing sample title here</div><div class="clip-pub">Publication or platform name</div></a>
+        <a href="#" class="clip"><div class="clip-meta">Workplace Wellbeing - LinkedIn</div><div class="clip-title">Add your third writing sample title here</div><div class="clip-pub">LinkedIn - your strongest post</div></a>
       </div>
       <div class="services-label">Fractional content strategy</div>
       <div class="services-grid">
@@ -339,11 +402,92 @@
     </div></div></div>
   </div>
 
+
+  <!-- 05 Research -->
+  <div class="panel" id="p-research">
+    <div class="spine-dot" id="dot-research"></div>
+    <button class="panel-trigger" onclick="toggle('p-research')" aria-expanded="false">
+      <div>
+        <div class="panel-label">05 &nbsp;&middot;&nbsp; Research</div>
+        <div class="panel-title">Published.<br><em>Open. Documented.</em></div>
+        <div class="panel-teaser">The framework and its psychological audit — both published, both open. This is where the idea becomes a document.</div>
+      </div>
+      <div class="panel-icon"></div>
+    </button>
+    <div class="panel-body"><div class="panel-body-inner"><div class="panel-body-content">
+
+      <p class="research-intro">These documents constitute the published foundation of Eth&bull;ai&bull;Syn. The framework paper presents a validity-grounded measurement architecture for detecting cognitive and moral erosion in human-AI systems. The audit applies a dual-lens psychological evaluation to the framework itself before enterprise deployment.</p>
+
+      <div class="research-doc" id="doc-framework">
+        <div class="research-doc-header" id="doc-framework-header" onclick="toggleDoc('doc-framework')">
+          <div>
+            <div class="research-doc-label">Framework Paper &nbsp;&middot;&nbsp; Authorea Preprint</div>
+            <div class="research-doc-title">Preserving Human Judgment in Human-AI Systems: A Mixed-Methods Measurement Framework for Detecting Cognitive, Moral, and Skill Erosion Over Time</div>
+            <div class="research-doc-meta">Mercedez Lopez &nbsp;|&nbsp; EthAi Syn Research Program &nbsp;|&nbsp; DOI: 10.22541/au.177369008.85139377/v2</div>
+          </div>
+          <div class="research-doc-toggle"></div>
+        </div>
+        <div class="research-doc-body" id="doc-framework-body">
+          <div class="research-doc-body-inner"><div class="research-doc-content">
+            <div class="research-abstract">As artificial intelligence becomes embedded in consequential decision workflows, a critical measurement problem has emerged: assistance and erosion produce identical surface behavior in the short term. A human whose judgment is being well-augmented and a human whose judgment is quietly deteriorating will both appear to be using AI effectively at any single point in time. The divergence only becomes visible under conditions of AI withdrawal, longitudinal decay analysis, or high-stakes failure.<br><br>This paper presents a comprehensive, validity-grounded measurement framework designed to detect the difference between augmentation and erosion &mdash; operationalizing seven constructs using a longitudinal, mixed-methods architecture that triangulates behavioral signals, self-report instruments, and qualitative process evidence.</div>
+            <div class="research-quote">"Organizations should not ask whether humans are performing well with AI. They should ask whether humans could still perform without it, whether they know when the AI is wrong, whether they are still contributing something the AI cannot, and whether they still feel and act as responsible agents for outcomes."</div>
+            <div class="research-section-label">The Seven Measured Constructs</div>
+            <div class="construct-grid">
+              <div class="construct-item"><div class="construct-num">01</div><div class="construct-name">Mental Model Gaps</div><div class="construct-desc">Divergence between how an AI system actually functions and how its operators believe it functions &mdash; measured through anticipatory prediction mapping and teach-back elicitation.</div></div>
+              <div class="construct-item"><div class="construct-num">02</div><div class="construct-name">Judgment Displacement</div><div class="construct-desc">Progressive regression toward AI recommendations, abandoning independent expertise to reduce cognitive friction &mdash; detectable only through pre-AI judgment capture.</div></div>
+              <div class="construct-item"><div class="construct-num">03</div><div class="construct-name">Trust Calibration</div><div class="construct-desc">Alignment between subjective confidence in AI accuracy and actual AI accuracy &mdash; measured through calibration curves and adaptive reliance trials.</div></div>
+              <div class="construct-item"><div class="construct-num">04</div><div class="construct-name">Cognitive Load Distribution</div><div class="construct-desc">Not how much cognitive load decreased, but where it went &mdash; whether AI offloads low-value pattern matching or replaces active domain reasoning with passive monitoring.</div></div>
+              <div class="construct-item"><div class="construct-num">05</div><div class="construct-name">Moral Diffusion</div><div class="construct-desc">Fragmentation of felt accountability when decision-making is shared with an algorithmic system &mdash; the AI becoming moral cover for outcomes operators would not authorize alone.</div></div>
+              <div class="construct-item"><div class="construct-num">06</div><div class="construct-name">Deskilling</div><div class="construct-desc">Skill decay that operators rarely perceive accurately and actively rationalize. Gold standard: behavioral performance without AI over time, compared against a pre-integration baseline.</div></div>
+              <div class="construct-item"><div class="construct-num">07</div><div class="construct-name">Override Behavior</div><div class="construct-desc">Override frequency is a weak metric. The diagnostic measure is override quality &mdash; whether overrides occur when they should and reflect substantive domain reasoning.</div></div>
+            </div>
+            <div class="download-row">
+              <span>Full paper with methodology, sentinel indicators, clinical triage application, and sample instruments.</span>
+              <a href="ethaisyn-framework.pdf" download class="btn-download">Download PDF</a>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="research-doc" id="doc-audit">
+        <div class="research-doc-header" id="doc-audit-header" onclick="toggleDoc('doc-audit')">
+          <div>
+            <div class="research-doc-label">Psychological Audit Report &nbsp;&middot;&nbsp; Version 2</div>
+            <div class="research-doc-title">EthAiSyn Psychological Audit Report: A Reflexive Dual-Lens Audit of the EthAiSyn Behavioral Governance Framework</div>
+            <div class="research-doc-meta">Mercedez Lopez &nbsp;|&nbsp; EthAi Syn &nbsp;|&nbsp; March 2026 &nbsp;|&nbsp; DOI: 10.22541/au.177369008.89105936/v1</div>
+          </div>
+          <div class="research-doc-toggle"></div>
+        </div>
+        <div class="research-doc-body" id="doc-audit-body">
+          <div class="research-doc-body-inner"><div class="research-doc-content">
+            <div class="research-abstract">This report documents a full psychological audit of the EthAi Syn Behavioral Governance Framework, applying two complementary lenses: the EthAi Syn framework's Psychological Audit methodology, which evaluates whether systems support or deplete human capability, and the Ethain-Synthia Framework, which evaluates whether human judgment is structurally preserved or quietly handed off to the system.<br><br>Five structural gaps were identified. Each was examined through both lenses. Each has been resolved with a specific structural realignment consistent with the framework's own design principles. A sixth finding &mdash; the Measurement Frontier &mdash; was documented as a formal research mandate.</div>
+            <div class="research-section-label">Five Gaps. All Resolved. One Frontier Named.</div>
+            <table class="gap-table">
+              <tr><th>#</th><th>Gap</th><th>Realignment</th><th>Status</th></tr>
+              <tr><td><strong>A</strong></td><td>Temporal Value Gap</td><td>Early Proof Point Checklist + Positioning Reframe</td><td><span class="gap-label gap-resolved">Resolved</span></td></tr>
+              <tr><td><strong>B</strong></td><td>Concealed Decision Pathway</td><td>Intent Signal + Transparent Decision Layer</td><td><span class="gap-label gap-resolved">Resolved</span></td></tr>
+              <tr><td><strong>C</strong></td><td>Undefined Autonomy Threshold</td><td>Moral Understanding Indicator + Autonomy Invitation</td><td><span class="gap-label gap-resolved">Resolved</span></td></tr>
+              <tr><td><strong>D</strong></td><td>Reactive Notification Model</td><td>Decision Trace</td><td><span class="gap-label gap-resolved">Resolved</span></td></tr>
+              <tr><td><strong>E</strong></td><td>Recursive System Orientation Gap</td><td>Bilateral Loop Briefing</td><td><span class="gap-label gap-resolved">Resolved</span></td></tr>
+              <tr><td><strong>F</strong></td><td>Measurement Frontier</td><td>Formal Research Mandate</td><td><span class="gap-label gap-active">Active</span></td></tr>
+            </table>
+            <div class="research-quote">"The framework that identifies the problem and the researcher calling for its solution are the same person. That is not a coincidence to be managed. It is a positioning asset to be claimed explicitly."</div>
+            <div class="download-row">
+              <span>Full audit with dual-lens methodology, gap analysis, realignment protocols, and research mandate.</span>
+              <a href="ethaisyn-audit-report.pdf" download class="btn-download">Download PDF</a>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+    </div></div></div>
+  </div>
+
   <div class="panel" id="p-connect">
     <div class="spine-dot" id="dot-connect"></div>
     <button class="panel-trigger" onclick="toggle('p-connect')" aria-expanded="false">
       <div>
-        <div class="panel-label">04 - Connect</div>
+        <div class="panel-label">06 - Connect</div>
         <div class="panel-title">Let's build something<br><em>worth preserving.</em></div>
         <div class="panel-teaser">Whether you need a writer, a fractional content strategist, or a professional connection — I would like to hear from you.</div>
       </div>
@@ -386,6 +530,14 @@
 </footer>
 
 <script>
+  function toggleDoc(id) {
+    var header = document.getElementById(id + '-header');
+    var body   = document.getElementById(id + '-body');
+    var isOpen = body.classList.contains('open');
+    header.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  }
+
   function openNav(){document.getElementById('navDrawer').classList.add('open');document.getElementById('navOverlay').classList.add('open')}
   function closeNav(){document.getElementById('navDrawer').classList.remove('open');document.getElementById('navOverlay').classList.remove('open')}
   function toggle(id){
@@ -400,6 +552,9 @@
     {el:document.getElementById('dot-writing'),panel:document.getElementById('p-writing')},
     {el:document.getElementById('dot-about'),panel:document.getElementById('p-about')},
     {el:document.getElementById('dot-ethaisyn'),panel:document.getElementById('p-ethaisyn')},
+    {el:document.getElementById('dot-ethaisyn'),panel:document.getElementById('p-ethaisyn')},
+    {el:document.getElementById('dot-research'),panel:document.getElementById('p-research')},
+    {el:document.getElementById('dot-research'),panel:document.getElementById('p-research')},
     {el:document.getElementById('dot-connect'),panel:document.getElementById('p-connect')},
   ];
   function updateSpine(){
