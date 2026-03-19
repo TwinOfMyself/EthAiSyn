@@ -172,11 +172,25 @@
     .footer-wm .dot{width:6px;height:6px}
     .footer-note{font-size:10px;letter-spacing:.12em;color:var(--border)}
 
+    
+    /* FRACTIONAL SERVICES */
+    .services-label{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:32px 0 12px}
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:28px}
+    .service-card{background:var(--cream);padding:20px 18px;transition:background .2s;display:flex;flex-direction:column;gap:8px}
+    .service-card:hover{background:var(--white)}
+    .service-tier{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--ink)}
+    .service-desc{font-size:12px;font-weight:300;color:var(--muted);line-height:1.65;flex:1}
+    .service-time{font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
+
+    /* EAS IN PRACTICE */
+    .eas-in-practice{margin-top:28px;padding:22px 24px;background:var(--fog);border:1px solid var(--border);border-radius:3px}
+    .eip-label{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+    .eip-body{font-size:13px;font-weight:300;color:var(--ink);line-height:1.8}
     @media(max-width:600px){
       #content{padding:0 20px 80px}
       .panel{padding-left:calc(44px + 16px)}
       .spine{left:calc(20px + 44px)}
-      .topics,.about-grid,.eas-grid,.connect-grid{grid-template-columns:1fr;gap:24px}
+      .topics,.about-grid,.eas-grid,.connect-grid,.services-grid{grid-template-columns:1fr;gap:24px}
       .hero-btns{width:100%;padding:0 20px}
       .btn-filled,.btn-outline{width:100%}
     }
@@ -202,7 +216,7 @@
   <div class="hero-wm-wrap"><span class="wm wm-hero">Eth<span class="dot dt"></span>ai<span class="dot dg"></span>Syn</span></div>
   <div class="hero-rule"></div>
   <p class="hero-name">Mercedez Lopez</p>
-  <p class="hero-tagline">Writer. Researcher. Framework-builder at the intersection<br>of mental health, AI, and human dignity.</p>
+  <p class="hero-tagline">Writer. Researcher. Framework-builder<br>at the intersection of mental health, AI, and human dignity.</p>
   <div class="hero-btns">
     <a href="#p-writing" class="btn-filled" onclick="setTimeout(()=>toggle('p-writing'),200)">Read My Work</a>
     <a href="#p-connect" class="btn-outline" onclick="setTimeout(()=>toggle('p-connect'),200)">Get In Touch</a>
@@ -222,7 +236,7 @@
       <div>
         <div class="panel-label">01 - Writing</div>
         <div class="panel-title">Words that <em>hold</em> their weight.</div>
-        <div class="panel-teaser">Mental health, AI psychology, workplace wellbeing - written with clinical grounding and genuine care. Applied knowledge, not observation from a distance.</div>
+        <div class="panel-teaser">Mental health, AI psychology, workplace wellbeing — written and strategized with clinical grounding. Applied knowledge, built into systems that scale.</div>
       </div>
       <div class="panel-icon"></div>
     </button>
@@ -238,7 +252,25 @@
         <a href="#" class="clip"><div class="clip-meta">AI Psychology - Article</div><div class="clip-title">Add your second writing sample title here</div><div class="clip-pub">Publication or platform name</div></a>
         <a href="#" class="clip"><div class="clip-meta">Workplace Wellbeing - LinkedIn</div><div class="clip-title">Add your third writing sample title here</div><div class="clip-pub">LinkedIn - your strongest post</div></a>
       </div>
-      <a href="#p-connect" class="panel-cta" onclick="setTimeout(()=>toggle('p-connect'),120)">Hire me to write</a>
+      <div class="services-label">Fractional content strategy</div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-tier">Foundation</div>
+          <div class="service-desc">Messaging audit, positioning, strategy documentation, and editorial system design. Built on the Eth-ai-Syn evidence-action-reflection cycle.</div>
+          <div class="service-time">Days 1-30</div>
+        </div>
+        <div class="service-card">
+          <div class="service-tier">Growth Retainer</div>
+          <div class="service-desc">Ongoing strategy, content creation, AI search optimization, and performance reflection. The system runs and improves.</div>
+          <div class="service-time">Days 31-60</div>
+        </div>
+        <div class="service-card">
+          <div class="service-tier">Fractional Leadership</div>
+          <div class="service-desc">Full content ownership — strategy, execution, team enablement — using Eth-ai-Syn as the operating methodology throughout.</div>
+          <div class="service-time">Day 61+</div>
+        </div>
+      </div>
+      <a href="#p-connect" class="panel-cta" onclick="setTimeout(()=>toggle('p-connect'),120)">Start a conversation</a>
     </div></div></div>
   </div>
 
@@ -274,7 +306,7 @@
       <div>
         <div class="panel-label">03 - Eth-ai-Syn</div>
         <div class="panel-title">A framework for<br><em>humane intelligence in praxis.</em></div>
-        <div class="panel-teaser">Research consistently shows that AI systems alter human cognition, judgment, and moral reasoning - whether or not they are designed to. Eth-ai-Syn is a framework for designing them with that data in view.</div>
+        <div class="panel-teaser">Research consistently shows that AI systems alter human cognition, judgment, and moral reasoning — whether or not they are designed to. Eth-ai-Syn is both the framework and the methodology behind a fractional content strategy practice designed with that data in view.</div>
       </div>
       <div class="panel-icon"></div>
     </button>
@@ -293,6 +325,10 @@
             <div class="pillar-row"><div class="pillar-badge t">A</div><div class="pillar-text"><h4>AI as Augmentation</h4><p>Augmentation is a practice, not a promise. It requires actively protecting human judgment, resisting dependency, and building toward amplification - not replacement.</p></div></div>
             <div class="pillar-row"><div class="pillar-badge g">S</div><div class="pillar-text"><h4>Synthesis Over Speed</h4><p>Cognitive load research demonstrates that systems optimized for speed at the expense of comprehension degrade reasoning over time. Systems designed for synthesis produce measurably more capable human collaborators.</p></div></div>
           </div>
+          <div class="eas-in-practice">
+            <div class="eip-label">Eth-ai-Syn in practice</div>
+            <p class="eip-body">A fractional content strategy engagement built on this framework moves through three measurable phases. In the first 30 days: audience clarity, message definition, and conversion mapping. By day 60: a documented strategy, editorial rhythm, and AI-structured content that earns trust from both readers and the engines interpreting your work. By day 90: a cohesive, measurable content system that runs with intention — not reactive output.</p>
+          </div>
         </div>
       </div>
     </div></div></div>
@@ -304,7 +340,7 @@
       <div>
         <div class="panel-label">04 - Connect</div>
         <div class="panel-title">Let's build something<br><em>worth preserving.</em></div>
-        <div class="panel-teaser">Whether you need a writer, a strategic mind, or a professional connection - I would like to hear from you.</div>
+        <div class="panel-teaser">Whether you need a writer, a fractional content strategist, or a professional connection — I would like to hear from you.</div>
       </div>
       <div class="panel-icon"></div>
     </button>
@@ -313,11 +349,11 @@
         <div>
           <p class="connect-intro">I write for brands, publications, and people who believe how we treat humans inside our systems is never a footnote. Open to professional connections and job leads.</p>
           <div class="connect-links">
-            <a href="https://linkedin.com" target="_blank" class="connect-link">
+            <a href="https://www.linkedin.com/in/twinofmyself" target="_blank" class="connect-link">
               <div class="connect-icon li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--slate)" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
               <div><strong>LinkedIn</strong><span>Connect professionally</span></div>
             </a>
-            <a href="mailto:hello@mercedezlopez.com" class="connect-link">
+            <a href="mailto:MCLopez001@yahoo.com" class="connect-link">
               <div class="connect-icon em"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
               <div><strong>Email</strong><span>hello@mercedezlopez.com</span></div>
             </a>
@@ -327,7 +363,7 @@
           <label>Your Name<input type="text" placeholder="First and last"/></label>
           <label>Email<input type="email" placeholder="you@company.com"/></label>
           <label>Reaching out about
-            <select><option value="" disabled selected>Select one</option><option>Hiring you as a writer</option><option>Professional connection / job lead</option><option>Eth-ai-Syn / speaking / collaboration</option><option>Something else</option></select>
+            <select><option value="" disabled selected>Select one</option><option>Fractional content strategy engagement</option><option>Hiring you as a writer</option><option>Professional connection / job lead</option><option>Eth-ai-Syn / speaking / collaboration</option><option>Something else</option></select>
           </label>
           <label>Message<textarea placeholder="Tell me what you are working on"></textarea></label>
           <button class="btn-send" type="button">Send</button>
@@ -340,7 +376,7 @@
 
 <footer>
   <span class="footer-wm">Eth<span class="dot dt" style="width:6px;height:6px;margin:0 2px"></span>ai<span class="dot dg" style="width:6px;height:6px;margin:0 2px"></span>Syn</span>
-  <span class="footer-note">Healthcare - People Strategy - Ethical AI</span>
+  <span class="footer-note">Healthcare - People - Operations - Ethical AI</span>
 </footer>
 
 <script>
