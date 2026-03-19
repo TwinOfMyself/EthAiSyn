@@ -198,6 +198,14 @@
 </head>
 <body>
 
+<script>
+  // Force page to top on every load — prevents anchor drift
+  if (window.location.hash) {
+    history.replaceState(null, null, window.location.pathname);
+  }
+  window.scrollTo(0, 0);
+</script>
+
 <nav>
   <a href="#hero" class="wm wm-nav">Eth<span class="dot dt"></span>ai<span class="dot dg"></span>Syn</a>
   <div class="nav-menu" onclick="openNav()"><span></span><span></span></div>
@@ -355,7 +363,7 @@
             </a>
             <a href="mailto:MCLopez001@yahoo.com" class="connect-link">
               <div class="connect-icon em"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
-              <div><strong>Email</strong><span>hello@mercedezlopez.com</span></div>
+              <div><strong>Email</strong><span>MCLopez001@yahoo.com</span></div>
             </a>
           </div>
         </div>
@@ -376,7 +384,7 @@
 
 <footer>
   <span class="footer-wm">Eth<span class="dot dt" style="width:6px;height:6px;margin:0 2px"></span>ai<span class="dot dg" style="width:6px;height:6px;margin:0 2px"></span>Syn</span>
-  <span class="footer-note">Healthcare - People - Operations - Ethical AI</span>
+  <span class="footer-note">Healthcare - People Strategy - Ethical AI</span>
 </footer>
 
 <script>
@@ -412,4 +420,4 @@
 </script>
 
 </body>
-</html>
+  </html>
