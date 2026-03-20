@@ -1061,6 +1061,18 @@
     const input=document.getElementById('concernInput');
     const text=input.value.trim();
     if(!text)return;
+    /* Send to Google Form */
+    const formUrl='https://docs.google.com/forms/d/e/1FAIpQLSf6u1RjdZOXvytzYtd7U3ZCrFd0C8o6uBHbqBrBdMzIwcjOeg/formResponse';
+    const iframe=document.createElement('iframe');
+    iframe.name='concern_submit';iframe.style.display='none';
+    document.body.appendChild(iframe);
+    const form=document.createElement('form');
+    form.method='POST';form.action=formUrl;form.target='concern_submit';
+    const field=document.createElement('input');
+    field.name='entry.1090165553';field.value=text;
+    form.appendChild(field);document.body.appendChild(form);form.submit();
+    setTimeout(()=>{form.remove();iframe.remove();},3000);
+    /* Update UI */
     const track=document.getElementById('concernTrack');
     const newItem=document.createElement('div');
     newItem.className='concern-item';
