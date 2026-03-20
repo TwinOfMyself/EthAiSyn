@@ -124,6 +124,8 @@
     .cred-title{font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;margin-bottom:3px}
     .cred-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
     .cred-desc{font-size:12px;font-weight:300;color:var(--muted);line-height:1.55;padding-left:14px}
+    .cred-anchor{padding:18px 0;border-bottom:none}
+    .cred-anchor .cred-desc{font-size:13px;font-weight:300;color:var(--ink);line-height:1.75;padding-left:14px}
 
     /* EAS */
     .eas-grid{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:start}
@@ -211,6 +213,7 @@
     .construct-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:24px}
     .construct-item{background:var(--cream);padding:16px 18px;transition:background .2s}
     .construct-item:hover{background:var(--white)}
+    .construct-item:last-child:nth-child(odd){grid-column:1 / -1}
     .construct-num{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--border);margin-bottom:6px}
     .construct-name{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:4px}
     .construct-desc{font-size:11px;font-weight:300;color:var(--muted);line-height:1.6}
@@ -261,7 +264,7 @@
 <body>
 
 <script>
-  // Force page to top on every load — prevents anchor drift
+  // Force page to top on every load -- prevents anchor drift
   if (window.location.hash) {
     history.replaceState(null, null, window.location.pathname);
   }
@@ -307,7 +310,7 @@
       <div>
         <div class="panel-label">01 - Writing</div>
         <div class="panel-title">Words that <em>hold</em> their weight.</div>
-        <div class="panel-teaser">Mental health, AI psychology, workplace wellbeing — written with clinical grounding and genuine care. Applied knowledge, not observation from a distance.</div>
+        <div class="panel-teaser">Mental health, AI psychology, workplace wellbeing -- written with clinical grounding and genuine care. Applied knowledge, not observation from a distance.</div>
       </div>
       <div class="panel-icon"></div>
     </button>
@@ -320,7 +323,7 @@
       <div class="clips-label">Selected work</div>
       <div class="clips">
         <a href="#" class="clip"><div class="clip-meta">Mental Health - Essay</div><div class="clip-title">You're Still The One Who Has to Feel It</div><div class="clip-pub">EthAiSyn</div></a>
-        <a href="#" class="clip"><div class="clip-meta">AI Psychology - Article</div><div class="clip-title">Cognitive Debt Is Real — And Most Organizations Have No Way to Measure It</div><div class="clip-pub">EthAiSyn</div></a>
+        <a href="#" class="clip"><div class="clip-meta">AI Psychology - Article</div><div class="clip-title">Cognitive Debt Is Real &mdash; And Most Organizations Have No Way to Measure It</div><div class="clip-pub">EthAiSyn</div></a>
         <a href="#" class="clip"><div class="clip-meta">Workplace Wellbeing - LinkedIn</div><div class="clip-title">Psychological Safety Isn't a Perk. It's Infrastructure.</div><div class="clip-pub">LinkedIn</div></a>
       </div>
       <div class="services-label">Fractional content strategy</div>
@@ -335,7 +338,7 @@
         </div>
         <div class="service-card">
           <div class="service-tier">Fractional Leadership</div>
-          <div class="service-desc">Full content ownership — strategy, execution, team enablement — using Eth-ai-Syn as the operating methodology throughout.</div>
+          <div class="service-desc">Full content ownership &mdash; strategy, execution, team enablement &mdash; using Eth-ai-Syn as the operating methodology throughout.</div>
         </div>
       </div>
       <a href="#p-connect" class="panel-cta" onclick="setTimeout(()=>toggle('p-connect'),120)">Start a conversation</a>
@@ -362,7 +365,12 @@
         <div>
           <div class="cred"><div class="cred-title"><span class="cred-dot" style="background:var(--slate)"></span>BA Clinical Psychology</div><div class="cred-desc">Mental Health concentration - the foundation for everything that followed.</div></div>
           <div class="cred"><div class="cred-title"><span class="cred-dot" style="background:var(--teal)"></span>Healthcare Operations</div><div class="cred-desc">Benefits verification, prior authorization, revenue cycle - the systems that touch patients most.</div></div>
-          <div class="cred" style="border-bottom:none"><div class="cred-title"><span class="cred-dot" style="background:var(--gold)"></span>HR / Organizational Development</div><div class="cred-desc">People analytics, workforce strategy, designing orgs where humans actually thrive.</div></div>
+          <div class="cred"><div class="cred-title"><span class="cred-dot" style="background:var(--gold)"></span>HR / Organizational Development</div><div class="cred-desc">People analytics, workforce strategy, designing orgs where humans actually thrive.</div></div>
+          <div class="cred"><div class="cred-title"><span class="cred-dot" style="background:var(--slate)"></span>Lean Six Sigma Green Belt &mdash; Healthcare</div><div class="cred-desc">Process improvement with patient-facing stakes. Measure what matters, eliminate what doesn't, protect what should never be optimized away.</div></div>
+          <div class="cred"><div class="cred-title"><span class="cred-dot" style="background:var(--teal)"></span>Dual Good Clinical Practice Certifications</div><div class="cred-desc">Ethics for human behavioral studies. Ethics for engineering. Two disciplines, one non-negotiable: the person inside the system is never the variable you control for.</div></div>
+          <div class="cred"><div class="cred-title"><span class="cred-dot" style="background:var(--gold)"></span>Freelance Development</div><div class="cred-desc">Learning to code not to become an engineer, but to stop needing a translator. Praxis applied to technical fluency &mdash; build it, break it, understand what you are asking others to build.</div></div>
+          <div class="cred"><div class="cred-title"><span class="cred-dot" style="background:var(--slate)"></span>Leadership Through Applied Emotional Intelligence</div><div class="cred-desc">Praxis again. Not emotional intelligence as a personality trait, but as an operational discipline &mdash; practiced, pressure-tested, and refined through leading actual humans through actual complexity.</div></div>
+          <div class="cred cred-anchor"><div class="cred-title"><span class="cred-dot" style="background:var(--teal)"></span>Remaining Recognizably Human</div><div class="cred-desc">Every credential on this list was pursued with the same constraint: do not become the thing you are trying to govern. The point of understanding systems is to stay whole inside them. People deserve that. They are owed it &mdash; especially now, when the systems are accelerating faster than anyone was asked to consent to.</div></div>
         </div>
       </div>
     </div></div></div>
@@ -374,7 +382,7 @@
       <div>
         <div class="panel-label">03 - Eth-ai-Syn</div>
         <div class="panel-title">A framework for<br><em>humane intelligence in praxis.</em></div>
-        <div class="panel-teaser">AI systems making significant decisions are already being tested on live populations — in healthcare, housing, and employment — with no agreed-upon methods to ensure fairness or protect people's rights. Eth-ai-Syn exists because the gap between AI ethics and meaningful accountability has a human cost, and that cost lands hardest on the people least positioned to absorb it.</div>
+        <div class="panel-teaser">AI systems making significant decisions are already being tested on live populations &mdash; in healthcare, housing, and employment &mdash; with no agreed-upon methods to ensure fairness or protect people's rights. Eth-ai-Syn exists because the gap between AI ethics and meaningful accountability has a human cost, and that cost lands hardest on the people least positioned to absorb it.</div>
       </div>
       <div class="panel-icon"></div>
     </button>
@@ -387,15 +395,15 @@
           <div class="eas-quote">Clarity is an act of care. Structure is never neutral - it either holds the people inside it, or it does not.<cite>Eth-ai-Syn, core operating principle</cite></div>
         </div>
         <div>
-          <p class="eas-intro">In clinical and organizational development literature, praxis is defined as the evidence-action-reflection cycle — the only methodology that produces knowledge you cannot derive from theory alone. Eth-ai-Syn applies that cycle specifically to human-AI integration, using Algorithmic Impact Assessment methodology as its primary instrument: observe the behavioral and cognitive effects of AI systems on the humans using them, capture risk across the full development lifecycle, engage multi-stakeholder analysis, produce documented decisions. Each principle below is an operational protocol, not a position statement.</p>
+          <p class="eas-intro">In clinical and organizational development literature, praxis is defined as the evidence-action-reflection cycle &mdash; the only methodology that produces knowledge you cannot derive from theory alone. Eth-ai-Syn applies that cycle specifically to human-AI integration, using Algorithmic Impact Assessment methodology as its primary instrument: observe the behavioral and cognitive effects of AI systems on the humans using them, capture risk across the full development lifecycle, engage multi-stakeholder analysis, produce documented decisions. Each principle below is an operational protocol, not a position statement.</p>
           <div class="pillars">
-            <div class="pillar-row"><div class="pillar-badge s">E</div><div class="pillar-text"><h4>Ethics-First Design</h4><p>Evaluate AI not just for what it produces, but for what it does to the person using it — their cognition, agency, and moral development. The instrument for this evaluation is an Algorithmic Impact Assessment: a structured lifecycle review that captures risk, governs the full development cycle, engages multi-stakeholder analysis, and produces a documented go/no-go decision before deployment. Critically, AIAs must assess human factors — not just code. Bias arises as much from the human choices made in designing and training a system as from the outputs the system produces.</p></div></div>
-            <div class="pillar-row"><div class="pillar-badge t">A</div><div class="pillar-text"><h4>AI as Augmentation</h4><p>Augmentation is a practice, not a promise. It requires actively protecting human judgment, resisting dependency, and building toward amplification — not replacement. When an impact assessment reveals that a system is producing dependency rather than capability, that is a go/no-go signal — not a footnote.</p></div></div>
-            <div class="pillar-row"><div class="pillar-badge g">S</div><div class="pillar-text"><h4>Synthesis Over Speed</h4><p>Cognitive load research demonstrates that systems optimized for speed at the expense of comprehension degrade reasoning over time. Synthesis requires assessment at every lifecycle stage — strategy, data, deployment, and ongoing monitoring — not only at launch. Systems designed for synthesis produce measurably more capable human collaborators.</p></div></div>
+            <div class="pillar-row"><div class="pillar-badge s">E</div><div class="pillar-text"><h4>Ethics-First Design</h4><p>Evaluate AI not just for what it produces, but for what it does to the person using it &mdash; their cognition, agency, and moral development. The instrument for this evaluation is an Algorithmic Impact Assessment: a structured lifecycle review that captures risk, governs the full development cycle, engages multi-stakeholder analysis, and produces a documented go/no-go decision before deployment. Critically, AIAs must assess human factors &mdash; not just code. Bias arises as much from the human choices made in designing and training a system as from the outputs the system produces.</p></div></div>
+            <div class="pillar-row"><div class="pillar-badge t">A</div><div class="pillar-text"><h4>AI as Augmentation</h4><p>Augmentation is a practice, not a promise. It requires actively protecting human judgment, resisting dependency, and building toward amplification &mdash; not replacement. When an impact assessment reveals that a system is producing dependency rather than capability, that is a go/no-go signal &mdash; not a footnote.</p></div></div>
+            <div class="pillar-row"><div class="pillar-badge g">S</div><div class="pillar-text"><h4>Synthesis Over Speed</h4><p>Cognitive load research demonstrates that systems optimized for speed at the expense of comprehension degrade reasoning over time. Synthesis requires assessment at every lifecycle stage &mdash; strategy, data, deployment, and ongoing monitoring &mdash; not only at launch. Systems designed for synthesis produce measurably more capable human collaborators.</p></div></div>
           </div>
           <div class="eas-in-practice">
             <div class="eip-label">Eth-ai-Syn in practice</div>
-            <p class="eip-body">The framework operationalizes accountability through Algorithmic Impact Assessment methodology, drawing on frameworks established by PwC and the AI Now Institute. The AI Now Institute’s foundational AIA research identified three non-negotiable requirements: agencies must conduct self-assessments evaluating fairness, justice, and bias across affected communities; develop external researcher review processes to measure impacts over time; and provide public notice disclosing what systems exist and how they work. Eth-ai-Syn applies this to any organization using AI to make decisions that affect people — particularly in healthcare, housing, and employment, where the AI Now Institute’s own research documented the highest concentration of unexamined harm. Every engagement begins with the same question: what is this system doing to the humans inside it? That is praxis. Not opinion.</p>
+            <p class="eip-body">The framework operationalizes accountability through Algorithmic Impact Assessment methodology, drawing on frameworks established by PwC and the AI Now Institute. The AI Now Institute's foundational AIA research identified three non-negotiable requirements: agencies must conduct self-assessments evaluating fairness, justice, and bias across affected communities; develop external researcher review processes to measure impacts over time; and provide public notice disclosing what systems exist and how they work. Eth-ai-Syn applies this to any organization using AI to make decisions that affect people &mdash; particularly in healthcare, housing, and employment, where the AI Now Institute's own research documented the highest concentration of unexamined harm. Every engagement begins with the same question: what is this system doing to the humans inside it? That is praxis. Not opinion.</p>
           </div>
         </div>
       </div>
@@ -410,7 +418,7 @@
       <div>
         <div class="panel-label">05 &nbsp;&middot;&nbsp; Research</div>
         <div class="panel-title">Published.<br><em>Open. Documented.</em></div>
-        <div class="panel-teaser">The framework and its psychological audit — both published, both open. This is where the idea becomes a document.</div>
+        <div class="panel-teaser">The framework and its psychological audit &mdash; both published, both open. This is where the idea becomes a document.</div>
       </div>
       <div class="panel-icon"></div>
     </button>
@@ -430,7 +438,7 @@
         <div class="research-doc-body" id="doc-framework-body">
           <div class="research-doc-body-inner"><div class="research-doc-content">
             <div class="research-abstract">As artificial intelligence becomes embedded in consequential decision workflows, a critical measurement problem has emerged: assistance and erosion produce identical surface behavior in the short term. A human whose judgment is being well-augmented and a human whose judgment is quietly deteriorating will both appear to be using AI effectively at any single point in time. The divergence only becomes visible under conditions of AI withdrawal, longitudinal decay analysis, or high-stakes failure.<br><br>This paper presents a comprehensive, validity-grounded measurement framework designed to detect the difference between augmentation and erosion &mdash; operationalizing seven constructs using a longitudinal, mixed-methods architecture that triangulates behavioral signals, self-report instruments, and qualitative process evidence.</div>
-            <div class="research-quote">"Organizations should not ask whether humans are performing well with AI. They should ask whether humans could still perform without it, whether they know when the AI is wrong, whether they are still contributing something the AI cannot, and whether they still feel and act as responsible agents for outcomes."</div>
+            <div class="research-quote">&ldquo;Organizations should not ask whether humans are performing well with AI. They should ask whether humans could still perform without it, whether they know when the AI is wrong, whether they are still contributing something the AI cannot, and whether they still feel and act as responsible agents for outcomes.&rdquo;</div>
             <div class="research-section-label">The Seven Measured Constructs</div>
             <div class="construct-grid">
               <div class="construct-item"><div class="construct-num">01</div><div class="construct-name">Mental Model Gaps</div><div class="construct-desc">Divergence between how an AI system actually functions and how its operators believe it functions &mdash; measured through anticipatory prediction mapping and teach-back elicitation.</div></div>
@@ -471,7 +479,7 @@
               <tr><td><strong>E</strong></td><td>Recursive System Orientation Gap</td><td>Bilateral Loop Briefing</td><td><span class="gap-label gap-resolved">Resolved</span></td></tr>
               <tr><td><strong>F</strong></td><td>Measurement Frontier</td><td>Formal Research Mandate</td><td><span class="gap-label gap-active">Active</span></td></tr>
             </table>
-            <div class="research-quote">"The framework that identifies the problem and the researcher calling for its solution are the same person. That is not a coincidence to be managed. It is a positioning asset to be claimed explicitly."</div>
+            <div class="research-quote">&ldquo;The framework that identifies the problem and the researcher calling for its solution are the same person. That is not a coincidence to be managed. It is a positioning asset to be claimed explicitly.&rdquo;</div>
             <div class="download-row">
               <span>Full audit with dual-lens methodology, gap analysis, realignment protocols, and research mandate.</span>
               <a href="ethaisyn-audit-report.pdf" download class="btn-download">Download PDF</a>
@@ -489,7 +497,7 @@
       <div>
         <div class="panel-label">06 - Connect</div>
         <div class="panel-title">Let's build something<br><em>worth preserving.</em></div>
-        <div class="panel-teaser">Whether you need a writer, a fractional content strategist, or a professional connection — I would like to hear from you.</div>
+        <div class="panel-teaser">Whether you need a writer, a fractional content strategist, or a professional connection &mdash; I would like to hear from you.</div>
       </div>
       <div class="panel-icon"></div>
     </button>
@@ -525,7 +533,7 @@
 
 <footer>
   <span class="footer-wm">Eth<span class="dot dt" style="width:6px;height:6px;margin:0 2px"></span>ai<span class="dot dg" style="width:6px;height:6px;margin:0 2px"></span>Syn</span>
-  <span class="footer-note">Healthcare &nbsp;·&nbsp; People Strategy &nbsp;·&nbsp; Ethical AI</span>
+  <span class="footer-note">Healthcare &nbsp;&middot;&nbsp; People Strategy &nbsp;&middot;&nbsp; Ethical AI</span>
   <span class="footer-copy">&copy; 2026 Mercedez Lopez. All rights reserved. Eth&#x2022;ai&#x2022;Syn is an original framework by Mercedez Lopez.</span>
 </footer>
 
