@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>You Put Humans in the Loop. You Just Put Them in the Wrong Part. — Eth•ai•Syn</title>
+<meta name="description" content="Every responsible AI framework includes human-in-the-loop oversight. But the humans in these loops aren't preserving judgment. They're validating AI outputs inside a frame the algorithm constructed.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#f7f3ec;color:#1c1710;font-family:'EB Garamond',Georgia,serif;font-size:20px;line-height:1.75;-webkit-font-smoothing:antialiased;}
+nav{background:#f7f3ec;border-bottom:1px solid rgba(160,120,48,.2);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.wm{font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;font-weight:500;color:#1c1710;text-decoration:none;}
+.wm em{color:#a07830;font-style:italic;}
+.nb{font-family:'Cormorant Garamond',Georgia,serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8a7860;text-decoration:none;}
+.page{max-width:720px;margin:0 auto;padding:52px 28px 80px;}
+.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;padding-bottom:16px;border-bottom:1px solid rgba(160,120,48,.2);}
+.mwm{font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;font-weight:500;color:#1c1710;}
+.mwm em{color:#a07830;font-style:italic;}
+.meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.cat{font-family:'Cormorant Garamond',Georgia,serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#a07830;border:1px solid rgba(160,120,48,.3);padding:2px 9px;border-radius:20px;}
+.dl{font-family:'Cormorant Garamond',Georgia,serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8a7860;}
+.ey{font-family:'Cormorant Garamond',Georgia,serif;font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#a07830;margin-bottom:13px;}
+h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:40px;font-weight:400;line-height:1.12;color:#1c1710;letter-spacing:-.01em;margin-bottom:16px;}
+h1 em{font-style:italic;color:#4a4030;}
+.hr{width:38px;height:2px;background:#a07830;border-radius:1px;margin-bottom:44px;}
+.lede{font-family:'Cormorant Garamond',Georgia,serif;font-size:21px;font-weight:400;line-height:1.58;color:#1c1710;margin-bottom:1.3em;}
+p{font-size:19px;color:#4a4030;line-height:1.78;margin-bottom:1.3em;}
+p:last-of-type{margin-bottom:0;}
+p strong{color:#1c1710;font-weight:500;}
+.dv{display:flex;align-items:center;gap:12px;margin:36px 0;}
+.dl2{flex:1;height:1px;background:rgba(160,120,48,.2);}
+.dm{font-family:'Cormorant Garamond',Georgia,serif;font-size:15px;color:#a07830;font-style:italic;}
+.pq{position:relative;padding:26px 34px 26px 44px;margin:34px -8px;background:rgba(160,120,48,.09);border-left:3px solid #a07830;border-radius:0 5px 5px 0;}
+.pq p{font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:400;font-style:italic;line-height:1.52;color:#1c1710;margin:0;}
+.pq::before{content:'\201C';position:absolute;top:4px;left:10px;font-family:'Cormorant Garamond',Georgia,serif;font-size:58px;line-height:1;color:#a07830;opacity:.28;}
+.ll{font-family:'Cormorant Garamond',Georgia,serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#a07830;margin-bottom:20px;margin-top:8px;}
+.item{display:grid;grid-template-columns:46px 1fr;gap:0 18px;margin-bottom:26px;padding-bottom:26px;border-bottom:1px solid rgba(160,120,48,.18);}
+.item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.inum{font-family:'Cormorant Garamond',Georgia,serif;font-size:32px;font-weight:300;color:#a07830;line-height:1;padding-top:3px;opacity:.52;}
+.ititle{font-family:'Cormorant Garamond',Georgia,serif;font-size:17px;font-weight:600;color:#1c1710;margin-bottom:6px;}
+.itext{font-size:17px;color:#4a4030;line-height:1.7;margin:0;}
+.cl{margin-top:46px;padding-top:30px;border-top:1px solid rgba(160,120,48,.2);}
+.cls{font-family:'Cormorant Garamond',Georgia,serif;font-size:24px;font-weight:400;font-style:italic;line-height:1.42;color:#1c1710;margin-bottom:22px;}
+.cls span{color:#a07830;font-style:normal;}
+.by{display:flex;align-items:flex-start;gap:15px;padding:20px 24px;background:#ede8df;border-radius:5px;border:1px solid rgba(160,120,48,.2);margin-bottom:20px;margin-top:32px;}
+.byb{width:3px;min-height:48px;background:#a07830;border-radius:2px;flex-shrink:0;margin-top:2px;}
+.byn{font-family:'Cormorant Garamond',Georgia,serif;font-size:17px;font-weight:500;color:#1c1710;margin-bottom:3px;}
+.byt{font-family:'Cormorant Garamond',Georgia,serif;font-size:12px;color:#8a7860;font-style:italic;margin-bottom:4px;}
+.byu{font-family:'Cormorant Garamond',Georgia,serif;font-size:11px;letter-spacing:.06em;color:#a07830;text-transform:uppercase;text-decoration:none;}
+.tgs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:32px;}
+.tg{font-family:'Cormorant Garamond',Georgia,serif;font-size:11px;letter-spacing:.05em;color:#8a7860;border:1px solid rgba(160,120,48,.2);padding:2px 10px;border-radius:20px;}
+.refs{background:#ede8df;border:1px solid rgba(160,120,48,.2);border-radius:5px;padding:20px 22px;margin-bottom:28px;}
+.refs-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a07830;margin-bottom:14px;}
+.ref-item{font-size:13px;color:#4a4030;line-height:1.65;margin-bottom:8px;padding-left:18px;text-indent:-18px;}
+.ref-item:last-child{margin-bottom:0;}
+.ref-item a{color:#a07830;text-decoration:none;}
+.ft{padding-top:22px;border-top:1px solid rgba(160,120,48,.2);text-align:center;}
+.ft p{font-family:'Cormorant Garamond',Georgia,serif;font-size:11px;color:#8a7860;font-style:italic;letter-spacing:.04em;line-height:1.8;}
+@media(max-width:640px){h1{font-size:30px;}.page{padding:32px 18px 56px;}.pq{margin:24px 0;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="wm" href="/EthAiSyn">Eth<em>&bull;</em>ai<em>&bull;</em>Syn</a>
+  <a class="nb" href="/EthAiSyn#p-writing">&larr; All Writing</a>
+</nav>
+
+<div class="page">
+
+  <div class="mh">
+    <div class="mwm">Eth<em>&bull;</em>ai<em>&bull;</em>Syn</div>
+    <div class="meta">
+      <span class="cat">Framework &middot; Article</span>
+      <span class="dl">March 20, 2026</span>
+    </div>
+  </div>
+
+  <div class="ey">EthAiSyn &middot; Human-in-the-Loop</div>
+
+  <h1>You Put Humans in the Loop.<br><em>You Just Put Them in the Wrong Part.</em></h1>
+  <div class="hr"></div>
+
+  <p class="lede">I&rsquo;ll confess: I used to think HITL was the answer too.</p>
+
+  <p>Every responsible AI framework I&rsquo;ve reviewed in the past eighteen months includes some version of human-in-the-loop oversight. Someone reviews the output. Someone validates the decision. Someone signs off before deployment. It&rsquo;s practically a checklist item at this point&mdash;right between &lsquo;fairness metrics&rsquo; and &lsquo;transparency documentation.&rsquo; And organizations are absolutely doing it. They&rsquo;re hiring ethicists, convening review boards, building approval workflows. The infrastructure exists.</p>
+
+  <p>But here&rsquo;s what I keep noticing in my work: the humans in these loops aren&rsquo;t actually preserving human judgment. They&rsquo;re validating AI outputs. They&rsquo;re rubber-stamping decisions the system already made. They&rsquo;re operating inside a frame the algorithm constructed, answering questions the model predetermined, using mental models the training data encoded. We built the loop. We put humans in it. We just put them in after the most consequential judgment calls already happened.</p>
+
+  <div class="dv"><div class="dl2"></div><div class="dm">&#x2B21;</div><div class="dl2"></div></div>
+
+  <div class="pq"><p>The irony is we&rsquo;re protecting AI systems from humans instead of protecting human judgment from AI systems.</p></div>
+
+  <p><strong>You can have a human in every loop and still systematically displace the judgment you&rsquo;re trying to preserve.</strong></p>
+
+  <p>Most organizations can&rsquo;t pinpoint when judgment displacement happens because they&rsquo;re measuring the wrong thing. They track approval rates, review times, override frequencies&mdash;all downstream metrics that assume the human reviewer still has the cognitive infrastructure to exercise independent judgment. But if the system has already narrowed the decision space, pre-filtered the evidence, and framed the question, what exactly is the human reviewing? The automation bias literature has documented this for decades: humans don&rsquo;t just defer to automated recommendations&mdash;they stop generating alternative hypotheses entirely.<sup>[1]</sup></p>
+
+  <p>This is why putting humans &lsquo;in the loop&rsquo; doesn&rsquo;t automatically preserve judgment. The loop they&rsquo;re in was designed by the system. The options they&rsquo;re choosing between were curated by the algorithm. The evidence they&rsquo;re evaluating was pre-weighted by the model. You can have a human in every loop and still systematically displace the judgment you&rsquo;re trying to preserve because the displacement happened before the human ever entered the frame.</p>
+
+  <p>The gap most organizations can&rsquo;t see: they&rsquo;re auditing the human decision without auditing whether the human still has the capacity to make it. They&rsquo;re checking if Dr. Chen approved the recommendation without checking if Dr. Chen can still generate independent diagnostic hypotheses. They&rsquo;re verifying that the loan officer signed off without verifying that the loan officer still maintains working models of creditworthiness that exist independently of the scoring algorithm. They built the accountability structure. They just built it around the wrong question.</p>
+
+  <div class="dv"><div class="dl2"></div><div class="dm">&#x2B21;</div><div class="dl2"></div></div>
+
+  <p>This isn&rsquo;t a failure of responsible AI frameworks. Those frameworks correctly identified that humans need to be involved in high-stakes decisions. What they didn&rsquo;t account for is that involvement isn&rsquo;t the same as preservation. You can involve someone in every decision and still systematically erode their capacity to make independent judgments&mdash;especially if the system determines what counts as evidence, what questions get asked, and what options are available before the human ever shows up.<sup>[10]</sup></p>
+
+  <p>EthAiSyn isn&rsquo;t a safety brand or an ethics label. It&rsquo;s a behavioral governance framework designed to catch judgment displacement before it becomes infrastructure. Because by the time your HITL workflows are fully implemented, the damage might already be done. Not because the humans aren&rsquo;t reviewing&mdash;but because they&rsquo;re reviewing inside a cognitive frame they no longer control.</p>
+
+  <div class="dv"><div class="dl2"></div><div class="dm">&#x2B21;</div><div class="dl2"></div></div>
+
+  <div class="ll">Three Things I&rsquo;d Add Before Deploying This Framework</div>
+
+  <div class="item">
+    <div class="inum">01</div>
+    <div>
+      <div class="ititle">Measurement That Captures Judgment Preservation, Not Just Human Participation</div>
+      <p class="itext">Your current metrics probably tell you how often humans are involved. They don&rsquo;t tell you whether those humans still generate independent hypotheses, maintain working mental models, or exercise judgment that exists outside the system&rsquo;s frame. You need instruments that detect cognitive debt accumulation and concept drift&mdash;not just approval rates.<sup>[34]</sup></p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="inum">02</div>
+    <div>
+      <div class="ititle">Dual-Lens Monitoring That Separates Case-Level Decisions from Pattern-Level Drift</div>
+      <p class="itext">You can&rsquo;t catch judgment displacement if you&rsquo;re only looking at individual decisions. You need one lens tracking whether this specific case was handled appropriately and another lens tracking whether your team&rsquo;s collective judgment infrastructure is degrading over time. Most organizations only have the first lens. That&rsquo;s why they don&rsquo;t see the problem until it&rsquo;s systemic.</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="inum">03</div>
+    <div>
+      <div class="ititle">A Governance Structure That Treats Representational Alignment as a Technical Prerequisite</div>
+      <p class="itext">Before you deploy, verify that your system&rsquo;s internal representations actually map to the concepts your humans use to make judgments. Not the concepts you think they use. Not the concepts your training data encoded. The actual working models your decision-makers rely on when the algorithm isn&rsquo;t available.<sup>[11]</sup> If those don&rsquo;t align, your HITL workflow is just expensive theater.</p>
+    </div>
+  </div>
+
+  <div class="dv"><div class="dl2"></div><div class="dm">&#x2B21;</div><div class="dl2"></div></div>
+
+  <div class="cl">
+    <p class="cls">Other frameworks ask: &lsquo;Did a human approve this decision?&rsquo;<br>
+    <span>EthAiSyn asks: &lsquo;Can that human still make this decision without the system?&rsquo;</span></p>
+    <p>If you&rsquo;ve invested in RAI infrastructure and you&rsquo;re asking what comes next, the answer isn&rsquo;t more oversight&mdash;it&rsquo;s earlier intervention. Because in the long run, none of us are untouched by what systems repeatedly ask of human beings.</p>
+  </div>
+
+  <div class="by">
+    <div class="byb"></div>
+    <div>
+      <div class="byn">Mercedez Lopez</div>
+      <div class="byt">Founder, Eth&bull;ai&bull;Syn &middot; Human-AI Integration Architect</div>
+      <a class="byu" href="https://twinofmyself.github.io/EthAiSyn">twinofmyself.github.io/EthAiSyn</a>
+    </div>
+  </div>
+
+  <div class="tgs">
+    <span class="tg">#EthAiSyn</span>
+    <span class="tg">#HumanInTheLoop</span>
+    <span class="tg">#JudgmentPreservation</span>
+    <span class="tg">#ResponsibleAI</span>
+    <span class="tg">#AIGovernance</span>
+    <span class="tg">#CognitiveDrift</span>
+    <span class="tg">#AIEthics</span>
+    <span class="tg">#HumanAIIntegration</span>
+    <span class="tg">#WorkplaceAI</span>
+    <span class="tg">#AutomationBias</span>
+    <span class="tg">#HealthcareAI</span>
+    <span class="tg">#HumanCentered</span>
+  </div>
+
+  <div class="refs">
+    <div class="refs-title">References</div>
+    <div class="ref-item">[1] Goddard, Roudsari &amp; Wyatt (2012). Automation bias: A systematic review of frequency, effect mediators, and mitigators. <em>JAMIA.</em></div>
+    <div class="ref-item">[10] Casper et al. (2023). Open problems and fundamental limitations of reinforcement learning from human feedback. <em>arXiv.</em></div>
+    <div class="ref-item">[11] Rane, Ho, Sucholutsky &amp; Griffiths (2023). Concept alignment as a prerequisite for value alignment. <em>arXiv:2310.20059.</em> <a href="https://arxiv.org/abs/2310.20059">arxiv.org/abs/2310.20059</a></div>
+    <div class="ref-item">[34] Lopez, M. (2026). Preserving Human Judgment in Human-AI Systems: A Mixed-Methods Measurement Framework. <em>Authorea Preprint.</em> DOI: 10.22541/au.177369008.85139377/v2.</div>
+  </div>
+
+  <div class="ft">
+    <p>&copy; 2026 Mercedez Lopez. All rights reserved.<br>
+    Eth&bull;ai&bull;Syn is an original framework by Mercedez Lopez.<br>
+    Preserving Human Judgment in Human-AI Systems.</p>
+  </div>
+
+</div>
+</body>
+</html>
