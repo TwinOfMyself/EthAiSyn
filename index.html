@@ -252,10 +252,9 @@
     .eip-label{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
     .eip-body{font-size:13px;font-weight:300;color:var(--ink);line-height:1.8}
 
-    /* SPINE QUOTES */
-    .spine-quote{position:absolute;left:calc(44px + 14px);top:34px;font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:300;font-style:italic;color:var(--border);white-space:nowrap;opacity:0;transform:translateX(-6px);transition:opacity .6s var(--ease),transform .6s var(--ease),color .6s;pointer-events:none;z-index:1}
-    .spine-quote.visible{opacity:1;transform:translateX(0)}
-    .spine-quote.lit{color:var(--muted)}
+    /* SPINE QUOTES - appear left of spine, triggered by interaction only */
+    .spine-quote{position:absolute;right:calc(100% - 44px + 14px);top:40px;font-family:'Cormorant Garamond',serif;font-size:12px;font-weight:300;font-style:italic;color:transparent;white-space:nowrap;text-align:right;opacity:0;transform:translateX(4px);transition:opacity 1.2s ease,transform 1.2s ease,color 1.2s ease;pointer-events:none;z-index:1}
+    .spine-quote.earned{opacity:1;transform:translateX(0);color:var(--muted)}
 
     /* SELF-ASSESSMENT */
     .assess-wrap{margin-top:32px;padding-top:28px;border-top:1px solid var(--border)}
@@ -321,7 +320,7 @@
     .concern-track{display:flex;flex-direction:column;gap:0;animation:driftUp 60s linear infinite}
     .concern-item{padding:12px 0;border-bottom:1px solid var(--border);flex-shrink:0}
     .concern-text{font-size:13px;font-weight:300;color:var(--ink);line-height:1.65;font-style:italic}
-    .concern-role{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+    .concern-role{font-size:9px;font-weight:400;letter-spacing:.06em;color:var(--border);margin-top:4px;line-height:1.4}
     @keyframes driftUp{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
     .concern-input-row{display:flex;gap:10px;align-items:stretch}
     .concern-input{flex:1;background:var(--fog);border:1px solid var(--border);border-radius:2px;padding:10px 14px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;outline:none;transition:border-color .2s;min-height:40px;resize:none}
@@ -331,6 +330,21 @@
     .concern-submit:hover{background:var(--teal);transform:translateY(-1px)}
     .concern-thanks{display:none;font-size:12px;font-weight:300;color:var(--teal);margin-top:8px;font-style:italic}
     .concern-thanks.show{display:block}
+
+    /* CONCERN RING */
+    .concern-ring-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:24px}
+    .concern-ring-svg{width:120px;height:120px;transform:rotate(-90deg)}
+    .concern-ring-bg{fill:none;stroke:var(--border);stroke-width:2.5}
+    .concern-ring-fill{fill:none;stroke-width:2.5;stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(0.16,1,0.3,1),stroke .6s}
+    .concern-ring-count{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--ink);margin-top:-78px;margin-bottom:40px;text-align:center;line-height:1}
+    .concern-ring-sub{font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:block;margin-top:6px;font-family:'DM Sans',sans-serif}
+    .concern-context{text-align:center;margin-top:-28px;margin-bottom:32px}
+    .concern-context-num{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--border);line-height:1;transition:color 1.2s ease}
+    .concern-context-num.active{color:var(--muted)}
+    .concern-context-line{font-size:11px;font-weight:300;color:var(--border);line-height:1.6;margin-top:6px;max-width:320px;margin-left:auto;margin-right:auto;transition:color 1.2s ease}
+    .concern-context-line.active{color:var(--muted)}
+    .concern-context-source{font-size:9px;font-weight:400;letter-spacing:.1em;color:var(--border);margin-top:4px;transition:color 1.2s ease}
+    .concern-context-source.active{color:var(--border)}
 
     /* SCENARIO ROUTER */
     .scenario-wrap{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--border)}
@@ -474,7 +488,6 @@
 
   <div class="panel" id="p-about">
     <div class="spine-dot" id="dot-about"></div>
-    <span class="spine-quote" data-for="dot-about">Praxis produces what theory cannot.</span>
     <button class="panel-trigger" onclick="toggle('p-about')" aria-expanded="false">
       <div>
         <div class="panel-label">02 - About</div>
@@ -647,7 +660,6 @@
   <!-- 05 Research -->
   <div class="panel" id="p-research">
     <div class="spine-dot" id="dot-research"></div>
-    <span class="spine-quote" data-for="dot-research">Assistance and erosion look identical at first.</span>
     <button class="panel-trigger" onclick="toggle('p-research')" aria-expanded="false">
       <div>
         <div class="panel-label">05 &nbsp;&middot;&nbsp; Research</div>
@@ -764,6 +776,18 @@
 
       <!-- CONCERN FEED -->
       <div style="margin-top:32px;padding-top:28px;border-top:1px solid var(--border)">
+        <div class="concern-ring-wrap">
+          <svg class="concern-ring-svg" viewBox="0 0 120 120">
+            <circle class="concern-ring-bg" cx="60" cy="60" r="52"/>
+            <circle class="concern-ring-fill" id="concernRingFill" cx="60" cy="60" r="52" stroke="var(--teal)" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+          </svg>
+          <div class="concern-ring-count"><span id="concernCount">0</span><span class="concern-ring-sub">concerns voiced</span></div>
+        </div>
+        <div class="concern-context">
+          <div class="concern-context-num" id="contextNum">~130,000,000</div>
+          <div class="concern-context-line" id="contextLine">U.S. workers whose tasks are now shaped by AI-assisted decisions. Most without a framework to measure what that is doing to their judgment.</div>
+          <div class="concern-context-source" id="contextSource">OpenAI/UPenn research, WEF Future of Jobs 2025, Anthropic Economic Index</div>
+        </div>
         <div class="concern-header">
           <div class="concern-prompt">What are you most worried AI will change about your work?</div>
           <div class="concern-anon">Anonymous &middot; No login required</div>
@@ -832,27 +856,13 @@
   window.addEventListener('scroll',updateSpine,{passive:true});
   updateSpine();
 
-  /* ── SPINE QUOTES ── */
-  function updateSpineQuotes(){
-    document.querySelectorAll('.spine-quote').forEach(q=>{
-      const dotId=q.getAttribute('data-for');
-      const dotEl=document.getElementById(dotId);
-      if(!dotEl)return;
-      const dotTop=dotEl.getBoundingClientRect().top+window.scrollY;
-      const sTop=spine.getBoundingClientRect().top+window.scrollY;
-      const sH=spine.offsetHeight;
-      const pct=Math.min(Math.max((window.scrollY+window.innerHeight*.65-sTop)/sH,0),1);
-      const fillBottom=sTop+sH*pct;
-      const isLit=dotTop<=fillBottom+6;
-      const inView=dotEl.getBoundingClientRect().top<window.innerHeight*0.85&&dotEl.getBoundingClientRect().top>-40;
-      const panel=dotEl.closest('.panel');
-      const isOpen=panel&&panel.classList.contains('open');
-      q.classList.toggle('visible',inView&&!isOpen);
-      q.classList.toggle('lit',isLit);
-    });
+  /* ── SPINE QUOTES (earned via interaction) ── */
+  function earnQuote(dotId){
+    const q=document.querySelector('.spine-quote[data-for="'+dotId+'"]');
+    if(q&&!q.classList.contains('earned')){
+      q.classList.add('earned');
+    }
   }
-  window.addEventListener('scroll',updateSpineQuotes,{passive:true});
-  updateSpineQuotes();
 
   /* ── SELF-ASSESSMENT ── */
   const assessAnswers=[null,null,null,null,null];
@@ -891,6 +901,7 @@
     document.getElementById('assessInsight').textContent=insight;
     document.getElementById('assessResult').classList.add('show');
     document.getElementById('assessBtn').style.display='none';
+    earnQuote('dot-ethaisyn');
     setTimeout(()=>{
       document.querySelectorAll('.assess-bar-fill').forEach(b=>{b.style.width=b.dataset.target+'%';});
     },100);
@@ -978,27 +989,42 @@
     else msg='This is what erosion looks like from the inside: the outputs are good enough that the difference stops mattering. Until it does. The framework measures exactly this threshold.';
     document.getElementById('overrideFinalMsg').textContent=msg;
     f.scrollIntoView({behavior:'smooth',block:'nearest'});
+    earnQuote('dot-experience');
   }
   renderOverrideRound();
 
-  /* ── AMBIENT CONCERN FEED ── */
+  /* ── CONCERN FEED + RING ── */
+  const circumference=2*Math.PI*52;
+  let concernTotal=0;
+  const concernCap=60;
+  function updateConcernRing(count){
+    concernTotal=count;
+    const pct=Math.min(count/concernCap,1);
+    const offset=circumference-(pct*circumference);
+    const ring=document.getElementById('concernRingFill');
+    ring.style.strokeDashoffset=offset;
+    if(pct<0.4)ring.style.stroke='var(--teal)';
+    else if(pct<0.75)ring.style.stroke='var(--gold)';
+    else ring.style.stroke='var(--slate)';
+    document.getElementById('concernCount').textContent=count;
+  }
   const seedConcerns=[
-    {text:'That I will stop noticing when I disagree with a recommendation.',role:'Clinical researcher'},
-    {text:'That the new hires will never learn to do it the hard way first.',role:'Engineering manager'},
-    {text:'That my writing will start sounding like everyone else\'s writing.',role:'Content strategist'},
-    {text:'That we will optimize away the part of the process where we actually think.',role:'Healthcare administrator'},
-    {text:'That nobody will be able to explain why a decision was made.',role:'Compliance officer'},
-    {text:'That I am already dependent and I just have not been tested yet.',role:'Product designer'},
-    {text:'That the humans reviewing AI output are not really reviewing it.',role:'Prior authorization specialist'},
-    {text:'That my expertise is being turned into a checkbox.',role:'Social worker'},
-    {text:'That we will automate empathy and call it efficiency.',role:'Patient advocate'},
-    {text:'That the people making these decisions have never done the job.',role:'Revenue cycle analyst'},
-    {text:'That I will forget what I knew before the tools arrived.',role:'Copy editor'},
-    {text:'That speed will become the only metric that matters.',role:'UX researcher'},
-    {text:'That my team will stop asking why and start asking how fast.',role:'Operations director'},
-    {text:'That accountability will become something nobody can locate.',role:'HR business partner'},
-    {text:'That the junior staff will never develop the instincts we had to earn.',role:'Radiologist'},
-    {text:'That we are training ourselves out of our own jobs one shortcut at a time.',role:'Financial analyst'},
+    {text:'I wonder whether my years of training will be devalued by a system that learned in weeks what took me a career.',role:'Clinical nurse, 15 years \u2014 SAGE Open Nursing, 2024'},
+    {text:'There is a moral duty to provide human care, and I am not sure the system knows the difference.',role:'Healthcare worker \u2014 Rony et al., SAGE Open Nursing, 2024'},
+    {text:'Replacing human judgment with AI has ethical implications that nobody in leadership is talking about.',role:'Focus group participant \u2014 Rony et al., 2024'},
+    {text:'Forty-four percent of us are worried about our jobs. But the real question is what happens to the ones who stay.',role:'Healthcare workforce \u2014 HealthLeaders Media / FreelanceWritingJobs survey'},
+    {text:'It is adding extra burden, extra judgment, and a lower likelihood of working with the people creating it.',role:'MetLife Employee Benefits Study, 2026 \u2014 via CNBC'},
+    {text:'Half of us believe AI can reduce burnout. Half of us worry it will shrink the jobs that are left.',role:'WellSky / Center for Generational Kinetics, 2025'},
+    {text:'Over fifty percent of us say the changes are happening too fast. Forty-four percent do not understand why.',role:'PwC Global Workforce Hopes and Fears Survey, 2025'},
+    {text:'Forty-nine percent of jobs now use AI for at least a quarter of their tasks. Most of those workers were never asked.',role:'Anthropic Economic Index, November 2025'},
+    {text:'AI-driven automation may cause job displacement, deskilling, and precarious employment, threatening job autonomy.',role:'European Trade Union Confederation (ETUC), 2024'},
+    {text:'Employment for workers aged 22 to 25 in AI-exposed jobs has fallen six percent since late 2022.',role:'ADP Research / Stanford, October 2025'},
+    {text:'Overreliance on AI can reduce human judgment in critical staffing decisions.',role:'ShiftMed / WellSky, 2025'},
+    {text:'As AI advances, human judgment becomes increasingly critical for recognizing the right action under ambiguity.',role:'Microsoft New Future of Work Report, 2025'},
+    {text:'Twenty-one percent of workers expect AI will make their financial situation worse within five years.',role:'Federal Reserve Bank of Boston, December 2025'},
+    {text:'Only seven percent of managers described AI output as better than human work. That is down fifteen points from last year.',role:'Beautiful.ai Annual Manager Survey, 2025'},
+    {text:'Eighty percent of the U.S. workforce could have at least ten percent of their tasks affected.',role:'OpenAI / University of Pennsylvania, 2023'},
+    {text:'Algorithms are deciding who gets housing, who gets hired, and who gets treated. Most of those people have no idea.',role:'American Civil Liberties Union, 2025'},
   ];
   function buildFeed(){
     const track=document.getElementById('concernTrack');
@@ -1006,6 +1032,31 @@
     track.innerHTML=items.map(c=>`<div class="concern-item"><div class="concern-text">&ldquo;${c.text}&rdquo;</div><div class="concern-role">${c.role}</div></div>`).join('');
   }
   buildFeed();
+
+  /* animate ring count-up when Connect panel opens */
+  let ringAnimated=false;
+  const connectObserver=new MutationObserver(function(){
+    if(document.getElementById('p-connect').classList.contains('open')&&!ringAnimated){
+      ringAnimated=true;
+      let i=0;
+      const target=seedConcerns.length;
+      const step=()=>{
+        i++;
+        updateConcernRing(i);
+        if(i<target)setTimeout(step,50);
+        else{
+          setTimeout(()=>{
+            document.getElementById('contextNum').classList.add('active');
+            document.getElementById('contextLine').classList.add('active');
+            document.getElementById('contextSource').classList.add('active');
+          },600);
+        }
+      };
+      setTimeout(step,400);
+    }
+  });
+  connectObserver.observe(document.getElementById('p-connect'),{attributes:true,attributeFilter:['class']});
+
   function submitConcern(){
     const input=document.getElementById('concernInput');
     const text=input.value.trim();
@@ -1013,10 +1064,12 @@
     const track=document.getElementById('concernTrack');
     const newItem=document.createElement('div');
     newItem.className='concern-item';
-    newItem.innerHTML=`<div class="concern-text">&ldquo;${text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}&rdquo;</div><div class="concern-role">Just now</div>`;
+    newItem.innerHTML=`<div class="concern-text">&ldquo;${text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}&rdquo;</div><div class="concern-role">Submitted just now &mdash; anonymous visitor</div>`;
     track.prepend(newItem);
     input.value='';
+    updateConcernRing(concernTotal+1);
     document.getElementById('concernThanks').classList.add('show');
+    earnQuote('dot-connect');
     setTimeout(()=>document.getElementById('concernThanks').classList.remove('show'),4000);
   }
   document.getElementById('concernInput').addEventListener('keydown',function(e){
@@ -1060,6 +1113,7 @@
     link.textContent=d.link;
     link.onclick=function(){d.action();};
     document.getElementById('scenarioResult').classList.add('show');
+    earnQuote('dot-writing');
   }
 </script>
 
