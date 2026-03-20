@@ -650,7 +650,7 @@
           <div class="override-final-score" id="overrideFinalScore"></div>
           <div class="override-final-msg" id="overrideFinalMsg"></div>
           <div class="override-final-kicker">This is override behavior. Most AI-assisted workflows do not give you the chance to practice it. Eth-ai-Syn measures whether that chance exists, and what happens when it doesn't.</div>
-          <div style="margin-top:16px"><a href="#p-ethaisyn" class="panel-cta" onclick="setTimeout(()=>toggle('p-ethaisyn'),120)">Read the framework</a></div>
+          <div style="margin-top:16px"><a href="#p-ethaisyn" class="panel-cta" onclick="setTimeout(()=>toggle('p-ethaisyn'),120)">Read the framework</a> <span style="display:inline-block;margin-left:16px"><a class="panel-cta" onclick="resetOverride()" style="cursor:pointer">Try again</a></span></div>
         </div>
       </div>
 
@@ -992,6 +992,15 @@
     earnQuote('dot-experience');
   }
   renderOverrideRound();
+  function resetOverride(){
+    overrideIdx=0;overrideScore=0;
+    document.getElementById('overrideRound').style.display='';
+    document.getElementById('overrideFinal').classList.remove('show');
+    document.getElementById('overrideFeedback').classList.remove('show');
+    document.getElementById('overrideNext').classList.remove('show');
+    renderOverrideRound();
+    document.getElementById('p-experience').scrollIntoView({behavior:'smooth',block:'start'});
+  }
 
   /* ── CONCERN FEED + RING ── */
   const circumference=2*Math.PI*52;
