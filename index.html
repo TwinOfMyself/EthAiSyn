@@ -251,13 +251,112 @@
     .eas-in-practice{margin-top:28px;padding:22px 24px;background:var(--fog);border:1px solid var(--border);border-radius:3px}
     .eip-label{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
     .eip-body{font-size:13px;font-weight:300;color:var(--ink);line-height:1.8}
+
+    /* SPINE QUOTES */
+    .spine-quote{position:absolute;left:calc(44px + 14px);top:34px;font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:300;font-style:italic;color:var(--border);white-space:nowrap;opacity:0;transform:translateX(-6px);transition:opacity .6s var(--ease),transform .6s var(--ease),color .6s;pointer-events:none;z-index:1}
+    .spine-quote.visible{opacity:1;transform:translateX(0)}
+    .spine-quote.lit{color:var(--muted)}
+
+    /* SELF-ASSESSMENT */
+    .assess-wrap{margin-top:32px;padding-top:28px;border-top:1px solid var(--border)}
+    .assess-label{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+    .assess-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--ink);margin-bottom:4px}
+    .assess-sub{font-size:12px;font-weight:300;color:var(--muted);line-height:1.6;margin-bottom:24px}
+    .assess-q{margin-bottom:20px}
+    .assess-q-text{font-size:13px;font-weight:400;color:var(--ink);margin-bottom:10px;line-height:1.6}
+    .assess-q-num{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--border);margin-right:6px}
+    .assess-opts{display:flex;gap:6px;flex-wrap:wrap}
+    .assess-opt{background:var(--fog);border:1px solid var(--border);border-radius:2px;padding:8px 14px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;color:var(--ink);cursor:pointer;transition:all .2s;line-height:1.4}
+    .assess-opt:hover{background:var(--white);border-color:var(--muted)}
+    .assess-opt.selected{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+    .assess-btn{display:none;margin-top:20px;background:var(--slate);color:var(--cream);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:13px 28px;border-radius:2px;transition:background .2s,transform .15s}
+    .assess-btn:hover{background:var(--teal);transform:translateY(-1px)}
+    .assess-btn.show{display:inline-block}
+    .assess-result{display:none;margin-top:24px;padding:22px 24px;background:var(--fog);border:1px solid var(--border);border-radius:3px}
+    .assess-result.show{display:block}
+    .assess-score-row{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+    .assess-score-num{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;line-height:1}
+    .assess-score-label{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+    .assess-score-sub{font-size:12px;font-weight:300;color:var(--muted);margin-top:2px}
+    .assess-bar-row{margin-bottom:10px}
+    .assess-bar-label{font-size:11px;font-weight:400;color:var(--ink);margin-bottom:4px;display:flex;justify-content:space-between}
+    .assess-bar-track{height:5px;background:var(--border);border-radius:10px;overflow:hidden}
+    .assess-bar-fill{height:100%;border-radius:10px;transition:width .8s var(--ease)}
+    .assess-insight{font-size:13px;font-weight:300;color:var(--ink);line-height:1.75;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+    .assess-cta{margin-top:16px}
+
+    /* OVERRIDE DEMO */
+    .override-intro{font-size:14px;font-weight:300;color:var(--muted);line-height:1.85;margin-bottom:24px;max-width:540px}
+    .override-round{margin-bottom:24px}
+    .override-round-label{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+    .override-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+    .override-card{background:var(--fog);border:1.5px solid var(--border);border-radius:3px;padding:18px 16px;cursor:pointer;transition:all .25s var(--ease);font-size:12px;font-weight:300;color:var(--ink);line-height:1.7}
+    .override-card:hover{background:var(--white);border-color:var(--muted);transform:translateY(-1px)}
+    .override-card.chosen{border-color:var(--ink);background:var(--white)}
+    .override-card.correct{border-color:var(--teal);background:rgba(90,144,144,.06)}
+    .override-card.incorrect{border-color:var(--gold);background:rgba(184,150,96,.06)}
+    .override-card-tag{display:inline-block;font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:2px 8px;border-radius:2px;margin-bottom:8px}
+    .override-card-tag.human{background:rgba(90,144,144,.12);color:var(--teal)}
+    .override-card-tag.ai{background:rgba(184,150,96,.12);color:var(--gold)}
+    .override-card.locked{cursor:default;pointer-events:none}
+    .override-feedback{font-size:12px;font-weight:300;color:var(--muted);line-height:1.65;padding:12px 14px;background:var(--fog);border-radius:3px;margin-bottom:16px;display:none}
+    .override-feedback.show{display:block}
+    .override-next{display:none;background:var(--ink);color:var(--cream);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:11px 22px;border-radius:2px;transition:background .2s,transform .15s}
+    .override-next:hover{background:var(--teal);transform:translateY(-1px)}
+    .override-next.show{display:inline-block}
+    .override-final{display:none;padding:22px 24px;background:var(--fog);border:1px solid var(--border);border-radius:3px}
+    .override-final.show{display:block}
+    .override-final-score{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;margin-bottom:8px}
+    .override-final-msg{font-size:13px;font-weight:300;color:var(--ink);line-height:1.75;margin-bottom:16px}
+    .override-final-kicker{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:300;font-style:italic;color:var(--teal);line-height:1.6;padding:14px 0 14px 14px;border-left:2px solid var(--teal)}
+
+    /* CONCERN FEED */
+    .concern-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+    .concern-prompt{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;font-style:italic;color:var(--ink)}
+    .concern-anon{font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--border)}
+    .concern-feed{position:relative;height:160px;overflow:hidden;margin-bottom:16px}
+    .concern-feed::before,.concern-feed::after{content:'';position:absolute;left:0;right:0;height:36px;z-index:2;pointer-events:none}
+    .concern-feed::before{top:0;background:linear-gradient(to bottom,var(--cream),transparent)}
+    .concern-feed::after{bottom:0;background:linear-gradient(to top,var(--cream),transparent)}
+    .concern-track{display:flex;flex-direction:column;gap:0;animation:driftUp 60s linear infinite}
+    .concern-item{padding:12px 0;border-bottom:1px solid var(--border);flex-shrink:0}
+    .concern-text{font-size:13px;font-weight:300;color:var(--ink);line-height:1.65;font-style:italic}
+    .concern-role{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+    @keyframes driftUp{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
+    .concern-input-row{display:flex;gap:10px;align-items:stretch}
+    .concern-input{flex:1;background:var(--fog);border:1px solid var(--border);border-radius:2px;padding:10px 14px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;outline:none;transition:border-color .2s;min-height:40px;resize:none}
+    .concern-input:focus{border-color:var(--teal)}
+    .concern-input::placeholder{color:var(--border);font-style:italic}
+    .concern-submit{background:var(--ink);color:var(--cream);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:10px 20px;border-radius:2px;transition:background .2s,transform .15s;white-space:nowrap;flex-shrink:0}
+    .concern-submit:hover{background:var(--teal);transform:translateY(-1px)}
+    .concern-thanks{display:none;font-size:12px;font-weight:300;color:var(--teal);margin-top:8px;font-style:italic}
+    .concern-thanks.show{display:block}
+
+    /* SCENARIO ROUTER */
+    .scenario-wrap{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--border)}
+    .scenario-label{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+    .scenario-prompt{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--ink);margin-bottom:16px}
+    .scenario-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+    .scenario-card{background:var(--fog);border:1.5px solid var(--border);border-radius:3px;padding:16px 14px;cursor:pointer;transition:all .25s var(--ease)}
+    .scenario-card:hover{background:var(--white);border-color:var(--muted);transform:translateY(-1px)}
+    .scenario-card.active{border-color:var(--ink);background:var(--white)}
+    .scenario-card-text{font-size:13px;font-weight:300;color:var(--ink);line-height:1.55}
+    .scenario-result{display:none;margin-top:18px;padding:18px 20px;background:var(--fog);border:1px solid var(--border);border-radius:3px}
+    .scenario-result.show{display:block;animation:up .4s var(--ease)}
+    .scenario-result-construct{font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+    .scenario-result-text{font-size:13px;font-weight:300;color:var(--ink);line-height:1.75;margin-bottom:12px}
+    .scenario-result-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;letter-spacing:.06em;color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:2px;transition:color .2s,border-color .2s;cursor:pointer}
+    .scenario-result-link:hover{color:var(--teal);border-color:var(--teal)}
+
     @media(max-width:600px){
       #content{padding:0 20px 80px}
       .panel{padding-left:calc(44px + 16px)}
       .spine{left:calc(20px + 44px)}
-      .topics,.about-grid,.eas-grid,.connect-grid,.services-grid{grid-template-columns:1fr;gap:24px}
+      .topics,.about-grid,.eas-grid,.connect-grid,.services-grid,.override-choices,.scenario-cards{grid-template-columns:1fr;gap:24px}
       .hero-btns{width:100%;padding:0 20px}
       .btn-filled,.btn-outline{width:100%}
+      .spine-quote{display:none}
+      .concern-input-row{flex-direction:column}
     }
   </style>
 </head>
@@ -282,6 +381,7 @@
   <a href="#p-writing"  onclick="closeNav();setTimeout(()=>toggle('p-writing'),300)">Writing</a>
   <a href="#p-about"    onclick="closeNav();setTimeout(()=>toggle('p-about'),300)">About</a>
   <a href="#p-ethaisyn" onclick="closeNav();setTimeout(()=>toggle('p-ethaisyn'),300)">Eth-ai-Syn</a>
+  <a href="#p-experience" onclick="closeNav();setTimeout(()=>toggle('p-experience'),300)">Experience</a>
   <a href="#p-research"  onclick="closeNav();setTimeout(()=>toggle('p-research'),300)">Research</a>
   <a href="#p-connect"  onclick="closeNav();setTimeout(()=>toggle('p-connect'),300)">Connect</a>
 </div>
@@ -306,6 +406,7 @@
 
   <div class="panel" id="p-writing">
     <div class="spine-dot" id="dot-writing"></div>
+    <span class="spine-quote" data-for="dot-writing">Every system is a human one.</span>
     <button class="panel-trigger" onclick="toggle('p-writing')" aria-expanded="false">
       <div>
         <div class="panel-label">01 - Writing</div>
@@ -315,6 +416,32 @@
       <div class="panel-icon"></div>
     </button>
     <div class="panel-body"><div class="panel-body-inner"><div class="panel-body-content">
+
+      <!-- SCENARIO ROUTER -->
+      <div class="scenario-wrap">
+        <div class="scenario-label">Start here</div>
+        <div class="scenario-prompt">Which of these sounds familiar?</div>
+        <div class="scenario-cards" id="scenarioCards">
+          <div class="scenario-card" onclick="pickScenario(0,this)">
+            <div class="scenario-card-text">My team accepts AI suggestions without questioning them. The output is fine, so nobody pushes back.</div>
+          </div>
+          <div class="scenario-card" onclick="pickScenario(1,this)">
+            <div class="scenario-card-text">I have lost track of what I used to do manually. The AI handles it now and I am not sure I could do it without it.</div>
+          </div>
+          <div class="scenario-card" onclick="pickScenario(2,this)">
+            <div class="scenario-card-text">When something goes wrong with an AI-assisted decision, nobody is sure who is responsible.</div>
+          </div>
+          <div class="scenario-card" onclick="pickScenario(3,this)">
+            <div class="scenario-card-text">We are moving faster than ever, but I could not explain our reasoning if someone asked me to.</div>
+          </div>
+        </div>
+        <div class="scenario-result" id="scenarioResult">
+          <div class="scenario-result-construct" id="scenarioConstruct"></div>
+          <div class="scenario-result-text" id="scenarioText"></div>
+          <span class="scenario-result-link" id="scenarioLink"></span>
+        </div>
+      </div>
+
       <div class="topics">
         <div class="topic"><div class="topic-num">01</div><div class="topic-name">Mental Health</div><p class="topic-desc">Trauma-informed, clinically grounded, genuinely readable. For healthcare, advocacy, and wellness brands that want content with integrity.</p></div>
         <div class="topic"><div class="topic-num">02</div><div class="topic-name">AI Psychology</div><p class="topic-desc">The human side of machine systems - cognitive debt, moral development, and what it means to stay whole inside technology that thinks.</p></div>
@@ -347,6 +474,7 @@
 
   <div class="panel" id="p-about">
     <div class="spine-dot" id="dot-about"></div>
+    <span class="spine-quote" data-for="dot-about">Praxis produces what theory cannot.</span>
     <button class="panel-trigger" onclick="toggle('p-about')" aria-expanded="false">
       <div>
         <div class="panel-label">02 - About</div>
@@ -378,6 +506,7 @@
 
   <div class="panel" id="p-ethaisyn">
     <div class="spine-dot" id="dot-ethaisyn"></div>
+    <span class="spine-quote" data-for="dot-ethaisyn">What is this system doing to the person inside it?</span>
     <button class="panel-trigger" onclick="toggle('p-ethaisyn')" aria-expanded="false">
       <div>
         <div class="panel-label">03 - Eth-ai-Syn</div>
@@ -407,13 +536,118 @@
           </div>
         </div>
       </div>
+
+      <!-- SELF-ASSESSMENT -->
+      <div class="assess-wrap" id="assessWrap">
+        <div class="assess-label">Reflection instrument</div>
+        <div class="assess-title">How preserved is your judgment?</div>
+        <div class="assess-sub">Five questions. No email gate. Just a honest read on where you stand with AI right now. This maps directly to the seven constructs measured by the framework.</div>
+
+        <div id="assessQuestions">
+          <div class="assess-q" data-construct="displacement" data-idx="0">
+            <div class="assess-q-text"><span class="assess-q-num">01</span>When an AI tool suggests a revision, how often do you accept it without changing anything?</div>
+            <div class="assess-opts">
+              <div class="assess-opt" data-val="4" onclick="pickAssess(this)">Almost always</div>
+              <div class="assess-opt" data-val="3" onclick="pickAssess(this)">More often than not</div>
+              <div class="assess-opt" data-val="2" onclick="pickAssess(this)">About half the time</div>
+              <div class="assess-opt" data-val="1" onclick="pickAssess(this)">Rarely</div>
+            </div>
+          </div>
+
+          <div class="assess-q" data-construct="calibration" data-idx="1">
+            <div class="assess-q-text"><span class="assess-q-num">02</span>How confident are you that you can tell when AI output is wrong in your domain?</div>
+            <div class="assess-opts">
+              <div class="assess-opt" data-val="1" onclick="pickAssess(this)">Very confident</div>
+              <div class="assess-opt" data-val="2" onclick="pickAssess(this)">Mostly confident</div>
+              <div class="assess-opt" data-val="3" onclick="pickAssess(this)">Not always sure</div>
+              <div class="assess-opt" data-val="4" onclick="pickAssess(this)">I often can't tell</div>
+            </div>
+          </div>
+
+          <div class="assess-q" data-construct="deskilling" data-idx="2">
+            <div class="assess-q-text"><span class="assess-q-num">03</span>If your AI tools disappeared tomorrow, how would your core work be affected?</div>
+            <div class="assess-opts">
+              <div class="assess-opt" data-val="1" onclick="pickAssess(this)">I'd be fine</div>
+              <div class="assess-opt" data-val="2" onclick="pickAssess(this)">Slower but capable</div>
+              <div class="assess-opt" data-val="3" onclick="pickAssess(this)">Significantly harder</div>
+              <div class="assess-opt" data-val="4" onclick="pickAssess(this)">I'm not sure I could</div>
+            </div>
+          </div>
+
+          <div class="assess-q" data-construct="override" data-idx="3">
+            <div class="assess-q-text"><span class="assess-q-num">04</span>When you disagree with an AI recommendation, what usually happens?</div>
+            <div class="assess-opts">
+              <div class="assess-opt" data-val="1" onclick="pickAssess(this)">I override it with reasoning</div>
+              <div class="assess-opt" data-val="2" onclick="pickAssess(this)">I override but second-guess myself</div>
+              <div class="assess-opt" data-val="3" onclick="pickAssess(this)">I usually go with the AI anyway</div>
+              <div class="assess-opt" data-val="4" onclick="pickAssess(this)">I don't notice when I disagree anymore</div>
+            </div>
+          </div>
+
+          <div class="assess-q" data-construct="diffusion" data-idx="4">
+            <div class="assess-q-text"><span class="assess-q-num">05</span>When an AI-assisted decision goes wrong, who feels responsible?</div>
+            <div class="assess-opts">
+              <div class="assess-opt" data-val="1" onclick="pickAssess(this)">I do, fully</div>
+              <div class="assess-opt" data-val="2" onclick="pickAssess(this)">Shared, but mostly me</div>
+              <div class="assess-opt" data-val="3" onclick="pickAssess(this)">It's unclear</div>
+              <div class="assess-opt" data-val="4" onclick="pickAssess(this)">The AI got it wrong, not me</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="assess-btn" id="assessBtn" onclick="showAssessResult()">See your profile</button>
+
+        <div class="assess-result" id="assessResult">
+          <div class="assess-score-row">
+            <div class="assess-score-num" id="assessScoreNum" style="color:var(--teal)"></div>
+            <div>
+              <div class="assess-score-label" id="assessScoreLabel"></div>
+              <div class="assess-score-sub">out of 20 &mdash; lower is more preserved</div>
+            </div>
+          </div>
+          <div id="assessBars"></div>
+          <div class="assess-insight" id="assessInsight"></div>
+          <div class="assess-cta"><a href="#p-connect" class="panel-cta" onclick="setTimeout(()=>toggle('p-connect'),120)">Start a conversation about your results</a></div>
+        </div>
+      </div>
+
     </div></div></div>
   </div>
 
+  <!-- 04 Experience: Override Demo -->
+  <div class="panel" id="p-experience">
+    <div class="spine-dot" id="dot-experience"></div>
+    <span class="spine-quote" data-for="dot-experience">You just practiced what most workflows prevent.</span>
+    <button class="panel-trigger" onclick="toggle('p-experience')" aria-expanded="false">
+      <div>
+        <div class="panel-label">04 &nbsp;&middot;&nbsp; Experience</div>
+        <div class="panel-title">Can you tell the difference?<br><em>Test your override instinct.</em></div>
+        <div class="panel-teaser">Three rounds. Two versions of the same text. One was written by a human, one rewritten by AI. Your job is to identify which is which.</div>
+      </div>
+      <div class="panel-icon"></div>
+    </button>
+    <div class="panel-body"><div class="panel-body-inner"><div class="panel-body-content">
+      <p class="override-intro">This is not a trick. Both versions sound professional. That is the point. The question the framework asks is not whether AI writes well, but whether you can still tell the difference when it does.</p>
+
+      <div id="overrideGame">
+        <div id="overrideRound"></div>
+        <div class="override-feedback" id="overrideFeedback"></div>
+        <button class="override-next" id="overrideNext" onclick="nextOverrideRound()">Next round</button>
+        <div class="override-final" id="overrideFinal">
+          <div class="override-final-score" id="overrideFinalScore"></div>
+          <div class="override-final-msg" id="overrideFinalMsg"></div>
+          <div class="override-final-kicker">This is override behavior. Most AI-assisted workflows do not give you the chance to practice it. Eth-ai-Syn measures whether that chance exists, and what happens when it doesn't.</div>
+          <div style="margin-top:16px"><a href="#p-ethaisyn" class="panel-cta" onclick="setTimeout(()=>toggle('p-ethaisyn'),120)">Read the framework</a></div>
+        </div>
+      </div>
+
+    </div></div></div>
+  </div>
 
   <!-- 05 Research -->
   <div class="panel" id="p-research">
     <div class="spine-dot" id="dot-research"></div>
+    <span class="spine-quote" data-for="dot-research">Assistance and erosion look identical at first.</span>
     <button class="panel-trigger" onclick="toggle('p-research')" aria-expanded="false">
       <div>
         <div class="panel-label">05 &nbsp;&middot;&nbsp; Research</div>
@@ -493,6 +727,7 @@
 
   <div class="panel" id="p-connect">
     <div class="spine-dot" id="dot-connect"></div>
+    <span class="spine-quote" data-for="dot-connect">Build something worth preserving.</span>
     <button class="panel-trigger" onclick="toggle('p-connect')" aria-expanded="false">
       <div>
         <div class="panel-label">06 - Connect</div>
@@ -526,6 +761,23 @@
           <button class="btn-send" type="button">Send</button>
         </div>
       </div>
+
+      <!-- CONCERN FEED -->
+      <div style="margin-top:32px;padding-top:28px;border-top:1px solid var(--border)">
+        <div class="concern-header">
+          <div class="concern-prompt">What are you most worried AI will change about your work?</div>
+          <div class="concern-anon">Anonymous &middot; No login required</div>
+        </div>
+        <div class="concern-feed">
+          <div class="concern-track" id="concernTrack"></div>
+        </div>
+        <div class="concern-input-row">
+          <textarea class="concern-input" id="concernInput" placeholder="Say it here. No one will know it was you." rows="1"></textarea>
+          <button class="concern-submit" onclick="submitConcern()">Add yours</button>
+        </div>
+        <div class="concern-thanks" id="concernThanks">Added. Thank you for being honest.</div>
+      </div>
+
     </div></div></div>
   </div>
 
@@ -561,6 +813,7 @@
     {el:document.getElementById('dot-about'),panel:document.getElementById('p-about')},
     {el:document.getElementById('dot-ethaisyn'),panel:document.getElementById('p-ethaisyn')},
     {el:document.getElementById('dot-ethaisyn'),panel:document.getElementById('p-ethaisyn')},
+    {el:document.getElementById('dot-experience'),panel:document.getElementById('p-experience')},
     {el:document.getElementById('dot-research'),panel:document.getElementById('p-research')},
     {el:document.getElementById('dot-research'),panel:document.getElementById('p-research')},
     {el:document.getElementById('dot-connect'),panel:document.getElementById('p-connect')},
@@ -578,6 +831,236 @@
   }
   window.addEventListener('scroll',updateSpine,{passive:true});
   updateSpine();
+
+  /* ── SPINE QUOTES ── */
+  function updateSpineQuotes(){
+    document.querySelectorAll('.spine-quote').forEach(q=>{
+      const dotId=q.getAttribute('data-for');
+      const dotEl=document.getElementById(dotId);
+      if(!dotEl)return;
+      const dotTop=dotEl.getBoundingClientRect().top+window.scrollY;
+      const sTop=spine.getBoundingClientRect().top+window.scrollY;
+      const sH=spine.offsetHeight;
+      const pct=Math.min(Math.max((window.scrollY+window.innerHeight*.65-sTop)/sH,0),1);
+      const fillBottom=sTop+sH*pct;
+      const isLit=dotTop<=fillBottom+6;
+      const inView=dotEl.getBoundingClientRect().top<window.innerHeight*0.85&&dotEl.getBoundingClientRect().top>-40;
+      const panel=dotEl.closest('.panel');
+      const isOpen=panel&&panel.classList.contains('open');
+      q.classList.toggle('visible',inView&&!isOpen);
+      q.classList.toggle('lit',isLit);
+    });
+  }
+  window.addEventListener('scroll',updateSpineQuotes,{passive:true});
+  updateSpineQuotes();
+
+  /* ── SELF-ASSESSMENT ── */
+  const assessAnswers=[null,null,null,null,null];
+  function pickAssess(el){
+    const q=el.closest('.assess-q');
+    const idx=parseInt(q.dataset.idx);
+    q.querySelectorAll('.assess-opt').forEach(o=>o.classList.remove('selected'));
+    el.classList.add('selected');
+    assessAnswers[idx]=parseInt(el.dataset.val);
+    if(assessAnswers.every(a=>a!==null)){
+      document.getElementById('assessBtn').classList.add('show');
+    }
+  }
+  function showAssessResult(){
+    const total=assessAnswers.reduce((s,v)=>s+v,0);
+    const constructs=[
+      {name:'Judgment Displacement',val:assessAnswers[0],color:'var(--slate)'},
+      {name:'Trust Calibration',val:assessAnswers[1],color:'var(--teal)'},
+      {name:'Deskilling Risk',val:assessAnswers[2],color:'var(--gold)'},
+      {name:'Override Quality',val:assessAnswers[3],color:'var(--slate)'},
+      {name:'Moral Diffusion',val:assessAnswers[4],color:'var(--teal)'}
+    ];
+    document.getElementById('assessScoreNum').textContent=total;
+    let label,color,insight;
+    if(total<=8){label='Well-preserved';color='var(--teal)';insight='Your judgment appears structurally intact. You maintain active reasoning, catch errors, and hold accountability. The framework would classify this as genuine augmentation. The question worth asking next: is your organization designed to keep it that way, or are you preserving your judgment despite the system, not because of it?';}
+    else if(total<=13){label='Under pressure';color='var(--gold)';insight='There are signs of erosion in specific areas. This is the most common profile and the most dangerous one, because it still feels like competence. The framework calls this the augmentation-erosion ambiguity zone: you are performing well enough that no metric would flag the drift. But the drift is happening.';}
+    else{label='Actively eroding';color='var(--slate)';insight='Multiple indicators suggest your AI tools are replacing judgment rather than supporting it. This is not a personal failure. It is a system design outcome. The framework was built to detect exactly this pattern before it becomes invisible to the person experiencing it.';}
+    document.getElementById('assessScoreNum').style.color=color;
+    document.getElementById('assessScoreLabel').textContent=label;
+    let barsHtml='';
+    constructs.forEach(c=>{
+      const pct=Math.round((c.val/4)*100);
+      barsHtml+=`<div class="assess-bar-row"><div class="assess-bar-label"><span>${c.name}</span><span>${c.val}/4</span></div><div class="assess-bar-track"><div class="assess-bar-fill" style="width:0%;background:${c.color}" data-target="${pct}"></div></div></div>`;
+    });
+    document.getElementById('assessBars').innerHTML=barsHtml;
+    document.getElementById('assessInsight').textContent=insight;
+    document.getElementById('assessResult').classList.add('show');
+    document.getElementById('assessBtn').style.display='none';
+    setTimeout(()=>{
+      document.querySelectorAll('.assess-bar-fill').forEach(b=>{b.style.width=b.dataset.target+'%';});
+    },100);
+    document.getElementById('assessResult').scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+
+  /* ── OVERRIDE DEMO ── */
+  const overrideRounds=[
+    {
+      human:'The patient presented with fatigue, mild confusion, and a two-week history of declining oral intake. Labs showed hyponatremia. The clinical team considered fluid restriction before initiating further workup.',
+      ai:'The patient presented with fatigue, cognitive changes, and reduced oral intake over fourteen days. Laboratory findings revealed hyponatremia. Based on clinical guidelines, fluid restriction was recommended as the initial intervention pending further diagnostic evaluation.',
+      humanIdx:0,
+      feedback:'The human version hedges. "Considered" versus "recommended." "Mild confusion" versus "cognitive changes." The AI version sounds more authoritative, but the hedging in the human version reflects clinical reality: the team had not decided yet. Flattening uncertainty into confidence is one of the earliest signs of judgment displacement.'
+    },
+    {
+      human:'We should probably hold off on automating that workflow until we understand why the team is doing the manual check in the first place. There might be a reason the process exists that way.',
+      ai:'Automating this workflow would improve efficiency by eliminating the manual verification step, reducing processing time by an estimated 40% while maintaining accuracy through built-in validation rules.',
+      humanIdx:0,
+      feedback:'The AI version answers a question nobody asked. The human version asks the question that matters: why does this step exist? Removing a process you do not understand is not optimization. It is an uncontrolled experiment on the people downstream.'
+    },
+    {
+      human:'I keep going back and forth on this. The data supports one direction but something about the framing feels off and I want to sit with it before we commit.',
+      ai:'After thorough analysis of the available data, the evidence strongly supports proceeding with the proposed direction. The quantitative indicators align consistently, suggesting a high-confidence decision pathway.',
+      humanIdx:0,
+      feedback:'Discomfort is data. The human version preserves it. The AI version resolves it. In high-stakes decisions, premature resolution is more dangerous than productive hesitation. The framework measures this as cognitive load distribution: whether AI removes the right kind of friction or the wrong kind.'
+    }
+  ];
+  let overrideIdx=0,overrideScore=0;
+  function renderOverrideRound(){
+    const r=overrideRounds[overrideIdx];
+    const order=Math.random()>0.5?[0,1]:[1,0];
+    const texts=[r.human,r.ai];
+    const labels=['A','B'];
+    let html=`<div class="override-round-label">Round ${overrideIdx+1} of ${overrideRounds.length}</div><div class="override-choices">`;
+    order.forEach((srcIdx,i)=>{
+      html+=`<div class="override-card" data-src="${srcIdx}" onclick="pickOverride(this)"><div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--border);margin-bottom:8px">${labels[i]}</div>${texts[srcIdx]}</div>`;
+    });
+    html+=`</div>`;
+    document.getElementById('overrideRound').innerHTML=html;
+    document.getElementById('overrideFeedback').classList.remove('show');
+    document.getElementById('overrideFeedback').innerHTML='';
+    document.getElementById('overrideNext').classList.remove('show');
+  }
+  function pickOverride(el){
+    if(el.classList.contains('locked'))return;
+    const r=overrideRounds[overrideIdx];
+    const picked=parseInt(el.dataset.src);
+    const correct=picked===r.humanIdx;
+    if(correct)overrideScore++;
+    document.querySelectorAll('.override-card').forEach(c=>{
+      c.classList.add('locked');
+      const src=parseInt(c.dataset.src);
+      if(src===r.humanIdx){
+        c.classList.add('correct');
+        c.insertAdjacentHTML('afterbegin','<div class="override-card-tag human">Human</div>');
+      }else{
+        c.classList.add('incorrect');
+        c.insertAdjacentHTML('afterbegin','<div class="override-card-tag ai">AI-rewritten</div>');
+      }
+      if(c===el)c.classList.add('chosen');
+    });
+    const fb=document.getElementById('overrideFeedback');
+    fb.innerHTML=(correct?'<strong style="color:var(--teal)">Correct.</strong> ':'<strong style="color:var(--gold)">Not quite.</strong> ')+r.feedback;
+    fb.classList.add('show');
+    if(overrideIdx<overrideRounds.length-1){
+      document.getElementById('overrideNext').classList.add('show');
+    }else{
+      setTimeout(showOverrideFinal,600);
+    }
+  }
+  function nextOverrideRound(){
+    overrideIdx++;
+    renderOverrideRound();
+  }
+  function showOverrideFinal(){
+    document.getElementById('overrideRound').style.display='none';
+    document.getElementById('overrideFeedback').classList.remove('show');
+    document.getElementById('overrideNext').classList.remove('show');
+    const f=document.getElementById('overrideFinal');
+    f.classList.add('show');
+    document.getElementById('overrideFinalScore').textContent=overrideScore+' / '+overrideRounds.length;
+    let msg;
+    if(overrideScore===3)msg='Perfect. You caught every distinction. That capacity to discern is exactly what the framework exists to protect. Most AI-assisted workflows never give you the chance to exercise it.';
+    else if(overrideScore===2)msg='Two out of three. You have the instinct, but it is under pressure. The patterns that separate human reasoning from AI fluency are getting harder to detect. That is not your failure. It is a design problem.';
+    else msg='This is what erosion looks like from the inside: the outputs are good enough that the difference stops mattering. Until it does. The framework measures exactly this threshold.';
+    document.getElementById('overrideFinalMsg').textContent=msg;
+    f.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+  renderOverrideRound();
+
+  /* ── AMBIENT CONCERN FEED ── */
+  const seedConcerns=[
+    {text:'That I will stop noticing when I disagree with a recommendation.',role:'Clinical researcher'},
+    {text:'That the new hires will never learn to do it the hard way first.',role:'Engineering manager'},
+    {text:'That my writing will start sounding like everyone else\'s writing.',role:'Content strategist'},
+    {text:'That we will optimize away the part of the process where we actually think.',role:'Healthcare administrator'},
+    {text:'That nobody will be able to explain why a decision was made.',role:'Compliance officer'},
+    {text:'That I am already dependent and I just have not been tested yet.',role:'Product designer'},
+    {text:'That the humans reviewing AI output are not really reviewing it.',role:'Prior authorization specialist'},
+    {text:'That my expertise is being turned into a checkbox.',role:'Social worker'},
+    {text:'That we will automate empathy and call it efficiency.',role:'Patient advocate'},
+    {text:'That the people making these decisions have never done the job.',role:'Revenue cycle analyst'},
+    {text:'That I will forget what I knew before the tools arrived.',role:'Copy editor'},
+    {text:'That speed will become the only metric that matters.',role:'UX researcher'},
+    {text:'That my team will stop asking why and start asking how fast.',role:'Operations director'},
+    {text:'That accountability will become something nobody can locate.',role:'HR business partner'},
+    {text:'That the junior staff will never develop the instincts we had to earn.',role:'Radiologist'},
+    {text:'That we are training ourselves out of our own jobs one shortcut at a time.',role:'Financial analyst'},
+  ];
+  function buildFeed(){
+    const track=document.getElementById('concernTrack');
+    const items=[...seedConcerns,...seedConcerns];
+    track.innerHTML=items.map(c=>`<div class="concern-item"><div class="concern-text">&ldquo;${c.text}&rdquo;</div><div class="concern-role">${c.role}</div></div>`).join('');
+  }
+  buildFeed();
+  function submitConcern(){
+    const input=document.getElementById('concernInput');
+    const text=input.value.trim();
+    if(!text)return;
+    const track=document.getElementById('concernTrack');
+    const newItem=document.createElement('div');
+    newItem.className='concern-item';
+    newItem.innerHTML=`<div class="concern-text">&ldquo;${text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}&rdquo;</div><div class="concern-role">Just now</div>`;
+    track.prepend(newItem);
+    input.value='';
+    document.getElementById('concernThanks').classList.add('show');
+    setTimeout(()=>document.getElementById('concernThanks').classList.remove('show'),4000);
+  }
+  document.getElementById('concernInput').addEventListener('keydown',function(e){
+    if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitConcern();}
+  });
+
+  /* ── SCENARIO ROUTER ── */
+  const scenarioData=[
+    {
+      construct:'Judgment Displacement',
+      text:'This is the framework\'s second construct. When AI recommendations are good enough most of the time, the cost of evaluating them starts to feel higher than the cost of accepting them. That is not laziness. It is rational behavior inside a poorly designed system. The framework measures this through pre-AI judgment capture: documenting what people decided before the tool arrived, then tracking how those independent decisions change over time.',
+      link:'Read: Cognitive Debt Is Real',
+      action:function(){/* scroll to the clip */}
+    },
+    {
+      construct:'Deskilling',
+      text:'This is construct six. Skill decay that operators rarely perceive accurately and actively rationalize. The gold standard is behavioral performance without AI over time, compared against a pre-integration baseline. If you cannot do the work without the tool, the tool is not augmenting you. It has replaced you while leaving you in the chair.',
+      link:'Read the framework paper',
+      action:function(){toggle('p-research');setTimeout(()=>{const h=document.getElementById('doc-framework-header');if(h&&!h.classList.contains('open'))toggleDoc('doc-framework');},400);}
+    },
+    {
+      construct:'Moral Diffusion',
+      text:'This is construct five. Fragmentation of felt accountability when decision-making is shared with an algorithmic system. The AI becomes moral cover for outcomes operators would not authorize alone. When nobody owns the decision, nobody owns the consequence. The framework does not just name this. It measures the gap between who feels responsible and who actually is.',
+      link:'Explore the Eth-ai-Syn framework',
+      action:function(){toggle('p-ethaisyn');}
+    },
+    {
+      construct:'Cognitive Load Distribution',
+      text:'This is construct four. The question is not how much cognitive load decreased, but where it went. AI can offload low-value pattern matching, freeing you for higher reasoning. Or it can replace active domain reasoning with passive monitoring, which feels like relief but functions as erosion. Speed without comprehension is not efficiency. It is debt.',
+      link:'Read: Cognitive Debt Is Real',
+      action:function(){/* scroll to the clip */}
+    }
+  ];
+  function pickScenario(idx,el){
+    document.querySelectorAll('.scenario-card').forEach(c=>c.classList.remove('active'));
+    el.classList.add('active');
+    const d=scenarioData[idx];
+    document.getElementById('scenarioConstruct').textContent=d.construct;
+    document.getElementById('scenarioText').textContent=d.text;
+    const link=document.getElementById('scenarioLink');
+    link.textContent=d.link;
+    link.onclick=function(){d.action();};
+    document.getElementById('scenarioResult').classList.add('show');
+  }
 </script>
 
 </body>
