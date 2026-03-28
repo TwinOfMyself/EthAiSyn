@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Cost of Clear Eyes | EthAiSyn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream:       #f7f3ec;
+      --cream-dark:  #ede8df;
+      --gold:        #a07830;
+      --gold-light:  #c49a50;
+      --gold-faint:  rgba(160,120,48,0.08);
+      --slate:       #3d4f5c;
+      --slate-mid:   #4d6270;
+      --slate-light: #6b8090;
+      --teal:        #4a7c7e;
+      --teal-faint:  rgba(74,124,126,0.10);
+      --ink:         #1e2a30;
+      --rule:        #d4c9b0;
+      --rule-faint:  rgba(212,201,176,0.4);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      background-color: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.5;
+    }
+
+    /* ── SITE HEADER ── */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 2.5rem;
+      background: rgba(247,243,236,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--rule-faint);
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      text-decoration: none;
+    }
+
+    .logo-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .logo-bars span {
+      display: block;
+      height: 2px;
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    .logo-bars .bar-1 { width: 26px; background: var(--slate); }
+    .logo-bars .bar-2 { width: 20px; background: var(--teal); }
+    .logo-bars .bar-3 { width: 14px; background: var(--gold); }
+
+    .logo-group:hover .bar-1,
+    .logo-group:hover .bar-2,
+    .logo-group:hover .bar-3 { width: 26px; }
+
+    .logo-wordmark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: var(--slate);
+    }
+
+    .site-nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .site-nav a {
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .site-nav a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 2.5rem 5rem;
+      overflow: hidden;
+      background: var(--cream);
+    }
+
+    .hero-deco {
+      position: absolute;
+      top: 50%;
+      right: -0.05em;
+      transform: translateY(-52%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(18rem, 38vw, 42rem);
+      font-weight: 600;
+      font-style: italic;
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(160,120,48,0.13);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .hero-rule {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--rule) 20%, var(--rule) 80%, transparent);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 760px;
+    }
+
+    .hero-kicker {
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.6rem;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 0.7s ease 0.2s forwards;
+    }
+
+    .hero-kicker span { color: var(--slate-light); margin: 0 0.4em; }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 7vw, 6rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.8s ease 0.38s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--gold);
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--slate-mid);
+      max-width: 580px;
+      margin-bottom: 2.2rem;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: fadeUp 0.7s ease 0.54s forwards;
+    }
+
+    .hero-byline {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--slate-light);
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.6s ease 0.68s forwards;
+    }
+
+    .hero-byline-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--gold-light);
+      flex-shrink: 0;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── ARTICLE LAYOUT ── */
+    .article-outer {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 4rem;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 5rem 2.5rem 7rem;
+      align-items: start;
+    }
+
+    /* ── PROSE ── */
+    .prose p {
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: var(--ink);
+      margin-bottom: 1.6rem;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+
+    .prose p.visible { opacity: 1; transform: translateY(0); }
+
+    .prose em { font-style: italic; }
+
+    .prose strong {
+      font-weight: 500;
+      color: var(--slate);
+    }
+
+    /* ── PULL QUOTE ── */
+    .pull-quote {
+      border-left: 2px solid var(--gold);
+      padding: 0.4rem 0 0.4rem 1.8rem;
+      margin: 2.8rem 0;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+
+    .pull-quote.visible { opacity: 1; transform: translateY(0); }
+
+    .pull-quote p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--slate);
+      margin-bottom: 0 !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    /* ── SECTION BREAK ── */
+    .section-break {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 2.8rem 0;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .section-break.visible { opacity: 1; transform: translateY(0); }
+
+    .section-break span {
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--gold-light);
+    }
+
+    .section-break::before,
+    .section-break::after {
+      content: '';
+      display: block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold-light);
+      flex-shrink: 0;
+    }
+
+    /* ── CALLOUT BOX ── */
+    .callout-box {
+      border: 1px solid var(--teal);
+      background: var(--teal-faint);
+      border-radius: 2px;
+      padding: 1.5rem 1.75rem;
+      margin: 2.4rem 0;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+
+    .callout-box.visible { opacity: 1; transform: translateY(0); }
+
+    .callout-label {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.7rem;
+    }
+
+    .callout-box p {
+      font-size: 0.9rem !important;
+      line-height: 1.75 !important;
+      color: var(--slate-mid) !important;
+      margin-bottom: 0.5rem !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .callout-box a {
+      color: var(--teal);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+    }
+
+    .callout-box a:hover { text-decoration: underline; }
+
+    /* ── CLOSING ── */
+    .closing {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule-faint);
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+
+    .closing.visible { opacity: 1; transform: translateY(0); }
+
+    .closing-tag {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--slate-mid);
+      margin-bottom: 0.4rem;
+    }
+
+    .closing-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+    }
+
+    /* ── SIDEBAR ── */
+    .article-sidebar {
+      position: sticky;
+      top: 6rem;
+    }
+
+    .sidebar-block {
+      margin-bottom: 2.5rem;
+    }
+
+    .sidebar-label {
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--rule-faint);
+    }
+
+    .term-item {
+      margin-bottom: 1.2rem;
+    }
+
+    .term-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--slate);
+      margin-bottom: 0.25rem;
+    }
+
+    .term-def {
+      font-size: 0.78rem;
+      line-height: 1.65;
+      color: var(--slate-light);
+    }
+
+    .sources-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sources-list li {
+      font-size: 0.72rem;
+      line-height: 1.65;
+      color: var(--slate-light);
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid var(--rule-faint);
+    }
+
+    .sources-list li:last-child { border-bottom: none; margin-bottom: 0; }
+
+    .sources-list em { font-style: italic; }
+
+    .sources-list a {
+      display: inline-block;
+      margin-top: 0.2rem;
+      color: var(--teal);
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+    }
+
+    .sources-list a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      border-top: 1px solid var(--rule-faint);
+      padding: 2rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .footer-wordmark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: var(--slate-light);
+    }
+
+    .footer-copy {
+      font-size: 0.7rem;
+      color: var(--slate-light);
+      letter-spacing: 0.04em;
+    }
+
+    .footer-copy a { color: var(--gold); text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .article-outer {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        padding: 3rem 1.5rem 5rem;
+      }
+      .article-sidebar {
+        position: static;
+        border-top: 1px solid var(--rule);
+        padding-top: 2.5rem;
+      }
+      .hero { padding: 0 1.5rem 4rem; min-height: 85vh; }
+      .site-header { padding: 1rem 1.5rem; }
+      .site-nav a:not(:first-child) { display: none; }
+      .hero-deco { font-size: 16rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <a href="/EthAiSyn/" class="logo-group">
+      <div class="logo-bars">
+        <span class="bar-1"></span>
+        <span class="bar-2"></span>
+        <span class="bar-3"></span>
+      </div>
+      <span class="logo-wordmark">EthAi Syn</span>
+    </a>
+    <nav class="site-nav">
+      <a href="/EthAiSyn/">Home</a>
+      <a href="/EthAiSyn/articles">Articles</a>
+      <a href="/EthAiSyn/framework">Framework</a>
+      <a href="/EthAiSyn/about">About</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-deco" aria-hidden="true">C</div>
+    <div class="hero-content">
+      <p class="hero-kicker">
+        Essay <span>·</span> Human Judgment <span>·</span> Systems &amp; Self
+      </p>
+      <h1 class="hero-title">The Cost of <em>Clear Eyes</em></h1>
+      <p class="hero-subtitle">
+        On re-entering the world after surviving it — and what that teaches us about the systems we almost agreed to disappear inside.
+      </p>
+      <div class="hero-byline">
+        <span>Mercedez Lopez</span>
+        <span class="hero-byline-dot"></span>
+        <span>Founder, EthAiSyn</span>
+        <span class="hero-byline-dot"></span>
+        <span>March 2026</span>
+      </div>
+    </div>
+    <div class="hero-rule"></div>
+  </section>
+
+  <!-- ARTICLE -->
+  <div class="article-outer">
+
+    <!-- MAIN PROSE -->
+    <main class="article-main">
+      <div class="prose">
+
+        <p>There are places I have stood in twice. Once with the eyes I was given. Once with the eyes I had to earn.</p>
+
+        <p>For six years, I traveled for work. I moved through airports, cities, conference rooms, and corridors with the particular efficiency of someone who believes they understand what they are looking at. I was competent. I was present. I filed what I saw into the appropriate mental folders and moved on. What I did not yet understand was that my filing system — the entire internal architecture of how I interpreted the world — had been built by a version of me that had never been tested by the possibility of not being here.</p>
+
+        <p>Then life interrupted the arrangement. Significantly. Twice.</p>
+
+        <p>I am not going to tell you what happened. That is not what this essay is about. What I will tell you is this: when I came back — when I re-entered the ordinary world of tasks and systems and professional expectations — I could see things I had not been able to see before. Not because I was wiser in some performed sense. Because the noise had stopped long enough for me to hear what I actually thought.</p>
+
+        <div class="pull-quote">
+          <p>Clarity is not a reward for suffering. It is what happens when a system loses its grip on you long enough for you to look at it directly.</p>
+        </div>
+
+        <p>What I looked at directly was this: the systems I had been operating inside — healthcare, operations, corporate process — were not designed to preserve the people working within them. They were designed to preserve themselves. And in the service of that preservation, they had quietly been borrowing from the people inside. Not dramatically. Not in ways that triggered alarms. Just — steadily — taking a little more judgment, a little more initiative, a little more autonomous thought, and replacing it with protocol. With the path of least resistance. With the answer that the system had already decided on before the person arrived.</p>
+
+        <p>I had been efficient inside those systems. I had been good at them. And I had not noticed the cost.</p>
+
+        <div class="section-break"><span></span></div>
+
+        <p>There is a name for what I was describing, though I did not have it yet: <strong>judgment displacement</strong>. The gradual migration of decision-making authority away from the human and toward the system — not through coercion, but through accumulated small surrenders that each seem reasonable in isolation. The system offers an answer. You accept it. The system offers another. You accept that too. Eventually the question of what <em>you</em> think stops feeling urgent, because the system has been answering reliably and you have other things to do.</p>
+
+        <p>This is not a malfunction. This is the design. And it was already well underway in human systems long before AI arrived to accelerate it.</p>
+
+        <p>What AI does is compress the timeline. What might have taken five years of gradual deskilling inside a bureaucratic process can now happen in a single tool adoption cycle. The feedback feels good — the output is cleaner, the decisions come faster, the friction disappears. What also disappears, quietly, is the capacity that produced the judgment that was worth automating in the first place.</p>
+
+        <div class="callout-box">
+          <p class="callout-label">Independent Convergence</p>
+          <p>In 2026, Neural and Knowledge Systems Architect Zoltán Varga — writing from Budapest, working from an entirely different field — published an analysis of what he termed <em>capacity-hostile environments</em>: systems that structurally undermine the human capacity required to use them well. He identified AI deskilling and judgment displacement as central mechanisms. He reached these conclusions independently, from different geography, different discipline, different lived experience.</p>
+          <p>The convergence is not a coincidence. It is a signal.</p>
+          <a href="https://vargazoltan.ai/en/blog/ai-kapacitas-ellenszenv-dontesfagy/" target="_blank" rel="noopener">vargazoltan.ai ↗</a>
+        </div>
+
+        <p>The peer-reviewed literature is beginning to catch up. Research published in <em>Artificial Intelligence Review</em> in 2025 documented AI-induced deskilling in clinical medicine — physicians losing diagnostic capability not because they became careless, but because the AI was so consistently faster and more confident that deferring to it became the rational local choice. The same pattern appears in legal practice, financial analysis, and increasingly in any domain where AI-generated output is indistinguishable from expert output to the person receiving it.</p>
+
+        <p>The problem is not the tool. The problem is what happens to the person who uses it without a framework for protecting the judgment the tool is supposed to augment.</p>
+
+        <div class="section-break"><span></span></div>
+
+        <p>What I want to say to that is not technical. It is experiential.</p>
+
+        <p>I have stood in the same place twice with different eyes. I know what it costs to build a life on a pre-approved foundation — and I know what becomes visible when that foundation is removed. What becomes visible is not chaos. It is <em>clarity.</em> The kind that only comes when the system's noise has been interrupted long enough for a person to hear what they actually think.</p>
+
+        <p>That clarity is not a luxury. It is a prerequisite for the kind of moral agency that makes a human life meaningful — and that makes AI integration genuinely safe. Not safe in the compliance sense. Safe in the sense that the human being on the other side of the interaction is still, recognizably, themselves.</p>
+
+        <div class="section-break"><span></span></div>
+
+        <p>EthAiSyn exists because of what I saw through those clear eyes. Not despite having almost lost them, but because of it.</p>
+
+        <p>The framework is not built on fear of AI. It is built on the conviction that human judgment — developed, exercised, and protected — is the variable that determines whether AI integration enriches a life or quietly contracts it. That the goal is not resistance to technology, but the preservation of the person technology is supposed to serve.</p>
+
+        <p>Reform the systems that diminish people and you do not slow down AI. You give AI something worth building toward.</p>
+
+        <p>Some of us learned the cost of clarity the hard way. Which is precisely why we are the ones who should be in the room when these systems are being designed.</p>
+
+      </div>
+
+      <div class="closing">
+        <p class="closing-tag">Human judgment, preserved.</p>
+        <p class="closing-brand">EthAi Syn</p>
+      </div>
+    </main>
+
+    <!-- SIDEBAR -->
+    <aside class="article-sidebar">
+
+      <div class="sidebar-block">
+        <p class="sidebar-label">Framework Terms</p>
+
+        <div class="term-item">
+          <p class="term-name">Judgment Displacement</p>
+          <p class="term-def">The gradual migration of decision-making authority from the human to the system — not through coercion, but through accumulated small surrenders that each seem reasonable in isolation.</p>
+        </div>
+
+        <div class="term-item">
+          <p class="term-name">Cognitive Debt</p>
+          <p class="term-def">The deferred cost of offloading thinking to AI tools. Individually invisible. Systemically significant. Collects interest over time in the form of reduced capacity.</p>
+        </div>
+
+        <div class="term-item">
+          <p class="term-name">Capacity-Hostile Environment</p>
+          <p class="term-def">A system that structurally undermines the human capacity required to use it well. Identified independently by EthAiSyn and Zoltán Varga (Budapest, 2026).</p>
+        </div>
+      </div>
+
+      <div class="sidebar-block">
+        <p class="sidebar-label">Sources</p>
+        <ol class="sources-list">
+          <li>
+            Varga, Z. Capacity-Hostile: It's Not That You're Lazy. <em>vargazoltan.ai</em>, 2026.
+            <br><a href="https://vargazoltan.ai/en/blog/ai-kapacitas-ellenszenv-dontesfagy/" target="_blank" rel="noopener">vargazoltan.ai ↗</a>
+          </li>
+          <li>
+            Natali et al. AI-Induced Deskilling in Medicine. <em>Artificial Intelligence Review</em>, Springer Nature, 2025.
+            <br><a href="https://link.springer.com/article/10.1007/s10462-025-11352-1" target="_blank" rel="noopener">springer.com ↗</a>
+          </li>
+          <li>
+            Deskilling as a structural problem: capacity-hostile environments and AI mediation. <em>AI &amp; Society</em>, Springer Nature, 2025.
+            <br><a href="https://link.springer.com/article/10.1007/s00146-025-02686-z" target="_blank" rel="noopener">springer.com ↗</a>
+          </li>
+          <li>
+            New Future of Work Report 2025. Microsoft Research, 2025.
+            <br><a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2025/12/New-Future-Of-Work-Report-2025.pdf" target="_blank" rel="noopener">microsoft.com ↗</a>
+          </li>
+        </ol>
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-left">
+      <div class="logo-bars" style="gap:3px;">
+        <span class="bar-1" style="height:2px;"></span>
+        <span class="bar-2" style="height:2px;"></span>
+        <span class="bar-3" style="height:2px;"></span>
+      </div>
+      <span class="footer-wordmark">EthAi Syn</span>
+    </div>
+    <p class="footer-copy">
+      &copy; 2026 Mercedez Lopez &middot; All rights reserved &middot;
+      <a href="https://twinofmyself.github.io/EthAiSyn/">twinofmyself.github.io/EthAiSyn</a>
+    </p>
+  </footer>
+
+  <script>
+    const revealEls = document.querySelectorAll('.prose p, .pull-quote, .section-break, .callout-box, .closing');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
