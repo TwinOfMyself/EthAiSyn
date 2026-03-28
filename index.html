@@ -122,10 +122,11 @@
       </div>
       <div class="clips-label">Selected work</div>
       <div class="clips">
-        <a href="writing/the-cost-of-clear-eyes.html" class="clip"><div class="article-card">
-  <p class="card-category">Systems &amp; Self — Essay</p>
-  <h2 class="card-title">
-    <a href="writing/the-cost-of-clear-eyes.html">The Cost of Clear Eyes</a></h2><p class="card-source">EthAiSyn</p></div>
+        <a href="writing/the-cost-of-clear-eyes.html" class="clip">
+          <div class="clip-meta">Systems &amp; Self &mdash; Essay</div>
+          <div class="clip-title">The Cost of Clear Eyes</div>
+          <div class="clip-pub">EthAiSyn</div>
+        </a>
         <a href="writing/you-put-humans-in-the-loop.html" class="clip"><div class="clip-meta">AI Psychology &mdash; Article</div><div class="clip-title">You Put Humans in the Loop. You Just Put Them in the Wrong Part.</div><div class="clip-pub">EthAiSyn</div></a>
         <a href="writing/youre-still-the-one-who-has-to-feel-it.html" class="clip"><div class="clip-meta">Mental Health &mdash; Essay</div><div class="clip-title">You&rsquo;re Still the One Who Has to Feel It</div><div class="clip-pub">EthAiSyn</div></a>
         <a href="#" class="clip"><div class="clip-meta">AI Psychology - Article</div><div class="clip-title">Cognitive Debt Is Real &mdash; And Most Organizations Have No Way to Measure It</div><div class="clip-pub">EthAiSyn</div></a>
@@ -218,7 +219,6 @@
         </div>
       </div>
 
-      <!-- SELF-ASSESSMENT -->
       <div class="assess-wrap" id="assessWrap">
         <div class="assess-label">Reflection instrument</div>
         <div class="assess-title">How preserved is your judgment?</div>
@@ -238,7 +238,7 @@
             <div class="assess-opts">
               <div class="assess-opt" data-val="1" onclick="pickAssess(this)">Very confident</div>
               <div class="assess-opt" data-val="2" onclick="pickAssess(this)">Mostly confident</div>
-              <div class="assess-opt" data-val="3" onclick="pickAssess(this)">Not always sure</div>
+              <div class="="assess-opt" data-val="3" onclick="pickAssess(this)">Not always sure</div>
               <div class="assess-opt" data-val="4" onclick="pickAssess(this)">I often can't tell</div>
             </div>
           </div>
@@ -287,7 +287,6 @@
     </div></div></div>
   </div>
 
-  <!-- 04 Experience: Override Demo -->
   <div class="panel" id="p-experience">
     <div class="spine-dot" id="dot-experience"></div>
     <span class="spine-quote" data-for="dot-experience">You just practiced what most workflows prevent.</span>
@@ -315,7 +314,6 @@
     </div></div></div>
   </div>
 
-  <!-- 05 Research -->
   <div class="panel" id="p-research">
     <div class="spine-dot" id="dot-research"></div>
     <button class="panel-trigger" onclick="toggle('p-research')" aria-expanded="false">
@@ -486,9 +484,7 @@
     {el:document.getElementById('dot-writing'),panel:document.getElementById('p-writing')},
     {el:document.getElementById('dot-about'),panel:document.getElementById('p-about')},
     {el:document.getElementById('dot-ethaisyn'),panel:document.getElementById('p-ethaisyn')},
-    {el:document.getElementById('dot-ethaisyn'),panel:document.getElementById('p-ethaisyn')},
     {el:document.getElementById('dot-experience'),panel:document.getElementById('p-experience')},
-    {el:document.getElementById('dot-research'),panel:document.getElementById('p-research')},
     {el:document.getElementById('dot-research'),panel:document.getElementById('p-research')},
     {el:document.getElementById('dot-connect'),panel:document.getElementById('p-connect')},
   ];
@@ -511,7 +507,6 @@
     if(q&&!q.classList.contains('earned')){q.classList.add('earned');}
   }
 
-  /* SELF-ASSESSMENT */
   const assessAnswers=[null,null,null,null,null];
   function pickAssess(el){
     const q=el.closest('.assess-q');
@@ -551,7 +546,6 @@
     document.getElementById('assessResult').scrollIntoView({behavior:'smooth',block:'nearest'});
   }
 
-  /* OVERRIDE DEMO */
   const overrideRounds=[
     {
       human:'The patient presented with fatigue, mild confusion, and a two-week history of declining oral intake. Labs showed hyponatremia. The clinical team considered fluid restriction before initiating further workup.',
@@ -634,7 +628,6 @@
     document.getElementById('p-experience').scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  /* CONCERN FEED + RING */
   const circumference=2*Math.PI*52;
   let concernTotal=0;
   const concernCap=60;
@@ -724,7 +717,6 @@
     if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitConcern();}
   });
 
-  /* SCENARIO ROUTER */
   const scenarioData=[
     {construct:'Judgment Displacement',text:'This is the framework\'s second construct. When AI recommendations are good enough most of the time, the cost of evaluating them starts to feel higher than the cost of accepting them. That is not laziness. It is rational behavior inside a poorly designed system. The framework measures this through pre-AI judgment capture: documenting what people decided before the tool arrived, then tracking how those independent decisions change over time.',link:'Read: Cognitive Debt Is Real',action:function(){}},
     {construct:'Deskilling',text:'This is construct six. Skill decay that operators rarely perceive accurately and actively rationalize. The gold standard is behavioral performance without AI over time, compared against a pre-integration baseline. If you cannot do the work without the tool, the tool is not augmenting you. It has replaced you while leaving you in the chair.',link:'Read the framework paper',action:function(){toggle('p-research');setTimeout(()=>{const h=document.getElementById('doc-framework-header');if(h&&!h.classList.contains('open'))toggleDoc('doc-framework');},400);}},
