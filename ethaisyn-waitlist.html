@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EthAiSyn · Annotation Toolkit Waitlist</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:     #0D1B2A;
+    --navy-mid: #1B3A6B;
+    --steel:    #2C5282;
+    --teal:     #2B6CB0;
+    --gold:     #C9942A;
+    --gold-lt:  #E8B84B;
+    --slate:    #4A5568;
+    --muted:    #718096;
+    --light:    #F7FAFC;
+    --mid:      #EBF4FF;
+    --white:    #FFFFFF;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(43,108,176,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 85% 80%, rgba(201,148,42,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 40% at 60% 30%, rgba(27,58,107,0.3) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── GRID LINES ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(43,108,176,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(43,108,176,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 80px 32px 120px;
+  }
+
+  /* ── LOGO / NAV ── */
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 80px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.1s forwards;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--gold);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: -0.5px;
+  }
+
+  .logo-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.5px;
+  }
+
+  .logo-sub {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  /* ── EYEBROW ── */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.2s forwards;
+  }
+
+  .eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  /* ── HEADLINE ── */
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 6vw, 56px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.3s forwards;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--gold-lt);
+  }
+
+  .subhead {
+    font-size: 17px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 48px;
+    max-width: 560px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.4s forwards;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 48px;
+    height: 2px;
+    background: var(--gold);
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.45s forwards;
+  }
+
+  /* ── PROBLEM STATEMENT ── */
+  .problem {
+    background: rgba(43,108,176,0.08);
+    border: 1px solid rgba(43,108,176,0.2);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 24px 28px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.5s forwards;
+  }
+
+  .problem p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.75);
+  }
+
+  .problem strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  /* ── WHAT YOU'RE JOINING ── */
+  .what-block {
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.55s forwards;
+  }
+
+  .what-title {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .what-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    list-style: none;
+  }
+
+  .what-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .what-list li::before {
+    content: '▸';
+    color: var(--gold);
+    font-size: 12px;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .what-list li strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  /* ── FORM ── */
+  .form-wrap {
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.65s forwards;
+  }
+
+  .form-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 0;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .form-row:focus-within {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,148,42,0.12);
+  }
+
+  .form-row input {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: none;
+    outline: none;
+    padding: 16px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--white);
+  }
+
+  .form-row input::placeholder { color: rgba(255,255,255,0.3); }
+
+  .form-row button {
+    background: var(--gold);
+    border: none;
+    padding: 16px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--navy);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+  }
+
+  .form-row button:hover { background: var(--gold-lt); }
+  .form-row button:active { transform: scale(0.98); }
+
+  .form-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .form-fields input {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    outline: none;
+    padding: 14px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--white);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+  }
+
+  .form-fields input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,148,42,0.12);
+  }
+
+  .form-fields input::placeholder { color: rgba(255,255,255,0.3); }
+
+  .role-select {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    outline: none;
+    padding: 14px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239AA5B4' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+    padding-right: 44px;
+  }
+
+  .role-select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,148,42,0.12); }
+  .role-select option { background: var(--navy-mid); color: var(--white); }
+
+  .submit-btn {
+    width: 100%;
+    background: var(--gold);
+    border: none;
+    border-radius: 8px;
+    padding: 16px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--navy);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .submit-btn:hover {
+    background: var(--gold-lt);
+    box-shadow: 0 4px 20px rgba(201,148,42,0.25);
+  }
+
+  .submit-btn:active { transform: scale(0.99); }
+
+  .form-note {
+    font-size: 13px;
+    color: rgba(255,255,255,0.3);
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── SUCCESS STATE ── */
+  .success {
+    display: none;
+    text-align: center;
+    padding: 48px 32px;
+    background: rgba(43,108,176,0.08);
+    border: 1px solid rgba(201,148,42,0.25);
+    border-radius: 12px;
+  }
+
+  .success.show { display: block; }
+
+  .success-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+  }
+
+  .success h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .success p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.65;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* ── COUNTER ── */
+  .counter {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.75s forwards;
+  }
+
+  .counter-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+    min-width: 80px;
+  }
+
+  .counter-text {
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.5;
+  }
+
+  .counter-text strong {
+    display: block;
+    color: rgba(255,255,255,0.7);
+    font-weight: 400;
+    margin-bottom: 2px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.85s forwards;
+  }
+
+  .footer-left {
+    font-size: 13px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .footer-right a {
+    font-size: 13px;
+    color: var(--gold);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  .footer-right a:hover { opacity: 1; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 520px) {
+    .page { padding: 56px 20px 80px; }
+    .form-fields { grid-template-columns: 1fr; }
+    .counter { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .footer { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <div class="logo-mark">E</div>
+    <div>
+      <div class="logo-text">EthAiSyn</div>
+      <div class="logo-sub">Ethical AI in Mental Health</div>
+    </div>
+  </div>
+
+  <!-- EYEBROW -->
+  <div class="eyebrow">Early Access · Annotation Toolkit</div>
+
+  <!-- HEADLINE -->
+  <h1>Your clinical judgment<br>deserves a <em>record.</em></h1>
+
+  <!-- SUBHEAD -->
+  <p class="subhead">
+    When an AI tool misreads your patient, that insight disappears.
+    EthAiSyn is building the first cross-platform space where mental health professionals
+    can collectively document AI failures — and build the shared standards the field is missing.
+  </p>
+
+  <div class="divider"></div>
+
+  <!-- PROBLEM STATEMENT -->
+  <div class="problem">
+    <p>
+      Platforms like Upheal and Eleos let you correct AI outputs within their systems.
+      <strong>Those corrections stay siloed.</strong> A peer support specialist at one organization
+      cannot see what a clinician at another is noticing. There is no shared record.
+      EthAiSyn is built to create that layer — and it does not yet exist anywhere.
+    </p>
+  </div>
+
+  <!-- WHAT YOU'RE JOINING -->
+  <div class="what-block">
+    <p class="what-title">What early access includes</p>
+    <ul class="what-list">
+      <li><span><strong>Beta access</strong> to the annotation toolkit before public launch</span></li>
+      <li><span><strong>Direct input</strong> into which AI failure patterns we prioritize documenting first</span></li>
+      <li><span><strong>Named contributor</strong> status in the Year 1 public report shared with NAMI North Texas and DFW partners</span></li>
+      <li><span><strong>Community</strong> of DFW practitioners building shared interpretive standards together</span></li>
+    </ul>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-wrap" id="formWrap">
+    <label class="form-label">Join the waitlist</label>
+
+    <div class="form-fields">
+      <input type="text" id="firstName" placeholder="First name" autocomplete="given-name">
+      <input type="text" id="lastName" placeholder="Last name" autocomplete="family-name">
+    </div>
+
+    <div class="form-fields" style="grid-template-columns: 1fr;">
+      <input type="email" id="email" placeholder="Work or personal email" autocomplete="email">
+    </div>
+
+    <select class="role-select" id="role">
+      <option value="" disabled selected>Your role</option>
+      <option value="peer-specialist">Peer Support Specialist</option>
+      <option value="therapist">Licensed Therapist / Counselor</option>
+      <option value="social-worker">Social Worker</option>
+      <option value="psychiatrist">Psychiatrist / Psychologist</option>
+      <option value="nurse">Psychiatric Nurse</option>
+      <option value="case-manager">Case Manager / Care Coordinator</option>
+      <option value="researcher">Researcher / Academic</option>
+      <option value="other">Other Mental Health Professional</option>
+    </select>
+
+    <button class="submit-btn" onclick="handleSubmit()">Request Early Access →</button>
+
+    <p class="form-note">No spam. No commitment. Just your name on the list. Dallas-Fort Worth practitioners especially welcome.</p>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success" id="successBlock">
+    <div class="success-icon">✦</div>
+    <h3>You're on the list.</h3>
+    <p>
+      Thank you for being here. When the beta opens, you'll hear from us first.
+      Your judgment matters — and now it has a place to go.
+    </p>
+  </div>
+
+  <!-- COUNTER -->
+  <div class="counter" id="counter">
+    <div class="counter-num" id="counterNum">0</div>
+    <div class="counter-text">
+      <strong>practitioners on the waitlist</strong>
+      DFW-based mental health professionals building<br>the accountability layer the field is missing.
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-left">© 2026 Mercedez Lopez · EthAiSyn · Dallas, TX</div>
+    <div class="footer-right">
+      <a href="https://twinofmyself.github.io/EthAiSyn" target="_blank">twinofmyself.github.io/EthAiSyn ↗</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── FORMSPREE SUBMISSION ──────────────────────────────────────────────
+  const FORMSPREE_ID = 'maqlbyjv';
+
+  // Local count (persists in localStorage for the counter display)
+  let count = parseInt(localStorage.getItem('ethaisyn-waitlist-count') || '0');
+
+  function animateCount(target) {
+    const el = document.getElementById('counterNum');
+    const start = parseInt(el.textContent) || 0;
+    const duration = 800;
+    const startTime = performance.now();
+    function step(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(start + (target - start) * ease);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  animateCount(count);
+
+  async function handleSubmit() {
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName  = document.getElementById('lastName').value.trim();
+    const email     = document.getElementById('email').value.trim();
+    const role      = document.getElementById('role').value;
+    const btn       = document.querySelector('.submit-btn');
+
+    if (!firstName) { document.getElementById('firstName').focus(); return; }
+    if (!email || !email.includes('@')) { document.getElementById('email').focus(); return; }
+    if (!role) { document.getElementById('role').focus(); return; }
+
+    btn.textContent = 'Submitting…';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          _subject: `EthAiSyn Waitlist — ${firstName} ${lastName}`,
+          firstName, lastName, email, role,
+          _replyto: email
+        })
+      });
+
+      if (res.ok) {
+        document.getElementById('formWrap').style.display = 'none';
+        document.getElementById('successBlock').classList.add('show');
+        count += 1;
+        localStorage.setItem('ethaisyn-waitlist-count', String(count));
+        animateCount(count);
+      } else {
+        btn.textContent = 'Something went wrong — try again';
+        btn.disabled = false;
+      }
+    } catch (err) {
+      btn.textContent = 'Connection error — try again';
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
