@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What We Mean When We Say Alignment — EthAiSyn</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Source+Serif+4:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #f0ebe0;
+    --parchment-mid: #e8e1d3;
+    --ink: #2c2c2c;
+    --body: #3d4a4f;
+    --gold: #b8882a;
+    --gold-light: #c9973a;
+    --teal: #4a6670;
+    --teal-light: #5a7a85;
+    --callout-bg: #dde4e6;
+    --rule: #c9b99a;
+    --dot: #b8882a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--parchment);
+    color: var(--body);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* Nav */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    background: var(--parchment);
+    z-index: 10;
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+  }
+
+  .hamburger span {
+    display: block;
+    height: 1.5px;
+    background: var(--ink);
+  }
+
+  .hamburger span:first-child { width: 22px; }
+  .hamburger span:last-child { width: 16px; }
+
+  .brand {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+  }
+
+  .nav-home {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--teal);
+    text-decoration: none;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 48px 28px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tags {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 400;
+  }
+
+  .tag-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .title-block {
+    position: relative;
+    margin-bottom: 32px;
+  }
+
+  .title-decoration {
+    position: absolute;
+    right: -20px;
+    top: -12px;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 1.5px solid var(--parchment-mid);
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(2.6rem, 9vw, 3.4rem);
+    line-height: 1.08;
+    color: var(--ink);
+    position: relative;
+    z-index: 1;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--gold);
+    display: block;
+  }
+
+  .subtitle {
+    font-family: 'Source Serif 4', serif;
+    font-size: clamp(1rem, 3vw, 1.15rem);
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--body);
+    margin-bottom: 36px;
+    max-width: 520px;
+  }
+
+  .byline {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding-bottom: 36px;
+    flex-wrap: wrap;
+  }
+
+  .byline-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .byline-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--teal);
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .byline-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--teal);
+    line-height: 1.4;
+  }
+
+  /* Divider */
+  .rule {
+    height: 1px;
+    background: var(--rule);
+    margin: 0 28px;
+  }
+
+  .dot-rule {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 32px 28px;
+  }
+
+  .dot-rule-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--dot);
+    flex-shrink: 0;
+  }
+
+  .dot-rule-line {
+    height: 1px;
+    width: 48px;
+    background: var(--gold);
+  }
+
+  /* Body */
+  .body-content {
+    padding: 0 28px;
+  }
+
+  .series-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    display: block;
+    margin-bottom: 36px;
+  }
+
+  p {
+    font-size: clamp(1.05rem, 3.2vw, 1.18rem);
+    line-height: 1.8;
+    color: var(--body);
+    margin-bottom: 28px;
+  }
+
+  p strong {
+    font-weight: 500;
+    color: var(--teal);
+  }
+
+  /* Pull quote */
+  .pull-quote {
+    border-left: 2.5px solid var(--gold);
+    padding: 8px 0 8px 24px;
+    margin: 40px 0;
+  }
+
+  .pull-quote p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+    line-height: 1.55;
+    color: var(--teal);
+    margin-bottom: 0;
+    font-weight: 400;
+  }
+
+  /* Callout box */
+  .callout {
+    background: var(--callout-bg);
+    padding: 28px 24px;
+    margin: 44px 0;
+  }
+
+  .callout-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    font-weight: 400;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .callout p {
+    font-size: 0.98rem;
+    line-height: 1.72;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .callout p:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .callout p em {
+    font-style: italic;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 64px;
+    padding: 32px 28px 48px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .footer-tagline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--teal);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .footer-brand {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    color: var(--gold);
+    font-weight: 300;
+  }
+
+  .footer-rule {
+    height: 1px;
+    background: var(--rule);
+    margin: 28px 0;
+  }
+
+  .framework-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .framework-term {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--teal);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+      </div>
+      <span class="brand">EthAi Syn</span>
+    </div>
+    <a href="#" class="nav-home">Home</a>
+  </nav>
+
+  <div class="hero">
+    <div class="tags">
+      <span class="tag">Series</span>
+      <span class="tag-dot"></span>
+      <span class="tag">Business Language</span>
+      <span class="tag-dot"></span>
+      <span class="tag">Operations & Systems</span>
+    </div>
+
+    <div class="title-block">
+      <div class="title-decoration"></div>
+      <h1>What We Mean<br>When We Say<em>Alignment</em></h1>
+    </div>
+
+    <p class="subtitle">On the word that used to demand something real — and what it stopped demanding when we stopped noticing.</p>
+
+    <div class="byline">
+      <div class="byline-item">
+        <span class="byline-label">Mercedez<br>Lopez</span>
+      </div>
+      <div class="byline-dot"></div>
+      <div class="byline-item">
+        <span class="byline-label">Founder,<br>EthAiSyn</span>
+      </div>
+      <div class="byline-dot"></div>
+      <div class="byline-item">
+        <span class="byline-label">April<br>2026</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <div class="dot-rule">
+    <div class="dot-rule-dot"></div>
+    <div class="dot-rule-line"></div>
+    <div class="dot-rule-dot"></div>
+  </div>
+
+  <div class="body-content">
+
+    <span class="series-label">Entry 01 — The Language Series</span>
+
+    <p>There was a time when alignment meant something.</p>
+
+    <p>Not the word itself — the word is recent, polished, borrowed from engineering and applied to people as though people operate like components in a system. But the thing it was reaching for was real. The idea that a group of people could move in the same direction, for the same reasons, with enough shared understanding that they didn't need to be managed at every step. That was real. That still is.</p>
+
+    <p>Watch what happened to it.</p>
+
+    <p>Somewhere between the org charts and the offsites and the decks with the arrows all pointing the same direction, alignment stopped being a condition and became a performance. It stopped describing something true about how a team was operating and started describing something desired — or worse, something assumed. <em>We need to get aligned. Are we aligned on this? Let's make sure we're aligned before we move forward.</em></p>
+
+    <p>Listen to how often that word appears in rooms where people are not, in fact, moving in the same direction.</p>
+
+    <div class="pull-quote">
+      <p>The word survived. The work it was supposed to describe didn't.</p>
+    </div>
+
+    <p>The old operations language was blunter. It asked: <em>do we have buy-in?</em> Which was transactional, yes — but at least it acknowledged that people had positions, and that those positions might differ, and that the work was to actually move them. Buy-in required you to make a case. Alignment just requires everyone to nod.</p>
+
+    <p>This is what got hollowed out. Not the concept — the demand the concept made.</p>
+
+    <p>Real alignment is expensive. It requires someone to say <em>I don't actually understand why we're doing it this way</em> and someone else to answer that question honestly rather than escalating to a higher-altitude explanation that sounds strategic and explains nothing. It requires the person in the room with the least power to have the same picture as the person with the most. It requires, at minimum, that everyone is disagreeing about the same thing.</p>
+
+    <p>Most organizations don't have that. They have compliance dressed in the language of alignment. They have rooms full of people who have learned that asking the clarifying question costs more than pretending to understand. They have decks that show arrows pointing the same direction and teams that go back to their desks and pull in four different ones.</p>
+
+    <div class="callout">
+      <span class="callout-label">The Harder Question</span>
+      <p>This series exists because language is not neutral. The words an organization reaches for tell you exactly what it is trying to avoid saying directly.</p>
+      <p><em>Alignment</em> replaced a harder question. The harder question is still there.</p>
+      <p>It is: do the people doing this work actually understand it, believe in it, and trust the people leading it? That question doesn't fit on a slide. But it is the only one that tells you whether you are aligned.</p>
+    </div>
+
+    <p>If you have been inside enough rooms, across enough years, you have learned to hear what the language is covering. The older, more honest word that got replaced when the honest word became inconvenient.</p>
+
+    <p>That is what this series is for. Not to be cynical about the work — but to be precise about it. Because precision, in the end, is what the work requires.</p>
+
+  </div>
+
+  <div class="footer">
+    <span class="footer-tagline">The language changed. The dynamic didn't.</span>
+    <span class="footer-brand">EthAi Syn</span>
+    <div class="footer-rule"></div>
+    <span class="framework-label">Next in Series</span>
+    <span class="framework-term">What We Mean When We Say Culture →</span>
+  </div>
+
+</body>
+</html>
