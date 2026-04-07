@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Manager Stakeholder Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f4efe6;
+    --ink: #1a1408;
+    --warm: #c8b89a;
+    --rule: #d4c8b0;
+    --accent: #8b3a2a;
+    --blue: #1F4E9B;
+    --teal: #1a6b5a;
+    --gold: #b5860d;
+    --red: #c0392b;
+    --muted: #7a6e5f;
+    --faint: #ede7db;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--paper);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+  body::before {
+    content:''; position:fixed; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:999; opacity:0.5;
+  }
+
+  .page { max-width:1100px; margin:0 auto; padding:3rem 2.5rem 5rem; }
+
+  .series-label {
+    font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--warm); margin-bottom:2rem;
+    display:flex; align-items:center; gap:1rem;
+  }
+  .series-label::after { content:''; flex:1; height:1px; background:var(--rule); }
+
+  h1 {
+    font-size:clamp(2rem,5vw,3.8rem); font-weight:300; font-style:italic;
+    line-height:0.95; letter-spacing:-0.02em; margin-bottom:0.3rem;
+  }
+  .subtitle {
+    font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.15em;
+    color:var(--accent); text-transform:uppercase; margin-bottom:1.2rem;
+  }
+  .intro {
+    font-size:1rem; font-style:italic; font-weight:300; color:var(--muted);
+    max-width:660px; line-height:1.7; margin-bottom:2rem;
+    border-left:2px solid var(--accent); padding-left:1.2rem;
+  }
+
+  /* ── LEGEND ── */
+  .legend {
+    display:flex; flex-wrap:wrap; gap:1.2rem; margin-bottom:2rem;
+    padding:1rem 1.4rem; border:1px solid var(--rule);
+  }
+  .legend-item { display:flex; align-items:center; gap:0.5rem; font-size:0.82rem; color:var(--muted); }
+  .legend-line { width:32px; height:3px; border-radius:2px; }
+  .legend-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
+
+  /* ── FILTER BUTTONS ── */
+  .filters {
+    display:flex; flex-wrap:wrap; gap:0.6rem; margin-bottom:1.8rem;
+  }
+  .filter-btn {
+    font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.12em;
+    text-transform:uppercase; padding:5px 12px; border:1px solid var(--rule);
+    background:transparent; cursor:pointer; color:var(--muted);
+    transition:all 0.18s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background:var(--ink); color:var(--paper); border-color:var(--ink);
+  }
+  .filter-btn.f-gap.active  { background:#c0392b; border-color:#c0392b; }
+  .filter-btn.f-auth.active { background:#8b6010; border-color:#8b6010; }
+  .filter-btn.f-comm.active { background:#1a6b5a; border-color:#1a6b5a; }
+
+  /* ── SVG MAP ── */
+  .map-wrap { position:relative; margin-bottom:2.5rem; }
+  svg.map { width:100%; height:auto; display:block; overflow:visible; }
+
+  /* node hover */
+  .node { cursor:pointer; }
+  .node circle { transition:r 0.15s, filter 0.15s; }
+  .node:hover circle { filter:drop-shadow(0 0 8px rgba(0,0,0,0.18)); }
+
+  /* ── TOOLTIP ── */
+  #tooltip {
+    position:fixed; display:none; z-index:1000;
+    background:var(--ink); color:var(--paper);
+    padding:0.9rem 1.1rem; max-width:280px;
+    font-size:0.82rem; line-height:1.6;
+    pointer-events:none;
+    box-shadow:0 4px 20px rgba(0,0,0,0.22);
+  }
+  #tooltip .tt-title {
+    font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.15em;
+    text-transform:uppercase; margin-bottom:0.4rem; opacity:0.6;
+  }
+  #tooltip .tt-name { font-size:1rem; font-weight:600; margin-bottom:0.4rem; }
+  #tooltip .tt-body { font-size:0.8rem; opacity:0.85; }
+  #tooltip .tt-flags { margin-top:0.6rem; display:flex; flex-wrap:wrap; gap:0.3rem; }
+  #tooltip .tt-flag {
+    font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:0.08em;
+    padding:2px 6px; border-radius:1px;
+  }
+  .flag-gap  { background:#c0392b; color:#fff; }
+  .flag-auth { background:#8b6010; color:#fff; }
+  .flag-comm { background:#1a6b5a; color:#fff; }
+  .flag-ok   { background:#1F4E9B; color:#fff; }
+
+  /* ── INSIGHT CARDS ── */
+  .insights { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; margin-bottom:2.5rem; }
+  .ins-card {
+    border:1px solid var(--rule); padding:1.2rem 1.4rem;
+    position:relative; transition:box-shadow 0.2s;
+  }
+  .ins-card:hover { box-shadow:0 4px 18px rgba(0,0,0,0.07); }
+  .ins-card::before {
+    content:attr(data-label);
+    font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:0.18em;
+    text-transform:uppercase; position:absolute; top:-0.45rem; left:1rem;
+    background:var(--paper); padding:0 0.4rem; color:var(--warm);
+  }
+  .ins-title { font-size:0.95rem; font-weight:600; margin-bottom:0.5rem; }
+  .ins-body  { font-size:0.83rem; font-weight:300; color:var(--muted); line-height:1.65; }
+  .ins-list  { margin:0.5rem 0 0 1rem; }
+  .ins-list li { font-size:0.8rem; color:var(--muted); margin-bottom:3px; }
+
+  /* ── RING TABLE ── */
+  .ring-table { margin-bottom:2.5rem; }
+  .section-label {
+    font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--warm); margin-bottom:1rem;
+  }
+  .ring-row {
+    display:grid; grid-template-columns:130px 1fr 1fr 120px;
+    gap:0; border-bottom:1px solid var(--rule); padding:0.9rem 0; align-items:start;
+  }
+  .ring-row:first-of-type { border-top:1px solid var(--rule); }
+  .ring-label { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase; padding-top:3px; }
+  .ring-actors { font-size:0.88rem; font-weight:600; line-height:1.7; padding-right:1.5rem; }
+  .ring-rel { font-size:0.84rem; font-weight:300; font-style:italic; color:var(--muted); line-height:1.6; padding-right:1rem; }
+  .ring-flags { display:flex; flex-wrap:wrap; gap:0.3rem; }
+  .rflag {
+    font-family:'DM Mono',monospace; font-size:0.55rem; letter-spacing:0.08em;
+    padding:2px 6px; border-radius:1px;
+  }
+
+  .footer {
+    border-top:1px solid var(--rule); padding-top:1.2rem;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.8rem;
+  }
+  .footer span { font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--warm); }
+
+  @media(max-width:700px){
+    .insights { grid-template-columns:1fr; }
+    .ring-row { grid-template-columns:1fr; gap:0.4rem; }
+    .page { padding:2rem 1.2rem 4rem; }
+  }
+</style>
+</head>
+<body>
+<div id="tooltip">
+  <div class="tt-title" id="tt-ring"></div>
+  <div class="tt-name"  id="tt-name"></div>
+  <div class="tt-body"  id="tt-body"></div>
+  <div class="tt-flags" id="tt-flags"></div>
+</div>
+
+<div class="page">
+
+  <div class="series-label">EthAiSyn · Case Manager Stakeholder Map · Enhanced</div>
+  <h1>The Case Manager</h1>
+  <div class="subtitle">Stakeholder Map · Gaps · Authority · Communication · April 2026</div>
+
+  <p class="intro">
+    The table is the starting point. This map is the story the table can't tell — which relationships carry unclear responsibilities, where communication gaps delay critical decisions, and where authority breaks down before action can be taken.
+  </p>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-line" style="background:#1F4E9B"></div>
+      <span>Direct flow — clear accountability</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-line" style="background:#c0392b; height:2px; border-top:2px dashed #c0392b; background:transparent;"></div>
+      <span>Communication gap / delay risk</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-line" style="background:#8b6010; height:2px; border-top:2px dotted #8b6010; background:transparent;"></div>
+      <span>Authority gap — CM accountable, not in control</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#c0392b; border:2px solid #c0392b;"></div>
+      <span>Communication gap node</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#8b6010; border:2px solid #8b6010;"></div>
+      <span>Authority gap node</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#1a6b5a; border:2px solid #1a6b5a;"></div>
+      <span>Coordination node</span>
+    </div>
+    <span style="font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--warm);margin-left:auto;align-self:center;">↗ Hover nodes for detail</span>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterMap('all')">Show All</button>
+    <button class="filter-btn f-gap"  onclick="filterMap('gap')">⚠ Communication Gaps</button>
+    <button class="filter-btn f-auth" onclick="filterMap('auth')">⛔ Authority Gaps</button>
+    <button class="filter-btn f-comm" onclick="filterMap('comm')">↔ Coordination Flows</button>
+  </div>
+
+  <!-- SVG MAP -->
+  <div class="map-wrap">
+  <svg class="map" viewBox="0 0 960 640" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="gC" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#8b3a2a"/>
+        <stop offset="100%" stop-color="#6b2a1c"/>
+      </radialGradient>
+      <!-- markers -->
+      <marker id="m-blue" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+        <path d="M0,0 L0,7 L7,3.5 z" fill="#1F4E9B" opacity="0.7"/>
+      </marker>
+      <marker id="m-red" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+        <path d="M0,0 L0,7 L7,3.5 z" fill="#c0392b" opacity="0.8"/>
+      </marker>
+      <marker id="m-gold" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+        <path d="M0,0 L0,7 L7,3.5 z" fill="#8b6010" opacity="0.8"/>
+      </marker>
+      <marker id="m-teal" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+        <path d="M0,0 L0,7 L7,3.5 z" fill="#1a6b5a" opacity="0.7"/>
+      </marker>
+    </defs>
+
+    <!-- ── RINGS ── -->
+    <circle cx="480" cy="320" r="280" fill="none" stroke="#b5860d" stroke-width="0.7" stroke-opacity="0.2" stroke-dasharray="5,4"/>
+    <circle cx="480" cy="320" r="195" fill="none" stroke="#1a6b5a" stroke-width="0.7" stroke-opacity="0.25" stroke-dasharray="4,3"/>
+    <circle cx="480" cy="320" r="112" fill="none" stroke="#1F4E9B" stroke-width="1" stroke-opacity="0.35"/>
+    <circle cx="480" cy="320" r="54"  fill="url(#gC)"/>
+
+    <!-- ring labels -->
+    <text x="480" y="143" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="#1F4E9B" letter-spacing="2" opacity="0.7">RING 1 — DIRECT CARE</text>
+    <text x="310" y="148" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="#1a6b5a" letter-spacing="2" opacity="0.7">RING 2 — COORDINATION</text>
+    <text x="230" y="88"  text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="#b5860d" letter-spacing="2" opacity="0.7">RING 3 — SYSTEM</text>
+
+    <!-- center label -->
+    <text x="480" y="314" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="12" font-weight="600" fill="#f4efe6" letter-spacing="1">CASE</text>
+    <text x="480" y="330" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="12" font-weight="600" fill="#f4efe6" letter-spacing="1">MANAGER</text>
+    <text x="480" y="347" text-anchor="middle" font-family="DM Mono,monospace" font-size="6" fill="#f4efe6" letter-spacing="1" opacity="0.65">CLINICIAN · COORD · NAVIGATOR</text>
+
+    <!-- ══════════════════════════════
+         RING 1 CONNECTIONS
+    ══════════════════════════════ -->
+    <!-- Patient — top, solid blue — clear accountability -->
+    <line x1="480" y1="266" x2="480" y2="222" stroke="#1F4E9B" stroke-width="2" stroke-opacity="0.7" marker-end="url(#m-blue)" class="link link-comm"/>
+    <!-- Caregiver — bottom, DASHED RED — communication gap (family may not relay info) -->
+    <line x1="480" y1="374" x2="480" y2="418" stroke="#c0392b" stroke-width="1.8" stroke-dasharray="6,4" stroke-opacity="0.75" marker-end="url(#m-red)" class="link link-gap"/>
+
+    <!-- ══════════════════════════════
+         RING 2 CONNECTIONS
+    ══════════════════════════════ -->
+    <!-- MDT — upper left, solid teal — coordination -->
+    <line x1="426" y1="278" x2="367" y2="240" stroke="#1a6b5a" stroke-width="1.5" stroke-opacity="0.6" marker-end="url(#m-teal)" class="link link-comm"/>
+    <!-- Inpatient — left, DASHED RED — discharge info arrives late -->
+    <line x1="368" y1="320" x2="313" y2="320" stroke="#c0392b" stroke-width="1.8" stroke-dasharray="6,4" stroke-opacity="0.75" marker-end="url(#m-red)" class="link link-gap"/>
+    <!-- Outpatient TCU — upper right, solid teal -->
+    <line x1="534" y1="278" x2="593" y2="240" stroke="#1a6b5a" stroke-width="1.5" stroke-opacity="0.6" marker-end="url(#m-teal)" class="link link-comm"/>
+    <!-- Community Partners — right, DOTTED GOLD — authority gap -->
+    <line x1="592" y1="320" x2="648" y2="320" stroke="#8b6010" stroke-width="1.5" stroke-dasharray="3,3" stroke-opacity="0.8" marker-end="url(#m-gold)" class="link link-auth"/>
+    <!-- IMH — lower right, solid teal -->
+    <line x1="528" y1="364" x2="576" y2="404" stroke="#1a6b5a" stroke-width="1.5" stroke-opacity="0.6" marker-end="url(#m-teal)" class="link link-comm"/>
+    <!-- Crisis Services — lower left, DASHED RED — after hours gap -->
+    <line x1="432" y1="364" x2="380" y2="404" stroke="#c0392b" stroke-width="1.8" stroke-dasharray="6,4" stroke-opacity="0.75" marker-end="url(#m-red)" class="link link-gap"/>
+
+    <!-- ══════════════════════════════
+         RING 3 CONNECTIONS (all system ring)
+    ══════════════════════════════ -->
+    <!-- Supervisor — top left, DOTTED GOLD — auth gap (needs sign-off) -->
+    <line x1="446" y1="268" x2="316" y2="126" stroke="#8b6010" stroke-width="1.2" stroke-dasharray="3,3" stroke-opacity="0.7" marker-end="url(#m-gold)" class="link link-auth"/>
+    <!-- EHR — top right, DOTTED GOLD — documentation burden -->
+    <line x1="514" y1="268" x2="648" y2="126" stroke="#8b6010" stroke-width="1.2" stroke-dasharray="3,3" stroke-opacity="0.7" marker-end="url(#m-gold)" class="link link-auth"/>
+    <!-- Referring Physician — right, DASHED RED — info gap on referral -->
+    <line x1="582" y1="290" x2="730" y2="196" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="5,4" stroke-opacity="0.7" marker-end="url(#m-red)" class="link link-gap"/>
+    <!-- Policy — left, dotted gold -->
+    <line x1="378" y1="290" x2="228" y2="196" stroke="#8b6010" stroke-width="1.2" stroke-dasharray="3,3" stroke-opacity="0.7" marker-end="url(#m-gold)" class="link link-auth"/>
+    <!-- Insurance — bottom right, dotted gold -->
+    <line x1="554" y1="378" x2="680" y2="488" stroke="#8b6010" stroke-width="1.2" stroke-dasharray="3,3" stroke-opacity="0.7" marker-end="url(#m-gold)" class="link link-auth"/>
+    <!-- Quality — bottom left, solid teal -->
+    <line x1="406" y1="378" x2="268" y2="484" stroke="#1a6b5a" stroke-width="1.2" stroke-opacity="0.55" marker-end="url(#m-teal)" class="link link-comm"/>
+
+    <!-- ══════════════════════════════
+         NODES — RING 1
+    ══════════════════════════════ -->
+    <!-- Patient -->
+    <g class="node" onclick="showTip(event,'Ring 1 — Direct Care','Patient','Primary accountability. CM builds therapeutic alliance, conducts assessments, delivers counselling, and monitors mental state. The relationship is direct and personal.',['ok','ok'],'clear','No gap — direct, voluntary relationship.')">
+      <circle cx="480" cy="206" r="30" fill="#f4efe6" stroke="#1F4E9B" stroke-width="2"/>
+      <text x="480" y="202" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#1F4E9B">Patient</text>
+      <text x="480" y="214" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">Primary</text>
+    </g>
+
+    <!-- Caregiver — RED ring = communication gap -->
+    <g class="node" onclick="showTip(event,'Ring 1 — Direct Care','Caregiver / Family','Communication gap: family may not relay messages, change contact numbers, or accurately report patient status during crisis. CM has no authority to compel family communication.',['gap','auth'],'gap','Family may be only contact during crisis — but their account may be incomplete or distressed.')">
+      <circle cx="480" cy="434" r="32" fill="#f4efe6" stroke="#c0392b" stroke-width="2"/>
+      <text x="480" y="430" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#c0392b">Caregiver</text>
+      <text x="480" y="442" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">Family ⚠</text>
+    </g>
+
+    <!-- ══════════════════════════════
+         NODES — RING 2
+    ══════════════════════════════ -->
+    <!-- MDT -->
+    <g class="node" onclick="showTip(event,'Ring 2 — Coordination','MDT','CM attends MDT meetings, contributes case summaries and risk updates. Coordination is direct but MDT members may hold conflicting views of patient status.',['comm','gap'],'partial','Coordination flow exists — but conflicting information across MDT members is a documented gap.')">
+      <circle cx="340" cy="224" r="34" fill="#f4efe6" stroke="#1a6b5a" stroke-width="1.8"/>
+      <text x="340" y="220" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#1a6b5a">MDT</text>
+      <text x="340" y="232" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">Multi-disciplinary</text>
+    </g>
+
+    <!-- Inpatient — RED = communication gap -->
+    <g class="node" onclick="showTip(event,'Ring 2 — Coordination','Inpatient Team','Communication gap: discharge notifications arrive late or incomplete, compressing the follow-up window. CM cannot act until notified — but notification timing is outside their control.',['gap','gap'],'gap','Discharge info arrives after the patient is already home. This is the most documented single gap in the scope of work.')">
+      <circle cx="280" cy="320" r="34" fill="#f4efe6" stroke="#c0392b" stroke-width="2"/>
+      <text x="280" y="316" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#c0392b">Inpatient</text>
+      <text x="280" y="328" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">Team ⚠</text>
+    </g>
+
+    <!-- Outpatient TCU -->
+    <g class="node" onclick="showTip(event,'Ring 2 — Coordination','Outpatient / TCU Clinic','CM monitors 1st TCU visit and manages default cases. Coordination is active but appointment slot availability and scheduling delays are outside CM control.',['comm','auth'],'partial','Coordination exists — but CM cannot expedite scheduling or compel clinic availability.')">
+      <circle cx="620" cy="224" r="34" fill="#f4efe6" stroke="#1a6b5a" stroke-width="1.8"/>
+      <text x="620" y="220" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#1a6b5a">Outpatient</text>
+      <text x="620" y="232" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">TCU Clinic</text>
+    </g>
+
+    <!-- Community Partners — GOLD = authority gap -->
+    <g class="node" onclick="showTip(event,'Ring 2 — Coordination','Community Partners','Authority gap: CM can coordinate referrals and confirm acceptance but cannot enforce community partner follow-through. Partners operate on different systems — information sharing is fragmented.',['auth','gap'],'auth','CM is accountable for community linkage but has no authority over external partner actions or timelines.')">
+      <circle cx="682" cy="320" r="36" fill="#f4efe6" stroke="#8b6010" stroke-width="2"/>
+      <text x="682" y="316" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#8b6010">Community</text>
+      <text x="682" y="328" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">Partners ⛔</text>
+    </g>
+
+    <!-- IMH -->
+    <g class="node" onclick="showTip(event,'Ring 2 — Coordination','IMH — Institution','CM acts as bridge between IMH, patient, and community. Institutional coordination is direct but CM cannot override institutional decision-making timelines.',['comm','auth'],'partial','Direct coordination — but CM operates within institutional constraints they did not set.')">
+      <circle cx="606" cy="420" r="32" fill="#f4efe6" stroke="#1a6b5a" stroke-width="1.8"/>
+      <text x="606" y="416" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#1a6b5a">IMH</text>
+      <text x="606" y="428" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">Institution</text>
+    </g>
+
+    <!-- Crisis Services — RED = communication gap -->
+    <g class="node" onclick="showTip(event,'Ring 2 — Coordination','Crisis Services','Communication gap: crisis calls arrive outside scheduled hours; after-hours escalation pathways are unclear. CM cannot independently authorize inpatient admission — must route through physician.',['gap','auth'],'gap','After-hours crisis is the highest-risk gap in the entire map. Protocol assumes office hours. The signal works. The response pathway does not.')">
+      <circle cx="354" cy="420" r="32" fill="#f4efe6" stroke="#c0392b" stroke-width="2"/>
+      <text x="354" y="416" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#c0392b">Crisis</text>
+      <text x="354" y="428" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">Services ⚠</text>
+    </g>
+
+    <!-- ══════════════════════════════
+         NODES — RING 3
+    ══════════════════════════════ -->
+    <!-- Supervisor -->
+    <g class="node" onclick="showTip(event,'Ring 3 — System','Supervisor / Clinical Lead','Authority gap: CM requires supervisor authorization for key decisions including emergency escalation. Supervision sessions may not align with real-time crisis needs.',['auth'],'auth','Escalation requires sign-off. Supervision timing does not match crisis timing.')">
+      <circle cx="292" cy="110" r="38" fill="#f4efe6" stroke="#8b6010" stroke-width="1.5" stroke-dasharray="5,2"/>
+      <text x="292" y="106" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#8b6010">Supervisor</text>
+      <text x="292" y="118" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">Clinical Lead ⛔</text>
+    </g>
+
+    <!-- EHR -->
+    <g class="node" onclick="showTip(event,'Ring 3 — System','EHR System','Authority gap: CM is accountable for documentation completeness but the system itself generates the burden. Real-time updating is difficult during high-volume periods. Documentation takes as long as the clinical interaction.',['auth','auth'],'auth','The system designed to capture care is also the system most likely to displace it.')">
+      <circle cx="670" cy="110" r="38" fill="#f4efe6" stroke="#8b6010" stroke-width="1.5" stroke-dasharray="5,2"/>
+      <text x="670" y="106" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#8b6010">EHR System</text>
+      <text x="670" y="118" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">Documentation ⛔</text>
+    </g>
+
+    <!-- Referring Physician — RED -->
+    <g class="node" onclick="showTip(event,'Ring 3 — System','Referring Physician','Communication gap: referral documentation is often incomplete on receipt. CM cannot act on referral gaps without physician sign-off, and physicians may not be reachable for timely consultation.',['gap','auth'],'gap','Referral arrives incomplete. CM waits. Patient is already in transition.')">
+      <circle cx="758" cy="180" r="36" fill="#f4efe6" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="5,2"/>
+      <text x="758" y="176" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#c0392b">Referring</text>
+      <text x="758" y="188" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">Physician ⚠</text>
+    </g>
+
+    <!-- Policy -->
+    <g class="node" onclick="showTip(event,'Ring 3 — System','Policy & Regulation','Authority gap: regulatory constraints limit clinical flexibility in complex cases. Policy updates are not always communicated clearly to frontline staff. Compliance requirements generate administrative overhead.',['auth'],'auth','CM navigates policy they did not write and cannot change, under timelines they did not set.')">
+      <circle cx="202" cy="180" r="36" fill="#f4efe6" stroke="#8b6010" stroke-width="1.5" stroke-dasharray="5,2"/>
+      <text x="202" y="176" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#8b6010">Policy</text>
+      <text x="202" y="188" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">Regulation ⛔</text>
+    </g>
+
+    <!-- Insurance -->
+    <g class="node" onclick="showTip(event,'Ring 3 — System','Insurance / Payers','Authority gap: CM cannot override insurance decisions on placement, admission, or service coverage. Financial constraints shape clinical options without CM having any authority in the negotiation.',['auth'],'auth','Payers shape what is clinically possible. CM executes within that constraint without sitting in the conversation.')">
+      <circle cx="710" cy="504" r="36" fill="#f4efe6" stroke="#8b6010" stroke-width="1.5" stroke-dasharray="5,2"/>
+      <text x="710" y="500" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#8b6010">Insurance</text>
+      <text x="710" y="512" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">Payers ⛔</text>
+    </g>
+
+    <!-- Quality -->
+    <g class="node" onclick="showTip(event,'Ring 3 — System','Quality & Safety Standards','Coordination flow: CM participates in quality audits and safety reviews. Standards inform practice but are set externally. The Teresa Gaytan case illustrates what happens when quality standards exist on paper but not in culture.',['comm'],'ok','Standards exist. Cultural compliance is not guaranteed.')">
+      <circle cx="250" cy="500" r="38" fill="#f4efe6" stroke="#1a6b5a" stroke-width="1.5" stroke-dasharray="5,2"/>
+      <text x="250" y="496" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" font-weight="600" fill="#1a6b5a">Quality &amp;</text>
+      <text x="250" y="508" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8.5" font-style="italic" fill="#7a6e5f">Safety Standards</text>
+    </g>
+
+  </svg>
+  </div>
+
+  <!-- INSIGHT CARDS -->
+  <div class="section-label" style="margin-bottom:1rem">What the Map Reveals</div>
+  <div class="insights">
+
+    <div class="ins-card" data-label="Gap 01 — Highest Risk">
+      <div class="ins-title" style="color:#c0392b">After-Hours Crisis Gap</div>
+      <div class="ins-body">The crisis escalation pathway assumes office hours. When a patient deteriorates at 10pm, the CM is working with a phone and a protocol that was not built for that moment.</div>
+      <ul class="ins-list">
+        <li>Unclear after-hours pathways</li>
+        <li>Cannot authorize admission independently</li>
+        <li>Caregiver may be only contact — and may be in distress</li>
+      </ul>
+    </div>
+
+    <div class="ins-card" data-label="Gap 02 — Structural">
+      <div class="ins-title" style="color:#c0392b">Discharge Notification Delay</div>
+      <div class="ins-body">The CM's follow-up window opens when they receive the discharge notification — but the patient is already home. The most critical transition moment is often missed before the CM can act.</div>
+      <ul class="ins-list">
+        <li>Notification arrives late or incomplete</li>
+        <li>2-day follow-up clock starts too late</li>
+        <li>Patient already re-entering community unsupported</li>
+      </ul>
+    </div>
+
+    <div class="ins-card" data-label="Authority Gap — Systemic">
+      <div class="ins-title" style="color:#8b6010">Community Partner Accountability</div>
+      <div class="ins-body">The CM coordinates community referrals and confirms acceptance — but has no authority to enforce partner follow-through. Partners operate on different systems. Information sharing is fragmented by design.</div>
+      <ul class="ins-list">
+        <li>Referral waitlists outside CM control</li>
+        <li>No shared record system with external partners</li>
+        <li>Accountable for linkage, not for outcome</li>
+      </ul>
+    </div>
+
+    <div class="ins-card" data-label="Documentation Burden">
+      <div class="ins-title" style="color:#8b6010">EHR as Institutional Accountability Tool</div>
+      <div class="ins-body">Documentation takes as long as the clinical interaction. The system was built to serve institutional compliance — not clinical time. The CM bears the burden of both.</div>
+      <ul class="ins-list">
+        <li>Real-time updating impossible during high-volume periods</li>
+        <li>Inconsistent MDT standards create record gaps</li>
+        <li>Emotional load: documentation competes with care</li>
+      </ul>
+    </div>
+
+    <div class="ins-card" data-label="Unclear Responsibility">
+      <div class="ins-title" style="color:#c0392b">Family / Caregiver as Information Relay</div>
+      <div class="ins-body">The caregiver is often the only reachable contact — but their role as an information source is informal, unstructured, and unverifiable. No defined responsibility exists for what they are expected to communicate, or when.</div>
+      <ul class="ins-list">
+        <li>Contact numbers change without notification</li>
+        <li>Family distress distorts crisis reporting</li>
+        <li>No accountability structure for caregiver communication</li>
+      </ul>
+    </div>
+
+    <div class="ins-card" data-label="Structural Finding">
+      <div class="ins-title" style="color:#1a6b5a">The CM as Gap-Filler by Design</div>
+      <div class="ins-body">The map shows that most of the system's communication gaps and authority gaps resolve at one node: the case manager. That is not a coincidence. It is the function the role was designed to serve.</div>
+      <ul class="ins-list">
+        <li>Every gap in Ring 2 routes through CM</li>
+        <li>Every authority gap in Ring 3 is CM's problem to navigate</li>
+        <li>Role exists because the system's gaps are permanent</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- RING TABLE -->
+  <div class="ring-table">
+    <div class="section-label">Stakeholder Rings — Accountability &amp; Gap Summary</div>
+
+    <div class="ring-row">
+      <div class="ring-label" style="color:#1F4E9B">Direct Care<br>Ring 1</div>
+      <div class="ring-actors">Patient · Caregiver / Family</div>
+      <div class="ring-rel">Primary accountability. Trust is the medium of exchange. Family communication is informal and unstructured — no defined accountability for relay of information.</div>
+      <div class="ring-flags">
+        <span class="rflag" style="background:#1F4E9B;color:#fff">Patient — clear</span>
+        <span class="rflag" style="background:#c0392b;color:#fff">Family — comm gap</span>
+      </div>
+    </div>
+
+    <div class="ring-row">
+      <div class="ring-label" style="color:#1a6b5a">Coordination<br>Ring 2</div>
+      <div class="ring-actors">MDT · Inpatient Team · Outpatient / TCU · Community Partners · IMH · Crisis Services</div>
+      <div class="ring-rel">Operational accountability. CM is the single thread connecting this ring. Discharge timing, crisis pathways, and community follow-through are all outside CM control.</div>
+      <div class="ring-flags">
+        <span class="rflag" style="background:#c0392b;color:#fff">Inpatient — comm gap</span>
+        <span class="rflag" style="background:#8b6010;color:#fff">Community — auth gap</span>
+        <span class="rflag" style="background:#c0392b;color:#fff">Crisis — comm gap</span>
+      </div>
+    </div>
+
+    <div class="ring-row">
+      <div class="ring-label" style="color:#b5860d">System<br>Ring 3</div>
+      <div class="ring-actors">Supervisor · EHR · Referring Physician · Policy · Insurance · Quality &amp; Safety</div>
+      <div class="ring-rel">Structural accountability. CM navigates systems they did not build, policy they did not write, and financial constraints they have no seat in. Answerable to all of it. In control of none of it.</div>
+      <div class="ring-flags">
+        <span class="rflag" style="background:#8b6010;color:#fff">Supervisor — auth gap</span>
+        <span class="rflag" style="background:#8b6010;color:#fff">EHR — auth gap</span>
+        <span class="rflag" style="background:#c0392b;color:#fff">Physician — comm gap</span>
+        <span class="rflag" style="background:#8b6010;color:#fff">Insurance — auth gap</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span>EthAiSyn · Case Manager Stakeholder Map</span>
+    <span>For human review before publication</span>
+    <span>© 2026 Mercedez Lopez</span>
+  </div>
+
+</div>
+
+<script>
+// ── TOOLTIP ──
+const tt = document.getElementById('tooltip');
+
+function showTip(e, ring, name, body, flagTypes, gapType, insight) {
+  document.getElementById('tt-ring').textContent = ring;
+  document.getElementById('tt-name').textContent = name;
+  document.getElementById('tt-body').textContent = body;
+
+  const flagsEl = document.getElementById('tt-flags');
+  flagsEl.innerHTML = '';
+
+  const flagLabels = { gap:'⚠ Comm Gap', auth:'⛔ Auth Gap', comm:'↔ Coordination', ok:'✓ Clear' };
+  const flagClasses = { gap:'flag-gap', auth:'flag-auth', comm:'flag-comm', ok:'flag-ok' };
+
+  flagTypes.forEach(f => {
+    const span = document.createElement('span');
+    span.className = 'tt-flag ' + (flagClasses[f] || '');
+    span.textContent = flagLabels[f] || f;
+    flagsEl.appendChild(span);
+  });
+
+  if (insight) {
+    const note = document.createElement('div');
+    note.style.cssText = 'margin-top:0.5rem;font-size:0.75rem;opacity:0.7;font-style:italic;border-top:1px solid rgba(255,255,255,0.15);padding-top:0.4rem;';
+    note.textContent = insight;
+    flagsEl.appendChild(note);
+  }
+
+  tt.style.display = 'block';
+  positionTip(e);
+}
+
+function positionTip(e) {
+  const x = e.clientX + 14;
+  const y = e.clientY + 14;
+  const tw = 280, th = 160;
+  tt.style.left = (x + tw > window.innerWidth  ? x - tw - 28 : x) + 'px';
+  tt.style.top  = (y + th > window.innerHeight ? y - th - 28 : y) + 'px';
+}
+
+document.addEventListener('mousemove', e => {
+  if (tt.style.display === 'block') positionTip(e);
+});
+document.addEventListener('click', e => {
+  if (!e.target.closest('.node')) tt.style.display = 'none';
+});
+
+// ── FILTER ──
+function filterMap(type) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  const links = document.querySelectorAll('.link');
+  const nodes = document.querySelectorAll('.node');
+
+  links.forEach(l => {
+    if (type === 'all') { l.style.opacity = '1'; return; }
+    l.style.opacity = l.classList.contains('link-' + type) ? '1' : '0.08';
+  });
+
+  nodes.forEach(n => { n.style.opacity = '1'; });
+}
+</script>
+</body>
+</html>
