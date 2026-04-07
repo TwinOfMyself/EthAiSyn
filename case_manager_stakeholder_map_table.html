@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Manager — Stakeholder Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f4efe6;
+    --ink:   #1a1408;
+    --warm:  #c8b89a;
+    --rule:  #d4c8b0;
+    --accent:#8b3a2a;
+    --blue:  #1F4E9B;
+    --teal:  #1a6b5a;
+    --gold:  #b5860d;
+    --muted: #7a6e5f;
+    --faint: #ede7db;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--paper);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  body::before {
+    content:''; position:fixed; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:999; opacity:0.5;
+  }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 2.5rem 6rem;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: fadeUp 1s cubic-bezier(0.22,1,0.36,1) 0.15s forwards;
+  }
+
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+  /* ── HEADER ── */
+  .series-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm);
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .series-label::after { content:''; flex:1; height:1px; background:var(--rule); }
+
+  h1 {
+    font-size: clamp(2.2rem, 6vw, 4.2rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.3rem;
+  }
+  .subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.6rem;
+  }
+  .intro {
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--muted);
+    max-width: 600px;
+    line-height: 1.72;
+    margin-bottom: 3rem;
+    border-left: 2px solid var(--accent);
+    padding-left: 1.2rem;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap { width: 100%; overflow-x: auto; margin-bottom: 3.5rem; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  /* column widths */
+  col.c-ring  { width: 10%; }
+  col.c-stake { width: 14%; }
+  col.c-resp  { width: 18%; }
+  col.c-tasks { width: 22%; }
+  col.c-pain  { width: 20%; }
+  col.c-quote { width: 16%; }
+
+  /* ── COLUMN HEADERS ── */
+  thead th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warm);
+    padding: 0.7rem 1rem 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: bottom;
+    white-space: nowrap;
+  }
+
+  /* ── SECTION HEADER ROWS ── */
+  tr.section-row td {
+    padding: 1.4rem 1rem 0.5rem;
+    border-top: 1px solid var(--rule);
+    vertical-align: bottom;
+  }
+  tr.section-row td:first-child {
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .section-mono {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  /* ── DATA ROWS ── */
+  tr.data-row td {
+    padding: 1rem 1rem;
+    vertical-align: top;
+    border-bottom: 1px solid var(--faint);
+    line-height: 1.7;
+    font-weight: 300;
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+
+  tr.data-row:last-of-type td { border-bottom: 1px solid var(--rule); }
+
+  /* ring cell */
+  td.ring-cell {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding-top: 1.1rem !important;
+    white-space: nowrap;
+  }
+
+  /* stakeholder cell */
+  td.stake-cell {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+
+  /* bullet lists */
+  ul.cell-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  ul.cell-list li {
+    padding-left: 0.9rem;
+    position: relative;
+    margin-bottom: 0.35rem;
+    font-size: 0.85rem;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+  ul.cell-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--warm);
+    font-size: 0.75rem;
+    top: 0.08rem;
+  }
+
+  /* pain point labels */
+  .pain-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-right: 0.3rem;
+  }
+  .pl-op   { color: var(--accent); }
+  .pl-inf  { color: var(--teal); }
+  .pl-auth { color: var(--gold); }
+  .pl-res  { color: var(--blue); }
+  .pl-emo  { color: #7b2d8b; }
+
+  /* quote cell */
+  td.quote-cell {
+    font-style: italic;
+    font-size: 0.84rem !important;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .cite {
+    display: block;
+    font-style: normal;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.08em;
+    color: var(--warm);
+    margin-top: 0.4rem;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+  .footer span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--warm);
+  }
+
+  @media (max-width: 720px) {
+    .page { padding: 2.5rem 1.2rem 5rem; }
+    table { font-size: 0.8rem; }
+    thead th { font-size: 0.52rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="series-label">EthAiSyn · Language Series &nbsp;·&nbsp; Vol. I</div>
+
+  <h1>Stakeholder Map</h1>
+  <div class="subtitle">Case Manager · Scope of Work · April 2026</div>
+
+  <p class="intro">
+    Every relationship in this map carries a different weight. Some are built on trust. Some on protocol. Some on the gap between what the system promised and what it can deliver. This table names them all.
+  </p>
+
+  <div class="table-wrap">
+  <table>
+    <colgroup>
+      <col class="c-ring">
+      <col class="c-stake">
+      <col class="c-resp">
+      <col class="c-tasks">
+      <col class="c-pain">
+      <col class="c-quote">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Ring</th>
+        <th>Stakeholder</th>
+        <th>Key Responsibilities</th>
+        <th>Daily Tasks &amp; Workflows</th>
+        <th>Pain Points &amp; Frustrations</th>
+        <th>Key Quotes</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- ══════════════════════════════
+           CASE MANAGEMENT
+      ══════════════════════════════ -->
+      <tr class="section-row">
+        <td colspan="6">
+          <span class="section-mono">Role — Hat 01 &amp; 03</span>
+          Case Management
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="ring-cell" style="color:var(--blue)">Ring 1<br>Direct Care</td>
+        <td class="stake-cell">Patient</td>
+        <td>
+          <ul class="cell-list">
+            <li>Continuity &amp; transition management</li>
+            <li>Risk surveillance &amp; early intervention</li>
+            <li>Documentation &amp; care-plan updates</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li>Review chart at discharge notification</li>
+            <li>Telephonic follow-up within 2 working days</li>
+            <li>Monitor 1st TCU visit; meet patient in clinic</li>
+            <li>Conduct mental state &amp; risk assessments</li>
+            <li>Document all contacts in hospital clinical system</li>
+            <li>Escalate deterioration to supervising clinician</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li><span class="pain-label pl-op">Operational</span>Discharge notifications arrive late, compressing follow-up window</li>
+            <li><span class="pain-label pl-inf">Information</span>System may not reflect real-time discharge status</li>
+            <li><span class="pain-label pl-auth">Authority</span>Cannot compel attendance or override scheduling</li>
+            <li><span class="pain-label pl-res">Resource</span>High caseload limits monitoring capacity</li>
+          </ul>
+        </td>
+        <td class="quote-cell">
+          "Discharge is rarely clean. By the time I get the notification, the patient is already home and sometimes already in crisis."
+          <span class="cite">Paraphrase — qualitative study, community mental health CM</span>
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="ring-cell" style="color:var(--blue)">Ring 1<br>Direct Care</td>
+        <td class="stake-cell">Caregiver / Family</td>
+        <td>
+          <ul class="cell-list">
+            <li>Family liaison &amp; psychoeducation</li>
+            <li>Caregiver burden assessment</li>
+            <li>Crisis support &amp; safety planning</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li>Build rapport with caregiver at point of entry</li>
+            <li>Deliver psychoeducation on diagnosis &amp; relapse signs</li>
+            <li>Assess caregiver stress and capacity</li>
+            <li>Provide crisis advice during acute episodes</li>
+            <li>Send TCU appointment reminders</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li><span class="pain-label pl-emo">Emotional</span>Managing family during crisis by phone is high-stakes and isolating</li>
+            <li><span class="pain-label pl-inf">Information</span>Caregiver account during crisis may be incomplete or distressed</li>
+            <li><span class="pain-label pl-res">Resource</span>Home visit capacity limited by caseload</li>
+          </ul>
+        </td>
+        <td class="quote-cell">
+          "The family is often carrying as much as the patient. If I don't support them, the whole plan falls apart."
+          <span class="cite">Paraphrase — psychiatric CM, interview-based article</span>
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="ring-cell" style="color:var(--gold)">Ring 3<br>System</td>
+        <td class="stake-cell">EHR System</td>
+        <td>
+          <ul class="cell-list">
+            <li>Documentation &amp; care-plan updates</li>
+            <li>Clinical record management</li>
+            <li>Compliance &amp; audit trail</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li>Open and review case file at each interaction</li>
+            <li>Record all contacts, assessments &amp; decisions</li>
+            <li>Update care plan after each MDT discussion</li>
+            <li>Cross-check notes against MDT meeting records</li>
+            <li>Flag incomplete documentation to supervising team</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li><span class="pain-label pl-op">Operational</span>Documentation takes as long as the clinical visit itself</li>
+            <li><span class="pain-label pl-inf">Information</span>Inconsistent MDT documentation creates record gaps</li>
+            <li><span class="pain-label pl-emo">Emotional</span>Pressure to document competes with direct care time</li>
+          </ul>
+        </td>
+        <td class="quote-cell">
+          "I'm accountable for what's in the record, but half the information I need isn't in the system when I need it."
+          <span class="cite">Paraphrase — psychiatric CM, qualitative research</span>
+        </td>
+      </tr>
+
+      <!-- ══════════════════════════════
+           CARE COORDINATION
+      ══════════════════════════════ -->
+      <tr class="section-row">
+        <td colspan="6">
+          <span class="section-mono">Role — Hat 02</span>
+          Care Coordination
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="ring-cell" style="color:var(--teal)">Ring 2<br>Coordination</td>
+        <td class="stake-cell">MDT</td>
+        <td>
+          <ul class="cell-list">
+            <li>Information integration across teams</li>
+            <li>Case formulation contribution</li>
+            <li>MDT meeting participation</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li>Attend MDT meetings; contribute case summaries &amp; risk updates</li>
+            <li>Consolidate assessment info from inpatient team &amp; community</li>
+            <li>Clarify role boundaries to prevent duplication or gaps</li>
+            <li>Develop preliminary case formulation with MDT</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li><span class="pain-label pl-inf">Information</span>MDT members may hold conflicting views of patient status</li>
+            <li><span class="pain-label pl-auth">Authority</span>Can recommend but cannot enforce actions by MDT</li>
+            <li><span class="pain-label pl-op">Operational</span>Psychoeducation time-intensive across varying literacy levels</li>
+          </ul>
+        </td>
+        <td class="quote-cell">
+          "I'm the only person who talks to everyone. The left hand and the right hand don't always know what the other is doing."
+          <span class="cite">Paraphrase — care coordinator, community mental health</span>
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="ring-cell" style="color:var(--teal)">Ring 2<br>Coordination</td>
+        <td class="stake-cell">Inpatient Team</td>
+        <td>
+          <ul class="cell-list">
+            <li>Continuity from inpatient to outpatient</li>
+            <li>Discharge planning coordination</li>
+            <li>Transition handoff management</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li>Receive referral or discharge notification from inpatient team</li>
+            <li>Confirm discharge status and post-discharge needs</li>
+            <li>Coordinate outpatient TCU appointment scheduling</li>
+            <li>Ensure care plan reflects inpatient recommendations</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li><span class="pain-label pl-inf">Information</span>Discharge info arrives late or incomplete</li>
+            <li><span class="pain-label pl-op">Operational</span>Inpatient and outpatient systems do not always communicate</li>
+            <li><span class="pain-label pl-auth">Authority</span>Cannot expedite inpatient discharge decisions</li>
+          </ul>
+        </td>
+        <td class="quote-cell">
+          "I spend the first two days after discharge just trying to confirm someone is reachable."
+          <span class="cite">Paraphrase — behavioral health CM, professional forum</span>
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="ring-cell" style="color:var(--teal)">Ring 2<br>Coordination</td>
+        <td class="stake-cell">Outpatient / TCU Clinic</td>
+        <td>
+          <ul class="cell-list">
+            <li>Follow-up appointment monitoring</li>
+            <li>Default management</li>
+            <li>TCU visit coordination</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li>Monitor 1st TCU visit; meet patient in clinic</li>
+            <li>Confirm follow-up and address attendance barriers</li>
+            <li>Send TCU reminders prior to appointments</li>
+            <li>Manage default cases — follow up on missed appointments</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li><span class="pain-label pl-res">Resource</span>Clinic slots may not align with patient needs</li>
+            <li><span class="pain-label pl-op">Operational</span>Manual reminder process is time-intensive</li>
+            <li><span class="pain-label pl-auth">Authority</span>Cannot compel attendance; engagement is voluntary</li>
+          </ul>
+        </td>
+        <td class="quote-cell">
+          "Discharge is not a finish line. It's the start of a different kind of tracking."
+          <span class="cite">Paraphrase — case management practice literature</span>
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="ring-cell" style="color:var(--teal)">Ring 2<br>Coordination</td>
+        <td class="stake-cell">Community Partners</td>
+        <td>
+          <ul class="cell-list">
+            <li>Community integration &amp; referral</li>
+            <li>Psychoeducation delivery</li>
+            <li>Patient navigation support</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li>Coordinate referrals; confirm community partner acceptance</li>
+            <li>Bridge patient between IMH, family, and community services</li>
+            <li>Monitor community partner follow-through</li>
+            <li>Provide psychoeducation to community partners</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li><span class="pain-label pl-inf">Information</span>Partners operate on different systems; sharing is fragmented</li>
+            <li><span class="pain-label pl-res">Resource</span>Referral waitlists delay coordination</li>
+            <li><span class="pain-label pl-auth">Authority</span>Cannot enforce external partner actions</li>
+          </ul>
+        </td>
+        <td class="quote-cell">
+          "Psychoeducation works when there's time and trust. We don't always have either."
+          <span class="cite">Paraphrase — psychiatric social worker / CM hybrid role</span>
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="ring-cell" style="color:var(--teal)">Ring 2<br>Coordination</td>
+        <td class="stake-cell">Crisis Services</td>
+        <td>
+          <ul class="cell-list">
+            <li>Crisis coordination &amp; escalation</li>
+            <li>De-escalation &amp; safety planning</li>
+            <li>Early intervention formulation</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li>Monitor pre-crisis indicators through scheduled &amp; unscheduled contacts</li>
+            <li>Attempt telephonic de-escalation when distress reported</li>
+            <li>Activate crisis protocol; notify supervising clinician</li>
+            <li>Formulate safety plan with patient &amp; caregiver</li>
+            <li>Document crisis episode; debrief with MDT post-resolution</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li><span class="pain-label pl-op">Operational</span>Crisis calls arrive outside scheduled hours; after-hours pathways unclear</li>
+            <li><span class="pain-label pl-res">Resource</span>Emergency beds are scarce; escalation doesn't guarantee placement</li>
+            <li><span class="pain-label pl-auth">Authority</span>Cannot independently authorize inpatient admission</li>
+            <li><span class="pain-label pl-emo">Emotional</span>Managing acute distress by phone is high-stakes and isolating</li>
+          </ul>
+        </td>
+        <td class="quote-cell">
+          "Crisis doesn't wait for appointments. By the time the next visit is scheduled, the situation has already escalated."
+          <span class="cite">Paraphrase — mental health CM, qualitative study</span>
+        </td>
+      </tr>
+
+      <!-- ══════════════════════════════
+           THERAPEUTIC ROLE
+      ══════════════════════════════ -->
+      <tr class="section-row">
+        <td colspan="6">
+          <span class="section-mono">Role — Hat 01</span>
+          Therapeutic Role
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="ring-cell" style="color:var(--blue)">Ring 1<br>Direct Care</td>
+        <td class="stake-cell">Patient (Therapeutic)</td>
+        <td>
+          <ul class="cell-list">
+            <li>Therapeutic engagement &amp; alliance</li>
+            <li>Counselling &amp; supportive therapy</li>
+            <li>Home visit delivery</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li>Establish initial rapport at point of entry into care coordination</li>
+            <li>Provide individual counselling and supportive therapy</li>
+            <li>Conduct home visits when patient unable or unwilling to attend clinic</li>
+            <li>Adjust therapeutic approach based on changing mental state</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li><span class="pain-label pl-emo">Emotional</span>Building alliance with resistant patients is slow and demanding</li>
+            <li><span class="pain-label pl-res">Resource</span>Home visit capacity limited by geographic spread and caseload</li>
+            <li><span class="pain-label pl-auth">Authority</span>Cannot compel engagement — relationship is voluntary</li>
+          </ul>
+        </td>
+        <td class="quote-cell">
+          "You can't rush trust. Especially with patients who've been let down by the system before."
+          <span class="cite">Paraphrase — mental health CM, professional association profile</span>
+        </td>
+      </tr>
+
+      <!-- ══════════════════════════════
+           SYSTEM RING
+      ══════════════════════════════ -->
+      <tr class="section-row">
+        <td colspan="6">
+          <span class="section-mono">Role — Hat 03</span>
+          System Navigation
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="ring-cell" style="color:var(--gold)">Ring 3<br>System</td>
+        <td class="stake-cell">Supervisor / Clinical Lead</td>
+        <td>
+          <ul class="cell-list">
+            <li>Upward accountability</li>
+            <li>Escalation &amp; consultation</li>
+            <li>Quality oversight reporting</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li>Escalate high-risk cases to supervising clinician</li>
+            <li>Seek consultation on complex case formulations</li>
+            <li>Report on caseload, risk flags, and unresolved gaps</li>
+            <li>Participate in supervision sessions and performance review</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li><span class="pain-label pl-op">Operational</span>Supervision timing does not align with real-time crisis needs</li>
+            <li><span class="pain-label pl-auth">Authority</span>Key decisions require supervisor authorization</li>
+            <li><span class="pain-label pl-emo">Emotional</span>Carrying complex high-risk caseloads with insufficient support</li>
+          </ul>
+        </td>
+        <td class="quote-cell">
+          "I can see it coming. The system doesn't always give me the tools to stop it."
+          <span class="cite">Paraphrase — psychiatric CM interview</span>
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="ring-cell" style="color:var(--gold)">Ring 3<br>System</td>
+        <td class="stake-cell">Referring Physician / IMH</td>
+        <td>
+          <ul class="cell-list">
+            <li>Referral intake &amp; case entry</li>
+            <li>Clinical handoff coordination</li>
+            <li>Institutional liaison</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li>Receive and review referral from physician or IMH team</li>
+            <li>Confirm case eligibility and assign to care pathway</li>
+            <li>Communicate care plan updates back to referring physician</li>
+            <li>Coordinate actions between IMH and outpatient settings</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li><span class="pain-label pl-inf">Information</span>Referral documentation often incomplete on receipt</li>
+            <li><span class="pain-label pl-op">Operational</span>Physicians may not be reachable for timely consultation</li>
+            <li><span class="pain-label pl-auth">Authority</span>Cannot act on referral gaps without physician sign-off</li>
+          </ul>
+        </td>
+        <td class="quote-cell">
+          "We're responsible for the transition, but we don't control the resources."
+          <span class="cite">Paraphrase — behavioral health CM, IHI care transitions literature</span>
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="ring-cell" style="color:var(--gold)">Ring 3<br>System</td>
+        <td class="stake-cell">Policy, Regulation &amp; Quality</td>
+        <td>
+          <ul class="cell-list">
+            <li>Regulatory compliance</li>
+            <li>Standards of practice adherence</li>
+            <li>Quality &amp; safety reporting</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li>Comply with mandated timelines (e.g., 2-day post-discharge follow-up)</li>
+            <li>Follow CMSA standards of practice for formulation and documentation</li>
+            <li>Participate in quality audits and safety reviews when required</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="cell-list">
+            <li><span class="pain-label pl-op">Operational</span>Compliance requirements generate administrative overhead</li>
+            <li><span class="pain-label pl-inf">Information</span>Policy updates not always communicated clearly to frontline staff</li>
+            <li><span class="pain-label pl-auth">Authority</span>Regulatory constraints limit clinical flexibility in complex cases</li>
+          </ul>
+        </td>
+        <td class="quote-cell">
+          "The model a system chooses is a statement about what it believes is worth protecting — and what it is willing to let the market decide."
+          <span class="cite">EthAiSyn — Two Models, April 2026</span>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>EthAiSyn · Case Manager Stakeholder Map</span>
+    <span>For human review before publication</span>
+    <span>© 2026 Mercedez Lopez</span>
+  </div>
+
+</div>
+</body>
+</html>
