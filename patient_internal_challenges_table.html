@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient & Internal Challenges — Care Coordination Breakdown</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f4efe6;
+    --ink:   #1a1408;
+    --warm:  #c8b89a;
+    --rule:  #d4c8b0;
+    --accent:#8b3a2a;
+    --blue:  #1F4E9B;
+    --teal:  #1a6b5a;
+    --gold:  #b5860d;
+    --muted: #7a6e5f;
+    --faint: #ede7db;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--paper);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  body::before {
+    content:''; position:fixed; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:999; opacity:0.5;
+  }
+
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2.5rem 6rem;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: fadeUp 1s cubic-bezier(0.22,1,0.36,1) 0.15s forwards;
+  }
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+  .series-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.63rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm);
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .series-label::after { content:''; flex:1; height:1px; background:var(--rule); }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.3rem;
+  }
+  .subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.63rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.6rem;
+  }
+  .intro {
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--muted);
+    max-width: 680px;
+    line-height: 1.72;
+    margin-bottom: 3rem;
+    border-left: 2px solid var(--accent);
+    padding-left: 1.2rem;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; margin-bottom: 3.5rem; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+  }
+
+  col.c1 { width: 22%; }
+  col.c2 { width: 18%; }
+  col.c3 { width: 28%; }
+  col.c4 { width: 32%; }
+
+  /* column headers */
+  thead th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warm);
+    padding: 0.7rem 1rem 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: bottom;
+    white-space: nowrap;
+  }
+
+  /* section headers */
+  tr.cat-row td {
+    padding: 1.4rem 1rem 0.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  tr.cat-row td:first-child {
+    font-size: clamp(0.95rem, 2.2vw, 1.3rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink);
+  }
+  .cat-mono {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  /* data rows */
+  tr.data-row td {
+    padding: 1rem;
+    vertical-align: top;
+    border-bottom: 1px solid var(--faint);
+    line-height: 1.68;
+    font-weight: 300;
+    font-size: 0.85rem;
+    color: var(--ink);
+  }
+  tr.data-row:last-of-type td { border-bottom: 1px solid var(--rule); }
+
+  /* observable issue cell */
+  td.obs {
+    font-size: 0.9rem !important;
+    font-style: italic;
+    font-weight: 400 !important;
+    color: var(--ink);
+  }
+
+  /* who is affected */
+  td.who {
+    font-size: 0.8rem !important;
+    color: var(--muted);
+  }
+  .who-tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.54rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 1px 6px;
+    border-radius: 1px;
+    margin: 1px 2px 1px 0;
+    background: var(--faint);
+    color: var(--muted);
+  }
+
+  /* hidden risk */
+  td.risk {
+    color: var(--accent) !important;
+    font-style: italic;
+    font-size: 0.84rem !important;
+  }
+
+  /* internal process gap */
+  td.gap {
+    font-size: 0.83rem !important;
+    color: var(--ink);
+  }
+  .gap-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.54rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-right: 0.3rem;
+    color: var(--gold);
+  }
+
+  /* tan reference */
+  .tan-ref {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.54rem;
+    letter-spacing: 0.08em;
+    color: var(--warm);
+    margin-top: 0.4rem;
+    font-style: normal;
+  }
+
+  /* pull quote */
+  .pull-quote {
+    border-left: 2px solid var(--accent);
+    padding: 1.2rem 0 1.2rem 1.6rem;
+    margin-bottom: 3.5rem;
+    font-size: 1.12rem;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--accent);
+    max-width: 700px;
+  }
+
+  /* footer */
+  .footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 1.4rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+  .footer span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--warm);
+  }
+
+  @media (max-width: 720px) {
+    .page { padding: 2.5rem 1.2rem 5rem; }
+    table { font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="series-label">EthAiSyn · Language Series &nbsp;·&nbsp; Vol. I</div>
+
+  <h1>When Invisible Work Stops</h1>
+  <div class="subtitle">Patient &amp; Internal Challenges · Care Coordination Breakdown · April 2026</div>
+
+  <p class="intro">
+    What follows is not a list of complaints. It is a map of what happens when the quiet, undocumented work of case management is absent — and what that absence looks like from the patient's side, the system's side, and the side of everything in between that no one thought to measure.
+  </p>
+
+  <div class="table-wrap">
+  <table>
+    <colgroup>
+      <col class="c1"><col class="c2"><col class="c3"><col class="c4">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Observable Issue</th>
+        <th>Who Is Affected</th>
+        <th>Hidden Risk</th>
+        <th>Internal Process Gap</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- ══════════════════════════════
+           CAT 1: POST-DISCHARGE CONTACT
+      ══════════════════════════════ -->
+      <tr class="cat-row">
+        <td colspan="4">
+          <span class="cat-mono">Category 01</span>
+          Post-Discharge Contact Failure
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Patient receives no contact within 2 working days of discharge
+          <span class="tan-ref">↳ Mr. Tan: first contact Day 4, not Day 2</span>
+        </td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Case Manager</span>
+          <span class="who-tag">Inpatient Team</span>
+        </td>
+        <td class="risk">Critical post-hospitalization window — highest relapse risk — passes without support. Patient interprets silence as abandonment and begins self-managing, including stopping medication.</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>No risk-stratified contact timeline. All discharges treated equally regardless of diagnosis, prior episodes, social support, or medication status. No alert triggers before deadline is missed — only after.
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Case is assigned to CM late due to in-basket routing delay</td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Case Manager</span>
+        </td>
+        <td class="risk">Patient already home, cognitively vulnerable, and navigating a new medication regimen before any professional contact is established. The window for early problem identification is lost before the CM knows the case exists.</td>
+        <td class="gap">
+          <span class="gap-label">Process Failure</span>In-basket routing has no acknowledgment tracking. Cases can sit without a CM reading them. No system flag for cases approaching the 2-day contact deadline without any CM action recorded.
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">CM on leave with no backup system triggered; case goes uncontacted</td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Supervising Clinician</span>
+          <span class="who-tag">Case Manager</span>
+        </td>
+        <td class="risk">Patient with no named contact, no relationship, and no knowledge of how to reach anyone specific. When they encounter a barrier — medication running out — they have no anchor point in the system to call.</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>No cross-coverage protocol for CM leave during active discharge periods. Caseload responsibility is individually held rather than team-held. When the CM is unavailable, the case is effectively unassigned.
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Patient doesn't know who their case manager is or how to reach them</td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Family / Caregiver</span>
+        </td>
+        <td class="risk">Patient in distress defaults to the Emergency Services pathway — the most stigmatizing, time-consuming, and resource-intensive entry point — not because it is appropriate, but because it is the only one they can find.
+          <span class="tan-ref">↳ Mr. Tan: transferred 3 times, arrived at ES, waited 90 minutes, left without medication</span>
+        </td>
+        <td class="gap">
+          <span class="gap-label">Process Failure</span>Discharge paperwork lists multiple phone numbers without specifying which to use and for what. No named CM contact provided at point of discharge. No "what to do if" guidance for common post-discharge scenarios.
+        </td>
+      </tr>
+
+      <!-- ══════════════════════════════
+           CAT 2: MEDICATION TRANSITION
+      ══════════════════════════════ -->
+      <tr class="cat-row">
+        <td colspan="4">
+          <span class="cat-mono">Category 02</span>
+          Medication Transition &amp; Access Failure
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Medication supply at discharge does not cover the gap to first TCU appointment
+          <span class="tan-ref">↳ Mr. Tan: 3-day supply, TCU on Day 7</span>
+        </td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Inpatient Team</span>
+          <span class="who-tag">Outpatient Pharmacy</span>
+        </td>
+        <td class="risk">Patient runs out of mood stabilizers during the highest-risk window post-discharge. In bipolar disorder, even brief medication interruption can accelerate manic relapse. The symptom progression that follows looks indistinguishable from deliberate non-compliance.</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>No automated check comparing discharge medication supply against TCU appointment date before the patient leaves the ward. Inpatient team and outpatient pharmacy operate on separate timelines with no shared verification step.
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Patient cannot obtain interim medication refill through any clear pathway</td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">CM</span>
+          <span class="who-tag">Outpatient Pharmacy</span>
+        </td>
+        <td class="risk">Patient forced to navigate a system that was not designed for their specific need — post-discharge medication refill outside scheduled appointment hours. Each failed attempt reinforces the belief that engagement is punishing and unsuccessful.</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>No defined emergency medication top-up pathway communicated to patients at discharge. Pharmacy closes at 2pm; ES is the only after-hours option but requires registering as an acute case. Interim medication access is structurally invisible.
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">CM identifies urgent medication need but cannot resolve it; promises to call back and doesn't
+          <span class="tan-ref">↳ Mr. Tan: Friday call, end-of-day callback promised, never received</span>
+        </td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Case Manager</span>
+          <span class="who-tag">Prescribing Doctor</span>
+        </td>
+        <td class="risk">One broken promise at a critical moment undoes weeks of potential trust-building. Patient concludes the system is unreliable. This is the pivot point between engagement and avoidance — and it happens not from malice, but from a system with no mechanism to track open commitments.</td>
+        <td class="gap">
+          <span class="gap-label">Process Failure</span>No open-commitment tracking system. CM verbal commitments exist only in the CM's memory. When the CM is pulled to other urgent cases or cannot reach the prescribing doctor, the commitment falls without anyone catching it.
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">No weekend coverage for medication coordination; patient goes 3+ days without mood stabilizers</td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Family / Caregiver</span>
+        </td>
+        <td class="risk">Medication gap over a weekend, without contact, allows mania to accelerate unchecked. By Monday the patient's insight into their own condition is already compromised — the same insight required to make the decision to attend a TCU appointment.</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>Weekend coverage for active post-discharge medication issues is undefined. Handoff to weekend staff does not capture open medication issues. The case is treated as stable because no crisis has been documented, not because the situation is clinically stable.
+        </td>
+      </tr>
+
+      <!-- ══════════════════════════════
+           CAT 3: DEFAULT MANAGEMENT
+      ══════════════════════════════ -->
+      <tr class="cat-row">
+        <td colspan="4">
+          <span class="cat-mono">Category 03</span>
+          Default Management &amp; Follow-Up Failure
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Missed TCU appointment not followed up until Day 4 — the administrative deadline, not clinical urgency
+          <span class="tan-ref">↳ Mr. Tan: missed Monday, contacted Friday — exactly Day 4</span>
+        </td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Case Manager</span>
+          <span class="who-tag">Outpatient Team</span>
+        </td>
+        <td class="risk">Four days of symptom progression without any professional contact. By the time follow-up occurs, the patient's mania has advanced to a state where they no longer believe they need the call. The deadline is met; the clinical moment has passed.</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>Default management workflow is deadline-driven, not risk-driven. No differentiation between routine missed appointment and first post-discharge TCU missed by recently hospitalized, off-medication, high-risk patient. All defaults enter the same queue and receive the same response time.
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Voicemail left as sole follow-up attempt; task marked complete</td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Case Manager</span>
+          <span class="who-tag">Supervising Clinician</span>
+        </td>
+        <td class="risk">A voicemail to an unreachable, symptomatic patient in the early stages of a manic episode is not a clinical intervention. Marking it as "contacted" closes the task without addressing the clinical reality. The system registers completion; the patient is in freefall.</td>
+        <td class="gap">
+          <span class="gap-label">Process Failure</span>"Contacted patient" can be satisfied by voicemail with no requirement for confirmation of receipt or clinical response. No escalation trigger for unreachable high-risk patients after a single unanswered contact attempt.
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">No escalation triggered despite three compounding high-risk factors: recent hospitalization, missed first TCU, unresolved medication crisis</td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Case Manager</span>
+          <span class="who-tag">Supervising Clinician</span>
+          <span class="who-tag">Family / Caregiver</span>
+        </td>
+        <td class="risk">Each risk factor is individually within normal range. Cumulatively, they represent a patient in active deterioration. No one in the system is looking at the pattern — only at the individual tasks. The cumulative risk is invisible because the system was not designed to see it.</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>No risk-accumulation logic in the workflow. Escalation is triggered by individual flags, not by the combination of flags. A patient with three simultaneous high-risk indicators receives the same response as a patient with one.
+        </td>
+      </tr>
+
+      <!-- ══════════════════════════════
+           CAT 4: INFORMATION FRAGMENTATION
+      ══════════════════════════════ -->
+      <tr class="cat-row">
+        <td colspan="4">
+          <span class="cat-mono">Category 04</span>
+          Information Fragmentation &amp; Narrative Loss
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">CM handling default follow-up has no visibility into the prior week's medication crisis or broken callback promise
+          <span class="tan-ref">↳ Mr. Tan: each touchpoint treated as isolated event</span>
+        </td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Case Manager</span>
+          <span class="who-tag">Supervising Clinician</span>
+        </td>
+        <td class="risk">The CM cannot recognize the pattern — engagement, system failure, disengagement, deterioration — because the narrative does not exist in any single place. The patient's trajectory is invisible; each interaction is assessed in isolation rather than as part of a deteriorating arc.</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>Documentation is scattered across inpatient notes, CM notes, pharmacy records, and ES registration. No patient narrative record is maintained across touchpoints. Different staff handle post-discharge call and default follow-up with no continuity of relationship or information.
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Patient's three phone calls and in-person visit to IMH are not captured in any system visible to the CM</td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Case Manager</span>
+        </td>
+        <td class="risk">The patient's active engagement with the system — their repeated attempts to get help — is invisible to the person responsible for their care. What looks like non-compliance from the outside was preceded by heroic engagement that the system failed to respond to and failed to record.</td>
+        <td class="gap">
+          <span class="gap-label">Process Failure</span>Phone interactions are not systematically captured. Patient-initiated contacts that do not result in a scheduled appointment or documented outcome leave no trace in the CM's accessible record. The patient's effort is structurally invisible.
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Caregiver (family) receives no discharge information and does not know patient's care plan or warning signs</td>
+        <td class="who">
+          <span class="who-tag">Family / Caregiver</span>
+          <span class="who-tag">Patient</span>
+        </td>
+        <td class="risk">The person closest to the patient — the one most likely to notice early warning signs — is operating without information. They cannot recognize that the patient's increasing energy and decreased sleep are clinical symptoms rather than recovery. The safety net that might have caught the relapse was never activated.</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>Discharge communication is directed to the patient only. No formal caregiver notification workflow exists. Psychoeducation for family about warning signs and emergency contact procedures is not a standard discharge step.
+        </td>
+      </tr>
+
+      <!-- ══════════════════════════════
+           CAT 5: TRUST EROSION
+      ══════════════════════════════ -->
+      <tr class="cat-row">
+        <td colspan="4">
+          <span class="cat-mono">Category 05</span>
+          Trust Erosion &amp; Therapeutic Alliance Collapse
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Patient stops answering CM calls after broken callback promise</td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Case Manager</span>
+        </td>
+        <td class="risk">Phone avoidance is not a symptom of illness. It is a rational response to learned unreliability. The patient has evidence — multiple data points — that calling or engaging produces friction, not help. Stopping engagement is the only behavior the system consistently reinforced.</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>No mechanism for rebuilding trust after a system failure. Once a patient disengages, the workflow treats them as non-compliant rather than as someone who has reasonable grounds for distrust. There is no recovery pathway — no way for the system to acknowledge its failure and re-establish contact on different terms.
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Patient's medical record documents "TCU defaulted" and "medication non-compliance" with no record of what preceded those outcomes
+          <span class="tan-ref">↳ Mr. Tan: what the record says vs. what actually happened</span>
+        </td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Future Clinical Staff</span>
+          <span class="who-tag">System</span>
+        </td>
+        <td class="risk">Future clinicians who read this record will approach the next admission with the assumption that this patient is non-compliant. The institutional memory of the system's failure is erased; only the patient's behavior in response to that failure is preserved. The cycle is designed to repeat.</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>Documentation templates capture task completion and patient behavior, not system failures or patient engagement attempts. There is no field for "system failed to follow through." The record is structurally biased toward patient blame.
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Patient begins to believe they do not have bipolar disorder, that medication was suppressing their "real self"</td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Case Manager</span>
+          <span class="who-tag">Inpatient Team</span>
+        </td>
+        <td class="risk">Anosognosia — reduced insight into one's own illness — is a clinical feature of mania. But the system's failures during this window actively reinforced the patient's emerging lack of insight. Every broken promise, every navigation failure, every silence made "the system was wrong about me" a more rational conclusion than "I need to keep taking these pills."</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>Psychoeducation about the relationship between medication, insight, and early manic symptoms is not delivered in a timely or reinforced way post-discharge. The CM contact that should have reinforced medication importance and normalized the foggy post-discharge feeling did not occur until the patient had already begun stopping medication.
+        </td>
+      </tr>
+
+      <!-- ══════════════════════════════
+           CAT 6: SYSTEMIC RISK ACCUMULATION
+      ══════════════════════════════ -->
+      <tr class="cat-row">
+        <td colspan="4">
+          <span class="cat-mono">Category 06</span>
+          Systemic Risk Accumulation &amp; Preventable Readmission
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Each individual gap is "defensible" — within deadline, process followed — but cumulative effect is crisis</td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Case Manager</span>
+          <span class="who-tag">All System Actors</span>
+        </td>
+        <td class="risk">No single actor made a catastrophic error. Each action was individually within the bounds of accepted practice. The readmission was produced not by one failure but by the accumulation of five small ones — none of which the system was designed to see in combination.</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>The workflow has no risk-accumulation logic. Individual tasks are tracked; compounding risk is not. A patient with delayed contact + medication gap + broken promise + missed TCU + unreachable status receives the same administrative response as a patient with one of those factors.
+        </td>
+      </tr>
+
+      <tr class="data-row">
+        <td class="obs">Preventable readmission occurs 15 days post-discharge</td>
+        <td class="who">
+          <span class="who-tag">Patient</span>
+          <span class="who-tag">Case Manager</span>
+          <span class="who-tag">Inpatient Team</span>
+          <span class="who-tag">System</span>
+        </td>
+        <td class="risk">The readmission will be recorded. What will not be recorded is that it was preventable — and that the system's own workflows, applied correctly according to their own standards, produced the conditions that made it inevitable. The next admission will begin with the same assumptions and the same design.</td>
+        <td class="gap">
+          <span class="gap-label">Design Flaw</span>No post-readmission review process that asks: what workflow gaps preceded this? No feedback loop between readmission outcomes and workflow design. The system learns nothing from this patient's case because there is no mechanism for it to do so.
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+
+  <!-- PULL QUOTE -->
+  <div class="pull-quote">
+    Case management doesn't prevent disasters.<br>
+    It prevents the quiet unraveling that makes disasters inevitable —<br>
+    and when that invisible work stops, the silence isn't safety.<br>
+    It's the system failing in ways no one will ever document.
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>EthAiSyn · Language Series · Patient &amp; Internal Challenges</span>
+    <span>For human review before publication</span>
+    <span>© 2026 Mercedez Lopez</span>
+  </div>
+
+</div>
+</body>
+</html>
