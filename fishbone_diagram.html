@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fishbone Diagram – Broken Callback Promise</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2435;
+    --accent: #e8533a;
+    --accent2: #f0a05a;
+    --text: #e8e6e0;
+    --muted: #7a7f94;
+    --bone1: #4a7fa5;
+    --bone2: #5a9e7a;
+    --bone3: #9a6bbf;
+    --bone4: #bf7a4a;
+    --bone5: #bf4a6b;
+    --bone6: #4a9eb8;
+    --spine: #e8533a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 10% 20%, rgba(232,83,58,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 80%, rgba(74,127,165,0.06) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 36px;
+    animation: fadeDown 0.7s ease both;
+  }
+
+  .label-pill {
+    display: inline-block;
+    background: rgba(232,83,58,0.15);
+    border: 1px solid rgba(232,83,58,0.3);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(22px, 3.5vw, 38px);
+    line-height: 1.2;
+    color: var(--text);
+    max-width: 680px;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 620px;
+    line-height: 1.6;
+  }
+
+  /* Problem statement banner */
+  .problem-banner {
+    background: linear-gradient(135deg, rgba(232,83,58,0.12), rgba(232,83,58,0.05));
+    border: 1px solid rgba(232,83,58,0.25);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 36px;
+    animation: fadeUp 0.7s 0.15s ease both;
+  }
+
+  .problem-banner .pb-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .problem-banner p {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .problem-banner strong { color: var(--accent2); }
+
+  /* SVG Fishbone */
+  .diagram-wrap {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 32px 24px;
+    margin-bottom: 36px;
+    overflow-x: auto;
+    animation: fadeUp 0.7s 0.25s ease both;
+  }
+
+  svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  /* Cause Cards Grid */
+  .cards-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.7s 0.35s ease both;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+  }
+
+  .card-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .card-category {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .card-body {
+    padding: 0 16px 16px;
+  }
+
+  .cause-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .cause-bullet {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .cause-text {
+    font-size: 13px;
+    color: #c8c5be;
+    line-height: 1.5;
+  }
+
+  .cause-text em {
+    display: block;
+    font-style: normal;
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* Root cause highlight */
+  .root-cause-box {
+    background: linear-gradient(135deg, rgba(232,83,58,0.1), rgba(240,160,90,0.08));
+    border: 1px solid rgba(232,83,58,0.3);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-top: 36px;
+    animation: fadeUp 0.7s 0.5s ease both;
+  }
+
+  .rc-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .rc-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+    max-width: 780px;
+  }
+
+  .rc-text strong { color: var(--accent2); }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="label-pill">Root Cause Analysis · Ishikawa Diagram</div>
+    <h1>Why does a <span>promised callback</span> fall through the cracks?</h1>
+    <p class="subtitle">Analysing the system failure behind an unmet commitment — and why one broken promise undoes weeks of trust-building.</p>
+  </div>
+
+  <div class="problem-banner">
+    <div class="pb-label">Problem Statement</div>
+    <p>Case Manager identifies an <strong>urgent medication need</strong>, promises a callback to the patient, and never follows through — leaving the patient without resolution and eroding trust in the care system. <strong>Mr. Tan's case:</strong> Friday call, end-of-day callback promised, never received.</p>
+  </div>
+
+  <!-- SVG Fishbone Diagram -->
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 1060 480" width="1060" height="480" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans, sans-serif">
+
+      <!-- Defs: arrowhead -->
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#e8533a"/>
+        </marker>
+        <!-- Glow filter for head box -->
+        <filter id="glow" x="-20%" y="-40%" width="140%" height="180%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- ── Spine ── -->
+      <line x1="100" y1="240" x2="880" y2="240" stroke="#e8533a" stroke-width="3" marker-end="url(#arr)"/>
+
+      <!-- ══ HEAD (Effect box) ══ -->
+      <rect x="882" y="185" width="158" height="110" rx="10" fill="rgba(232,83,58,0.18)" stroke="#e8533a" stroke-width="1.5" filter="url(#glow)"/>
+      <text x="961" y="225" text-anchor="middle" fill="#e8e6e0" font-size="11" font-weight="600">Promised callback</text>
+      <text x="961" y="241" text-anchor="middle" fill="#e8e6e0" font-size="11" font-weight="600">never received by</text>
+      <text x="961" y="257" text-anchor="middle" fill="#f0a05a" font-size="11" font-weight="700">patient</text>
+      <text x="961" y="275" text-anchor="middle" fill="#7a7f94" font-size="9">(Mr. Tan scenario)</text>
+
+      <!-- ═══════════════════════════════════
+           TOP BONES  (above spine)
+      ═══════════════════════════════════ -->
+
+      <!-- BONE T1: People / Manpower  (colour #4a7fa5) -->
+      <line x1="220" y1="240" x2="300" y2="130" stroke="#4a7fa5" stroke-width="2"/>
+      <text x="306" y="124" fill="#4a7fa5" font-size="12" font-weight="700">People</text>
+      <!-- sub-bones -->
+      <line x1="260" y1="185" x2="220" y2="150" stroke="#4a7fa5" stroke-width="1.3"/>
+      <text x="165" y="148" fill="#c8c5be" font-size="10.5">CM overloaded with cases</text>
+      <line x1="280" y1="168" x2="250" y2="140" stroke="#4a7fa5" stroke-width="1.3"/>
+      <text x="195" y="136" fill="#c8c5be" font-size="10.5">No backup when CM unavailable</text>
+
+      <!-- BONE T2: Process / Methods  (colour #5a9e7a) -->
+      <line x1="430" y1="240" x2="510" y2="110" stroke="#5a9e7a" stroke-width="2"/>
+      <text x="516" y="104" fill="#5a9e7a" font-size="12" font-weight="700">Process</text>
+      <!-- sub-bones -->
+      <line x1="460" y1="197" x2="420" y2="165" stroke="#5a9e7a" stroke-width="1.3"/>
+      <text x="305" y="163" fill="#c8c5be" font-size="10.5">No open-commitment tracking</text>
+      <line x1="480" y1="175" x2="450" y2="145" stroke="#5a9e7a" stroke-width="1.3"/>
+      <text x="350" y="143" fill="#c8c5be" font-size="10.5">No handover protocol at EOD</text>
+      <line x1="500" y1="155" x2="478" y2="130" stroke="#5a9e7a" stroke-width="1.3"/>
+      <text x="390" y="127" fill="#c8c5be" font-size="10.5">Verbal commitments not logged</text>
+
+      <!-- BONE T3: Measurement  (colour #9a6bbf) -->
+      <line x1="650" y1="240" x2="720" y2="115" stroke="#9a6bbf" stroke-width="2"/>
+      <text x="726" y="109" fill="#9a6bbf" font-size="12" font-weight="700">Measurement</text>
+      <!-- sub-bones -->
+      <line x1="675" y1="196" x2="648" y2="165" stroke="#9a6bbf" stroke-width="1.3"/>
+      <text x="535" y="163" fill="#c8c5be" font-size="10.5">No SLA for callback turnaround</text>
+      <line x1="695" y1="173" x2="672" y2="145" stroke="#9a6bbf" stroke-width="1.3"/>
+      <text x="560" y="142" fill="#c8c5be" font-size="10.5">No alert if promise unresolved</text>
+
+      <!-- ═══════════════════════════════════
+           BOTTOM BONES  (below spine)
+      ═══════════════════════════════════ -->
+
+      <!-- BONE B1: Machines / Technology  (colour #bf7a4a) -->
+      <line x1="270" y1="240" x2="340" y2="355" stroke="#bf7a4a" stroke-width="2"/>
+      <text x="290" y="374" fill="#bf7a4a" font-size="12" font-weight="700">Machines / Technology</text>
+      <!-- sub-bones -->
+      <line x1="295" y1="283" x2="248" y2="310" stroke="#bf7a4a" stroke-width="1.3"/>
+      <text x="110" y="314" fill="#c8c5be" font-size="10.5">No shared cross-team task system</text>
+      <line x1="314" y1="308" x2="274" y2="332" stroke="#bf7a4a" stroke-width="1.3"/>
+      <text x="140" y="336" fill="#c8c5be" font-size="10.5">POS/EMR can't flag pending calls</text>
+      <line x1="330" y1="330" x2="295" y2="350" stroke="#bf7a4a" stroke-width="1.3"/>
+      <text x="155" y="354" fill="#c8c5be" font-size="10.5">No automated reminder to CM</text>
+
+      <!-- BONE B2: Materials / Information  (colour #bf4a6b) -->
+      <line x1="490" y1="240" x2="560" y2="360" stroke="#bf4a6b" stroke-width="2"/>
+      <text x="490" y="376" fill="#bf4a6b" font-size="12" font-weight="700">Materials / Information</text>
+      <!-- sub-bones -->
+      <line x1="516" y1="283" x2="472" y2="308" stroke="#bf4a6b" stroke-width="1.3"/>
+      <text x="340" y="312" fill="#c8c5be" font-size="10.5">Prescribing doctor unreachable</text>
+      <line x1="535" y1="308" x2="498" y2="330" stroke="#bf4a6b" stroke-width="1.3"/>
+      <text x="368" y="334" fill="#c8c5be" font-size="10.5">Pharmacy contact info missing</text>
+
+      <!-- BONE B3: Environment  (colour #4a9eb8) -->
+      <line x1="700" y1="240" x2="765" y2="360" stroke="#4a9eb8" stroke-width="2"/>
+      <text x="698" y="376" fill="#4a9eb8" font-size="12" font-weight="700">Environment</text>
+      <!-- sub-bones -->
+      <line x1="724" y1="283" x2="682" y2="308" stroke="#4a9eb8" stroke-width="1.3"/>
+      <text x="540" y="312" fill="#c8c5be" font-size="10.5">Late Friday — staff winding down</text>
+      <line x1="743" y1="308" x2="708" y2="330" stroke="#4a9eb8" stroke-width="1.3"/>
+      <text x="575" y="334" fill="#c8c5be" font-size="10.5">Weekend gap in coverage</text>
+      <line x1="757" y1="330" x2="728" y2="348" stroke="#4a9eb8" stroke-width="1.3"/>
+      <text x="590" y="352" fill="#c8c5be" font-size="10.5">High-urgency cases competing</text>
+
+      <!-- Legend labels (small) -->
+      <text x="50" y="460" fill="#7a7f94" font-size="10">*EOD = End of Day · CM = Case Manager · EMR = Electronic Medical Record</text>
+    </svg>
+  </div>
+
+  <!-- Cause Cards -->
+  <div class="cards-title">Cause Categories — Detailed Breakdown</div>
+  <div class="cards-grid">
+
+    <!-- People -->
+    <div class="card">
+      <div class="card-header" style="background: rgba(74,127,165,0.12); border-bottom: 1px solid rgba(74,127,165,0.2);">
+        <div class="card-dot" style="background:#4a7fa5;"></div>
+        <span class="card-category" style="color:#4a7fa5;">People (Manpower)</span>
+      </div>
+      <div class="card-body">
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#4a7fa5;"></div>
+          <div class="cause-text">CM is overloaded with active cases
+            <em>No capacity to follow through on each promise made</em>
+          </div>
+        </div>
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#4a7fa5;"></div>
+          <div class="cause-text">No designated backup when CM is unavailable
+            <em>Commitment lives only in one person's memory</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Process -->
+    <div class="card">
+      <div class="card-header" style="background: rgba(90,158,122,0.12); border-bottom: 1px solid rgba(90,158,122,0.2);">
+        <div class="card-dot" style="background:#5a9e7a;"></div>
+        <span class="card-category" style="color:#5a9e7a;">Process (Methods)</span>
+      </div>
+      <div class="card-body">
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#5a9e7a;"></div>
+          <div class="cause-text">No open-commitment tracking system
+            <em>Verbal promises exist only in the CM's memory</em>
+          </div>
+        </div>
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#5a9e7a;"></div>
+          <div class="cause-text">No end-of-day handover protocol
+            <em>Unresolved items are not handed off before close</em>
+          </div>
+        </div>
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#5a9e7a;"></div>
+          <div class="cause-text">Commitments not logged in any system
+            <em>No audit trail — promise is invisible to the team</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Machines -->
+    <div class="card">
+      <div class="card-header" style="background: rgba(191,122,74,0.12); border-bottom: 1px solid rgba(191,122,74,0.2);">
+        <div class="card-dot" style="background:#bf7a4a;"></div>
+        <span class="card-category" style="color:#bf7a4a;">Machines / Technology</span>
+      </div>
+      <div class="card-body">
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#bf7a4a;"></div>
+          <div class="cause-text">No shared cross-team task or ticketing system
+            <em>Inpatient and outpatient teams use separate tools</em>
+          </div>
+        </div>
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#bf7a4a;"></div>
+          <div class="cause-text">EMR cannot flag pending callbacks
+            <em>System has no "open loop" status for patient contacts</em>
+          </div>
+        </div>
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#bf7a4a;"></div>
+          <div class="cause-text">No automated reminder to CM
+            <em>Nothing prompts the CM to revisit the promise</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Materials -->
+    <div class="card">
+      <div class="card-header" style="background: rgba(191,74,107,0.12); border-bottom: 1px solid rgba(191,74,107,0.2);">
+        <div class="card-dot" style="background:#bf4a6b;"></div>
+        <span class="card-category" style="color:#bf4a6b;">Materials / Information</span>
+      </div>
+      <div class="card-body">
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#bf4a6b;"></div>
+          <div class="cause-text">Prescribing doctor unreachable after hours
+            <em>CM cannot resolve the medication issue even if they try</em>
+          </div>
+        </div>
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#bf4a6b;"></div>
+          <div class="cause-text">Pharmacy or on-call contact info not readily available
+            <em>No fallback path to fulfil the promise independently</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Measurement -->
+    <div class="card">
+      <div class="card-header" style="background: rgba(154,107,191,0.12); border-bottom: 1px solid rgba(154,107,191,0.2);">
+        <div class="card-dot" style="background:#9a6bbf;"></div>
+        <span class="card-category" style="color:#9a6bbf;">Measurement</span>
+      </div>
+      <div class="card-body">
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#9a6bbf;"></div>
+          <div class="cause-text">No service-level agreement for callback turnaround
+            <em>No standard that defines "how fast is fast enough"</em>
+          </div>
+        </div>
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#9a6bbf;"></div>
+          <div class="cause-text">No alert triggered if promise remains unresolved
+            <em>Broken promises are invisible — never counted or reported</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Environment -->
+    <div class="card">
+      <div class="card-header" style="background: rgba(74,158,184,0.12); border-bottom: 1px solid rgba(74,158,184,0.2);">
+        <div class="card-dot" style="background:#4a9eb8;"></div>
+        <span class="card-category" style="color:#4a9eb8;">Environment</span>
+      </div>
+      <div class="card-body">
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#4a9eb8;"></div>
+          <div class="cause-text">Late Friday timing — staff in wind-down mode
+            <em>Mr. Tan's call came at the worst possible moment</em>
+          </div>
+        </div>
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#4a9eb8;"></div>
+          <div class="cause-text">Weekend coverage gap
+            <em>Even if flagged Friday, no one acts until Monday</em>
+          </div>
+        </div>
+        <div class="cause-item">
+          <div class="cause-bullet" style="background:#4a9eb8;"></div>
+          <div class="cause-text">Competing urgent cases in the same window
+            <em>CM is pulled away before the callback can happen</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Root cause -->
+  <div class="root-cause-box">
+    <div class="rc-label">★ Root Cause (Priority Finding)</div>
+    <p class="rc-text">
+      The system has <strong>no mechanism to track open commitments</strong>. When a Case Manager makes a verbal promise to a patient, that commitment exists only in one person's memory — with no log, no alert, no escalation path, and no handover protocol. When the CM is diverted by other urgent cases or fails to reach the prescribing doctor, <strong>the promise silently falls through with no one catching it</strong>. The failure is not malicious intent — it is a predictable outcome of a system that never designed for promise accountability. One unmet callback at a critical juncture (Friday, end-of-day, urgent medication) becomes the pivot point at which <strong>the patient concludes the system is unreliable</strong> — erasing weeks of potential trust-building.
+    </p>
+  </div>
+
+</div>
+</body>
+</html>
