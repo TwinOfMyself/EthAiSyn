@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Callback Commitment Protocol · EthAiSyn</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg:      #F7F5F0;
+    --ink:     #1A1916;
+    --muted:   #7A776E;
+    --rule:    #D8D4CC;
+    --accent:  #C0392B;
+    --surface: #EFECE6;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* grain */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:0;
+  }
+
+  .page {
+    position:relative; z-index:1;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 52px 28px 80px;
+  }
+
+  /* ── Masthead ── */
+  .masthead {
+    border-top: 3px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 18px 0 14px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    animation: rise 0.6s ease both;
+  }
+
+  .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+  }
+
+  .brand span { color: var(--accent); font-style: italic; }
+
+  .meta {
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.9;
+  }
+
+  /* ── Title ── */
+  .title-block {
+    margin-bottom: 32px;
+    animation: rise 0.6s 0.08s ease both;
+  }
+
+  .eyebrow {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 3.5vw, 42px);
+    font-weight: 300;
+    line-height: 1.15;
+    max-width: 640px;
+  }
+
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .deck {
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.8;
+    border-left: 2px solid var(--rule);
+    padding-left: 12px;
+  }
+
+  /* ── Start banner ── */
+  .start-banner {
+    background: var(--ink);
+    color: #F7F5F0;
+    padding: 16px 20px;
+    border-radius: 3px;
+    margin-bottom: 32px;
+    animation: rise 0.6s 0.14s ease both;
+  }
+
+  .start-banner .sb-label {
+    font-size: 8.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #C8A050;
+    margin-bottom: 5px;
+  }
+
+  .start-banner .sb-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.55;
+    color: #E8E4DC;
+  }
+
+  .start-banner .sb-text strong { color: #F5C07A; font-weight: 600; }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 28px;
+    padding: 12px 16px;
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    animation: rise 0.6s 0.18s ease both;
+  }
+
+  .leg-title {
+    width: 100%;
+    font-size: 8.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+
+  .li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: var(--ink);
+  }
+
+  .ls {
+    width: 13px; height: 13px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── Diagram ── */
+  .diagram-wrap {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 28px 16px;
+    overflow-x: auto;
+    box-shadow: 0 2px 16px rgba(26,25,22,0.06);
+    animation: rise 0.6s 0.22s ease both;
+  }
+
+  .mermaid {
+    display: flex;
+    justify-content: center;
+    min-width: 700px;
+  }
+
+  /* ── Gap + GL strips ── */
+  .strip-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+    margin-top: 24px;
+    animation: rise 0.6s 0.3s ease both;
+  }
+
+  .strip {
+    padding: 10px 13px;
+    border-radius: 3px;
+    border: 1px solid;
+    font-size: 10.5px;
+    line-height: 1.6;
+  }
+
+  .strip.gap {
+    background: #FEF9F0;
+    border-color: #E8C878;
+    border-left: 3px solid #8A5C00;
+  }
+
+  .strip.gl {
+    background: #EBF2FA;
+    border-color: #B8D0EA;
+    border-left: 3px solid #1D5C96;
+  }
+
+  .strip-label {
+    font-size: 8px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    font-weight: 500;
+  }
+
+  .strip.gap .strip-label { color: #8A5C00; }
+  .strip.gl  .strip-label { color: #1D5C96; }
+
+  /* ── Closing ── */
+  .closing {
+    margin-top: 32px;
+    border-top: 1px solid var(--rule);
+    padding-top: 20px;
+    animation: rise 0.6s 0.36s ease both;
+  }
+
+  .closing p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--ink);
+    max-width: 660px;
+  }
+
+  .closing p em { font-style: italic; color: var(--accent); }
+
+  @keyframes rise {
+    from { opacity:0; transform:translateY(10px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  @media(max-width:600px){
+    .page { padding:24px 12px 60px; }
+    .masthead { flex-direction:column; gap:8px; align-items:flex-start; }
+    .meta { text-align:left; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Masthead -->
+  <div class="masthead">
+    <div class="brand">Eth<span>Ai</span>Syn</div>
+    <div class="meta">
+      Process Design · Psychiatric Care Coordination<br>
+      IMH Externship · Case Management Unit
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div class="title-block">
+    <div class="eyebrow">Visual Decision Flowchart · Callback Commitment Protocol</div>
+    <h1>From verbal promise<br>to <em>closed loop</em></h1>
+    <p class="deck">What should happen — step by step, role by role, timeframe by timeframe — when a Case Manager makes a commitment during a call that cannot be resolved in the same interaction.</p>
+  </div>
+
+  <!-- Start banner -->
+  <div class="start-banner">
+    <div class="sb-label">Starting Point</div>
+    <div class="sb-text">A Case Manager has just ended a contact call in which they made a <strong>verbal commitment</strong> to follow up on an urgent patient need. <strong>The system has no record of this commitment yet.</strong></div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="leg-title">Colour Key</div>
+    <div class="li"><div class="ls" style="background:#E8E8E8;border:1px solid #999;"></div>Start / End</div>
+    <div class="li"><div class="ls" style="background:#CCE5FF;border:1px solid #5599CC;"></div>Decision point</div>
+    <div class="li"><div class="ls" style="background:#D4EDDA;border:1px solid #A8CFBA;"></div>Resolved / Safe</div>
+    <div class="li"><div class="ls" style="background:#F8D7DA;border:1px solid #DCA8A8;"></div>Escalation required</div>
+    <div class="li"><div class="ls" style="background:#D1ECF1;border:1px solid #99D6E0;"></div>Team Lead action</div>
+    <div class="li"><div class="ls" style="background:#FFF3CD;border:1px solid #E8C878;"></div>⚠ Workflow gap node</div>
+    <div class="li"><div class="ls" style="background:#FFFFFF;border:1px solid #DCDBD7;"></div>Standard action</div>
+  </div>
+
+  <!-- Diagram -->
+  <div class="diagram-wrap">
+    <div class="mermaid">
+flowchart TD
+    START([" START\nCM ends call with\nunresolved patient need "])
+
+    N1["📋 NODE 1 — Log Commitment\nCM logs in .cmutel before closing call\n• What was promised\n• Timeframe given to patient\n• What resolution requires\nDefault if no timeframe stated: same business day"]
+
+    Q1{{"Friday call or timeframe\ncrosses EOD / weekend?"}}
+
+    N2["⏱ NODE 2 — Same-Day Resolution\nCM contacts doctor / pharmacy\nwithin same business day\nDocument all attempts in .cmutel"]
+
+    Q2{{"Resolved within\nsame business day?"}}
+
+    RESOLVED1(["✓ CLOSED\nCM calls patient to confirm\n.cmutel updated: commitment closed\nOwner: CM · Same day"])
+
+    Q3{{"Clinical risk\nidentified?"}}
+
+    ESC1["🔴 ESCALATE — High Risk\nCM → Team Lead + Consultant before EOD\nConsultant: on-call or emergency pharmacy?\nCovering CM assigned overnight\nPatient called back with new timeframe\nOwner: Team Lead + Consultant · Before EOD"]
+
+    LOW1["📌 Low Risk — Flag and Remind\nCM flags in .cmutel: unresolved, low risk\nSystem reminder set for next morning\nTeam Lead informed via in-basket\nOwner: CM · First thing next business day"]
+
+    N3["⚠ NODE 3 — Weekend Handover\nGAP: This step does not exist in current workflow\nCM attempts resolution before end of Friday\nLog full detail in .cmutel"]
+
+    Q4{{"Resolved before\nend of Friday?"}}
+
+    RESOLVED2(["✓ CLOSED\nCM calls patient to confirm\n.cmutel updated: commitment closed"])
+
+    Q5{{"Clinical risk\nidentified?"}}
+
+    ESC2["🔴 ESCALATE — Weekend Risk\nCM → Consultant + Team Lead before leaving Friday\nOn-call CM briefed with full details\nPatient called back Friday:\nSomeone will follow up by specific day and time\nOwner: On-call / Duty Officer"]
+
+    LOW2["📌 Low Risk — Written Handover\nCM writes handover note\nPlaced in Team Lead in-basket before Friday close\nTeam Lead assigns Monday owner before EOD Friday\nOwner: Named CM · By 10am Monday"]
+
+    N4["🔍 NODE 4 — Audit and Detection\nTeam Lead: weekly open-commitment audit\nAny .cmutel entry unresolved over 2 business days\nautomatically escalated\nAlso reviewed at every patient contact"]
+
+    Q6{{"How long has commitment\nbeen unresolved?"}}
+
+    LESS2["Priority callback today\nOwner: CM · Same business day"]
+
+    MID["Team Lead assigns CM or cover\nPatient contacted: acknowledge delay\nGive specific new timeframe\n.cmutel updated\nOwner: TL assigns · Within 24 hours"]
+
+    LONG["🔴 ESCALATE — Critical\nConsultant determines clinical response\nIs medication gap now a safety issue?\nPatient contacted by CM or Consultant\nIncident logged for quality review\nOwner: Consultant + TL · Same day"]
+
+    N5["📞 NODE 5 — Unreachable Patient\n3-attempt protocol at different timings and days\nAll attempts timestamped in .cmutel"]
+
+    Q7{{"Patient reached on\ncallback attempt?"}}
+
+    RESOLVED3(["✓ CLOSED\nResolution communicated\n.cmutel updated: commitment closed"])
+
+    ATT2["Attempt 2 — Different time of day\nDocument in .cmutel\nOwner: CM · Within 1 business day"]
+
+    ATT3["Attempt 3 — Try NOK or emergency contact\nNotify Team Lead: resolution pending\nOwner: CM + TL · Within 2 business days"]
+
+    ESC3["🔴 ESCALATE — 3 Failed Attempts\nCM → Consultant\nConsultant: home visit? on-call? GP notification?\nAll attempts documented\nOwner: Consultant · Same day as 3rd failed attempt"]
+
+    END1(["END\nCommitment closed\nPatient informed\n.cmutel complete"])
+
+    START --> N1
+    N1 --> Q1
+
+    Q1 -->|"No — standard day"| N2
+    Q1 -->|"Yes — Friday / EOD / holiday"| N3
+
+    N2 --> Q2
+    Q2 -->|"Yes"| RESOLVED1
+    Q2 -->|"No"| Q3
+    Q3 -->|"Yes — risk identified"| ESC1
+    Q3 -->|"No — low risk"| LOW1
+
+    N3 --> Q4
+    Q4 -->|"Yes"| RESOLVED2
+    Q4 -->|"No"| Q5
+    Q5 -->|"Yes — risk identified"| ESC2
+    Q5 -->|"No — low risk"| LOW2
+
+    N4 --> Q6
+    Q6 -->|"Less than 2 business days"| LESS2
+    Q6 -->|"2 to 4 days, no risk"| MID
+    Q6 -->|"Over 4 days or risk present"| LONG
+
+    N5 --> Q7
+    Q7 -->|"Yes — contact made"| RESOLVED3
+    Q7 -->|"No — 1st attempt"| ATT2
+    ATT2 -->|"Still no contact"| ATT3
+    ATT3 -->|"Still no contact"| ESC3
+
+    RESOLVED1 --> END1
+    RESOLVED2 --> END1
+    RESOLVED3 --> END1
+    ESC1 -.->|"Commitment resolved"| END1
+    ESC2 -.->|"Commitment resolved"| END1
+    LOW1 -.->|"Next day: resolved"| END1
+    LOW2 -.->|"Monday: resolved"| END1
+    LESS2 -.->|"Resolved same day"| END1
+    MID -.->|"Resolved within 24hrs"| END1
+    LONG -.->|"Resolved and logged"| END1
+    ESC3 -.->|"Consultant resolves"| END1
+
+    style START fill:#E8E8E8,stroke:#999,color:#18181A
+    style END1  fill:#D4EDDA,stroke:#A8CFBA,color:#1A6640
+    style RESOLVED1 fill:#D4EDDA,stroke:#A8CFBA,color:#1A6640
+    style RESOLVED2 fill:#D4EDDA,stroke:#A8CFBA,color:#1A6640
+    style RESOLVED3 fill:#D4EDDA,stroke:#A8CFBA,color:#1A6640
+    style ESC1  fill:#F8D7DA,stroke:#DCA8A8,color:#8B1A1A
+    style ESC2  fill:#F8D7DA,stroke:#DCA8A8,color:#8B1A1A
+    style ESC3  fill:#F8D7DA,stroke:#DCA8A8,color:#8B1A1A
+    style LONG  fill:#F8D7DA,stroke:#DCA8A8,color:#8B1A1A
+    style N3    fill:#FFF3CD,stroke:#E8C878,color:#8A5C00
+    style Q1    fill:#CCE5FF,stroke:#5599CC,color:#18181A
+    style Q2    fill:#CCE5FF,stroke:#5599CC,color:#18181A
+    style Q3    fill:#CCE5FF,stroke:#5599CC,color:#18181A
+    style Q4    fill:#CCE5FF,stroke:#5599CC,color:#18181A
+    style Q5    fill:#CCE5FF,stroke:#5599CC,color:#18181A
+    style Q6    fill:#CCE5FF,stroke:#5599CC,color:#18181A
+    style Q7    fill:#CCE5FF,stroke:#5599CC,color:#18181A
+    style LOW1  fill:#D1ECF1,stroke:#99D6E0,color:#0C4A6E
+    style LOW2  fill:#D1ECF1,stroke:#99D6E0,color:#0C4A6E
+    style MID   fill:#D1ECF1,stroke:#99D6E0,color:#0C4A6E
+    style ATT2  fill:#FFFFFF,stroke:#DCDBD7,color:#18181A
+    style ATT3  fill:#D1ECF1,stroke:#99D6E0,color:#0C4A6E
+    style LESS2 fill:#D1ECF1,stroke:#99D6E0,color:#0C4A6E
+    style N1    fill:#FFFFFF,stroke:#DCDBD7,color:#18181A
+    style N2    fill:#FFFFFF,stroke:#DCDBD7,color:#18181A
+    style N4    fill:#FFFFFF,stroke:#DCDBD7,color:#18181A
+    style N5    fill:#FFFFFF,stroke:#DCDBD7,color:#18181A
+    </div>
+  </div>
+
+  <!-- Gaps + Guidelines -->
+  <div class="strip-row">
+    <div class="strip gap">
+      <div class="strip-label">⚠ Gap 1 — No logging step</div>
+      Neither IMH workflow records a verbal commitment made during a call. Node 1 adds it.
+    </div>
+    <div class="strip gap">
+      <div class="strip-label">⚠ Gap 2 — No weekend handover</div>
+      No protocol exists for open commitments crossing EOD or a weekend. Node 3 is the missing step.
+    </div>
+    <div class="strip gap">
+      <div class="strip-label">⚠ Gap 3 — Broken promises invisible</div>
+      Failed callbacks generate no signal. The Node 4 audit makes them countable and visible.
+    </div>
+    <div class="strip gl">
+      <div class="strip-label">§ SAMHSA 2019</div>
+      Follow-up within 24 hours is an institutional responsibility. Reflected in Node 2 and Node 5.
+    </div>
+    <div class="strip gl">
+      <div class="strip-label">§ Joint Commission · SEA 58</div>
+      Every handoff requires a documented action list and named owner. Reflected in Nodes 1, 2, 3.
+    </div>
+    <div class="strip gl">
+      <div class="strip-label">§ OMH / DOH · Feb 2026</div>
+      Failed attempts must be documented before disengagement. Reflected in Node 4 audit.
+    </div>
+  </div>
+
+  <!-- Closing -->
+  <div class="closing">
+    <p>The current IMH workflow ends when the contact is made. This chart begins where that workflow ends — at the moment an obligation is created inside a completed call. Every node addresses a gap the current workflow <em>structurally cannot see</em>.</p>
+  </div>
+
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor:        '#FFFFFF',
+      primaryTextColor:    '#1A1916',
+      primaryBorderColor:  '#D8D4CC',
+      lineColor:           '#9A9890',
+      secondaryColor:      '#EFECE6',
+      tertiaryColor:       '#F7F5F0',
+      fontFamily:          "'JetBrains Mono', monospace",
+      fontSize:            '11px',
+      edgeLabelBackground: '#F7F5F0',
+      clusterBkg:          '#EFECE6',
+    },
+    flowchart: {
+      curve: 'basis',
+      padding: 22,
+      nodeSpacing: 48,
+      rankSpacing: 52,
+      htmlLabels: true,
+    }
+  });
+</script>
+</body>
+</html>
