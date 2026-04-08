@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decision Tree — Callback Commitment Protocol · IMH</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #FAFAF8;
+    --ink:     #18181A;
+    --muted:   #666664;
+    --rule:    #DCDBD7;
+    --red:     #B83232;
+    --blue:    #1D5C96;
+    --green:   #1A6640;
+    --amber:   #8A5C00;
+    --gap-bg:  #FEF9F0;
+    --gap-bd:  #E8C878;
+    --yes-bg:  #F0F7F3;
+    --yes-bd:  #A8CFBA;
+    --no-bg:   #FDF2F2;
+    --no-bd:   #DCA8A8;
+    --neu-bg:  #F4F4F2;
+    --surface: #F0EFEB;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.75;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px 32px 96px;
+  }
+
+  /* ── Header ── */
+  .hdr {
+    border-top: 3px double var(--ink);
+    border-bottom: 3px double var(--ink);
+    padding: 16px 0;
+    margin-bottom: 40px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: center;
+    animation: up 0.6s ease both;
+  }
+
+  .hdr-left h1 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .hdr-left p {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+  }
+
+  .hdr-right {
+    font-size: 10px;
+    color: var(--muted);
+    text-align: right;
+    letter-spacing: 0.06em;
+    line-height: 1.8;
+  }
+
+  /* ── Title ── */
+  .title-block {
+    margin-bottom: 36px;
+    animation: up 0.6s 0.08s ease both;
+  }
+
+  .title-block .label {
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+
+  .title-block h2 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(22px, 3.5vw, 36px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--ink);
+    max-width: 640px;
+  }
+
+  .title-block h2 em {
+    font-style: italic;
+    color: var(--red);
+  }
+
+  .title-block .sub {
+    margin-top: 14px;
+    font-size: 11.5px;
+    color: var(--muted);
+    max-width: 600px;
+    line-height: 1.8;
+    padding-left: 14px;
+    border-left: 2px solid var(--rule);
+  }
+
+  /* ── Starting point ── */
+  .start {
+    background: var(--ink);
+    color: #FAFAF8;
+    padding: 18px 22px;
+    border-radius: 3px;
+    margin-bottom: 40px;
+    animation: up 0.6s 0.15s ease both;
+  }
+
+  .start .s-label {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #C8A86A;
+    margin-bottom: 6px;
+  }
+
+  .start .s-text {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 14px;
+    font-style: italic;
+    color: #E8E6E0;
+    line-height: 1.7;
+  }
+
+  .start .s-text strong {
+    font-style: normal;
+    color: #C8A86A;
+  }
+
+  /* ── Section rule ── */
+  .sec-rule {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 32px 0 20px;
+  }
+
+  .sec-rule::before, .sec-rule::after {
+    content:'';
+    flex:1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .sec-rule span {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ── Tree nodes ── */
+  .node {
+    margin-bottom: 20px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+    animation: up 0.5s ease both;
+    background: white;
+  }
+
+  .node:nth-child(1){ animation-delay:0.1s; }
+  .node:nth-child(2){ animation-delay:0.17s; }
+  .node:nth-child(3){ animation-delay:0.24s; }
+  .node:nth-child(4){ animation-delay:0.31s; }
+  .node:nth-child(5){ animation-delay:0.38s; }
+  .node:nth-child(6){ animation-delay:0.45s; }
+
+  .node-hdr {
+    padding: 12px 18px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+
+  .node-n {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--rule);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .node-info {}
+
+  .node-tag {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .node-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-top: 1px;
+  }
+
+  .node-body {
+    padding: 16px 18px;
+  }
+
+  /* Gap alert */
+  .gap {
+    background: var(--gap-bg);
+    border: 1px solid var(--gap-bd);
+    border-left: 3px solid var(--amber);
+    padding: 9px 13px;
+    margin-bottom: 13px;
+    font-size: 11px;
+    color: var(--amber);
+    line-height: 1.65;
+  }
+
+  .gap::before {
+    content: '⚠ WORKFLOW GAP: ';
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+  }
+
+  /* Guideline cite */
+  .gl {
+    display: inline-block;
+    background: #EBF2FA;
+    color: var(--blue);
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin-bottom: 13px;
+    letter-spacing: 0.04em;
+  }
+
+  .gl::before { content: '§ '; }
+
+  /* Actions */
+  .act-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    margin-top: 4px;
+  }
+
+  .steps { margin-bottom: 14px; }
+
+  .step {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 5px;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  .step .arr {
+    color: var(--muted);
+    flex-shrink: 0;
+    font-size: 11px;
+    margin-top: 2px;
+  }
+
+  /* Decision block */
+  .dec {
+    background: var(--neu-bg);
+    border-radius: 3px;
+    padding: 13px 15px;
+    margin: 12px 0;
+  }
+
+  .dec-q {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--ink);
+    margin-bottom: 11px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+    line-height: 1.5;
+  }
+
+  .dec-q::before {
+    content: '? ';
+    color: var(--red);
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  .branches { display: flex; flex-direction: column; gap: 9px; }
+
+  .br {
+    border-radius: 2px;
+    padding: 11px 13px;
+    border: 1px solid transparent;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  .br.yes { background: var(--yes-bg); border-color: var(--yes-bd); }
+  .br.no  { background: var(--no-bg);  border-color: var(--no-bd); }
+  .br.alt { background: #F5F0FC; border-color: #C4A8DC; }
+
+  .br-tag {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .br.yes .br-tag { color: var(--green); }
+  .br.no  .br-tag { color: var(--red); }
+  .br.alt .br-tag { color: #6B3FA0; }
+
+  .br-tag::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  .owner {
+    display: inline-block;
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+    padding: 2px 9px;
+    border-radius: 100px;
+    background: rgba(24,24,26,0.08);
+    color: var(--ink);
+    margin-top: 7px;
+  }
+
+  /* Sub-decision */
+  .sub {
+    margin-top: 10px;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 11px 13px;
+  }
+
+  .sub-q {
+    font-size: 11px;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .sub-q::before { content: '→ '; color: var(--red); font-style:normal; }
+
+  hr.thin {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 10px 0;
+  }
+
+  /* Table */
+  .tbl-wrap {
+    overflow-x: auto;
+    margin-top: 6px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+
+  th {
+    background: var(--ink);
+    color: #FAFAF8;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 400;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    line-height: 1.65;
+  }
+
+  tr:nth-child(even) td { background: var(--surface); }
+  tr:last-child td { border-bottom: none; }
+
+  .td-gap { color: var(--amber); font-style: italic; }
+  .td-gl  { color: var(--blue); }
+
+  /* Closing */
+  .closing {
+    margin-top: 48px;
+    border-top: 1px solid var(--rule);
+    padding-top: 22px;
+    animation: up 0.5s 0.5s ease both;
+  }
+
+  .closing p {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.75;
+    color: var(--ink);
+    max-width: 680px;
+  }
+
+  .closing p em { font-style: italic; color: var(--red); }
+
+  @keyframes up {
+    from { opacity:0; transform:translateY(10px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  @media(max-width:600px){
+    .page{ padding:28px 14px 64px; }
+    .hdr{ grid-template-columns:1fr; }
+    .hdr-right{ text-align:left; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <h1>IMH · Case Management Unit</h1>
+      <p>Externship Project · Process Design · Step 2</p>
+    </div>
+    <div class="hdr-right">
+      Text-Based Decision Tree<br>
+      Psychiatric Care Coordination
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div class="title-block">
+    <div class="label">Decision Tree · Coordination Protocol</div>
+    <h2>Verbal Callback Commitment<br>Made During a <em>Case Management Call</em></h2>
+    <p class="sub">A step-by-step process guide for what should happen when a Case Manager makes a promise to a patient that cannot be resolved in the same interaction — the coordination gap the current workflow cannot see.</p>
+  </div>
+
+  <!-- Starting point -->
+  <div class="start">
+    <div class="s-label">Starting Point</div>
+    <div class="s-text">A Case Manager has just ended a contact call in which they made a <strong>verbal commitment</strong> to follow up on an urgent patient need — medication access, a clinical query, or a referral — that could not be resolved during the call itself. <strong>Who knows about this commitment: the CM only. The system has no record of it yet.</strong></div>
+  </div>
+
+  <div class="sec-rule"><span>Step-by-Step Process</span></div>
+
+  <!-- NODE 1 -->
+  <div class="node">
+    <div class="node-hdr">
+      <div class="node-n">1</div>
+      <div class="node-info">
+        <div class="node-tag">Moment of commitment</div>
+        <div class="node-title">CM Makes Verbal Callback Commitment During Call</div>
+      </div>
+    </div>
+    <div class="node-body">
+      <div class="gap">This is the step the current IMH workflow skips entirely. Neither the ES Visit nor Post-Discharge workflow has a step for logging a commitment made inside a completed contact call.</div>
+      <div class="gl">Joint Commission Sentinel Event Alert 58 — every handoff requires a documented action list before responsibility transfers</div>
+
+      <div class="act-label">Immediate required action — before ending the call</div>
+      <div class="steps">
+        <div class="step"><span class="arr">→</span> CM logs the open commitment in the .cmutel entry before closing the contact note</div>
+        <div class="step"><span class="arr">→</span> Log must include: (1) nature of commitment, (2) what was promised to patient, (3) timeframe given, (4) what resolution requires — e.g. prescribing doctor confirmation, pharmacy check, on-call referral</div>
+        <div class="step"><span class="arr">→</span> If no timeframe was stated to patient: default to <strong>same business day</strong></div>
+      </div>
+
+      <div class="dec">
+        <div class="dec-q">Is this a Friday call, or does the promised timeframe cross end-of-day or a public holiday?</div>
+        <div class="branches">
+          <div class="br no">
+            <div class="br-tag">No — Standard business day, resolution achievable same day</div>
+            Proceed to <strong>Step 2: Same-Day Resolution Attempt</strong>
+          </div>
+          <div class="br alt">
+            <div class="br-tag">Yes — Friday call, or timeframe crosses EOD or weekend</div>
+            Commitment cannot survive on one person's memory across a coverage gap →<br>
+            Proceed to <strong>Step 3: Weekend / EOD Handover Protocol</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NODE 2 -->
+  <div class="node">
+    <div class="node-hdr">
+      <div class="node-n">2</div>
+      <div class="node-info">
+        <div class="node-tag">Standard resolution path</div>
+        <div class="node-title">Same-Day Resolution Attempt</div>
+      </div>
+    </div>
+    <div class="node-body">
+      <div class="gl">SAMHSA (2019) — post-discharge follow-up within 24 hours is an institutional responsibility, not an individual one</div>
+
+      <div class="act-label">Action</div>
+      <div class="steps">
+        <div class="step"><span class="arr">→</span> CM contacts prescribing doctor / pharmacy / relevant party to resolve the need within the same business day</div>
+        <div class="step"><span class="arr">→</span> All contact attempts documented in .cmutel with timestamps</div>
+      </div>
+
+      <div class="dec">
+        <div class="dec-q">Was the commitment resolved within the same business day?</div>
+        <div class="branches">
+
+          <div class="br yes">
+            <div class="br-tag">Yes — Resolved</div>
+            CM calls patient back to confirm resolution<br>
+            CM updates .cmutel: commitment closed, resolution documented, patient informed<br>
+            No further escalation required
+            <br><span class="owner">Owner: CM · Timeframe: Same business day</span>
+          </div>
+
+          <div class="br no">
+            <div class="br-tag">No — Unresolved by end of business day</div>
+            CM updates .cmutel: attempted, unresolved, reason documented<br>
+            CM notifies Team Lead before leaving: open commitment flagged, patient informed of delay, risk level noted
+
+            <div class="sub">
+              <div class="sub-q">Is there identified clinical risk attached to the unresolved need?</div>
+              <div class="branches">
+                <div class="br alt" style="margin-bottom:8px;">
+                  <div class="br-tag">Yes — Risk identified (e.g. medication gap, safety concern)</div>
+                  Escalate to Team Lead and Consultant same day, before close of business<br>
+                  Consultant determines whether on-call coverage or emergency pharmacy access is needed<br>
+                  Team Lead assigns a covering CM to hold the commitment overnight<br>
+                  Patient is called back to communicate delay and receive a specific new timeframe
+                  <br><span class="owner">Owner: Team Lead + Consultant · Timeframe: Before EOD, same day</span>
+                </div>
+                <div class="br yes">
+                  <div class="br-tag">No — No immediate clinical risk</div>
+                  CM flags in .cmutel: unresolved, low risk, follow-up required next business day<br>
+                  CM sets system reminder (calendar alert or task flag) for first action next morning<br>
+                  Team Lead informed via in-basket before CM leaves
+                  <br><span class="owner">Owner: CM (next morning) · Timeframe: First thing next business day</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NODE 3 -->
+  <div class="node">
+    <div class="node-hdr">
+      <div class="node-n">3</div>
+      <div class="node-info">
+        <div class="node-tag">Critical gap node</div>
+        <div class="node-title">Weekend / End-of-Day Handover Protocol</div>
+      </div>
+    </div>
+    <div class="node-body">
+      <div class="gap">This node does not currently exist in either the ES Visit or Post-Discharge workflow. It is the structural absence that produced Mr. Tan's situation. A promise made on Friday afternoon enters a 48-hour window with no named owner and no system record.</div>
+      <div class="gl">Joint Commission — named owner and contingency plan required before responsibility transfers at any handoff</div>
+
+      <div class="act-label">Immediate actions — before CM leaves for the weekend</div>
+      <div class="steps">
+        <div class="step"><span class="arr">→</span> Step 1: CM logs open commitment in .cmutel with full detail: what was promised, to whom, by when, and what resolution requires</div>
+        <div class="step"><span class="arr">→</span> Step 2: CM attempts resolution before end of Friday business hours</div>
+      </div>
+
+      <div class="dec">
+        <div class="dec-q">Was the commitment resolved before end of Friday?</div>
+        <div class="branches">
+
+          <div class="br yes">
+            <div class="br-tag">Yes — Resolved before weekend</div>
+            CM calls patient to confirm<br>
+            .cmutel updated: closed<br>
+            <em>End of tree for this commitment</em>
+          </div>
+
+          <div class="br no">
+            <div class="br-tag">No — Unresolved entering weekend</div>
+
+            <div class="sub">
+              <div class="sub-q">Is there identified clinical risk?</div>
+              <div class="branches">
+                <div class="br alt" style="margin-bottom:8px;">
+                  <div class="br-tag">Yes — Risk identified</div>
+                  CM escalates to Consultant and Team Lead before leaving on Friday<br>
+                  Consultant determines whether weekend on-call team needs to hold this<br>
+                  On-call CM or duty officer is briefed: patient name, commitment details, what resolution requires, all contact numbers<br>
+                  Patient is called back Friday before close:<br>
+                  <em style="display:block; margin:6px 0 4px; color:#444;">"We have not been able to reach [doctor/pharmacy] today. Someone from our team will follow up with you by [specific day and time]."</em>
+                  — A named new commitment replaces the unresolved one
+                  <br><span class="owner">Owner: On-call / Duty Officer · Timeframe: Named day + time communicated to patient</span>
+                </div>
+                <div class="br yes">
+                  <div class="br-tag">No — No immediate clinical risk</div>
+                  CM flags in .cmutel: unresolved, low risk, handover required<br>
+                  CM writes handover note: open commitment, patient details, what is needed, suggested first action<br>
+                  Handover note placed in Team Lead's in-basket before Friday close<br>
+                  Team Lead assigns Monday morning owner before end of Friday
+                  <br><span class="owner">Owner: Named CM for Monday · Timeframe: First action by 10am Monday</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NODE 4 -->
+  <div class="node">
+    <div class="node-hdr">
+      <div class="node-n">4</div>
+      <div class="node-info">
+        <div class="node-tag">Audit + detection</div>
+        <div class="node-title">Patient Has Not Heard Back Within Promised Timeframe</div>
+      </div>
+    </div>
+    <div class="node-body">
+      <div class="gap">In the current system, no one detects this unless the patient calls back. This node is the system catching what the current workflow cannot see. Broken promises generate no signal and are never counted.</div>
+      <div class="gl">OMH/DOH (2026) — failed attempts and unresolved needs must be documented and visible before disengagement</div>
+
+      <div class="act-label">Detection mechanisms required</div>
+      <div class="steps">
+        <div class="step"><span class="arr">→</span> Open commitment entries in .cmutel reviewed at every subsequent patient contact</div>
+        <div class="step"><span class="arr">→</span> Team Lead conducts weekly open-commitment audit: any .cmutel entry flagged unresolved and older than 2 business days is escalated automatically</div>
+      </div>
+
+      <div class="dec">
+        <div class="dec-q">How long has the commitment been unresolved?</div>
+        <div class="branches">
+
+          <div class="br yes">
+            <div class="br-tag">Less than 2 business days</div>
+            Assign to CM as priority callback today
+            <br><span class="owner">Owner: CM · Timeframe: Same business day</span>
+          </div>
+
+          <div class="br alt">
+            <div class="br-tag">2–4 business days, no clinical risk</div>
+            Team Lead assigns to CM or covering CM<br>
+            Patient contacted to acknowledge delay and receive specific new timeframe<br>
+            .cmutel updated with new commitment
+            <br><span class="owner">Owner: Team Lead assigns · Timeframe: Contact patient within 24 hours</span>
+          </div>
+
+          <div class="br no">
+            <div class="br-tag">More than 4 business days — OR — clinical risk present at any point</div>
+            Escalate to Consultant immediately<br>
+            Consultant determines clinical response: is the medication gap now a safety issue?<br>
+            Patient contacted by CM or Consultant directly<br>
+            Incident logged for quality review
+            <br><span class="owner">Owner: Consultant + Team Lead · Timeframe: Same business day, no exceptions</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NODE 5 -->
+  <div class="node">
+    <div class="node-hdr">
+      <div class="node-n">5</div>
+      <div class="node-info">
+        <div class="node-tag">Unreachable patient path</div>
+        <div class="node-title">Patient Cannot Be Reached When CM Attempts Resolution Callback</div>
+      </div>
+    </div>
+    <div class="node-body">
+      <div class="gl">SAMHSA best effort practice — 3 attempts at different timings and days before escalation</div>
+
+      <div class="dec">
+        <div class="dec-q">Was the patient successfully reached?</div>
+        <div class="branches">
+
+          <div class="br yes">
+            <div class="br-tag">Yes — Contact made</div>
+            Resolution communicated to patient<br>
+            .cmutel updated: commitment closed, outcome documented
+            <br><span class="owner">End of tree for this commitment</span>
+          </div>
+
+          <div class="br alt">
+            <div class="br-tag">No — First attempt, no contact</div>
+            Document attempt in .cmutel with timestamp<br>
+            Retry at a different time of day, same or next business day
+            <br><span class="owner">Owner: CM · Timeframe: Within 1 business day of first attempt</span>
+          </div>
+
+          <div class="br alt">
+            <div class="br-tag">No — Second attempt, still no contact</div>
+            Document in .cmutel<br>
+            Attempt contact with NOK or emergency contact if urgent need<br>
+            Notify Team Lead: resolution pending, patient unreachable
+            <br><span class="owner">Owner: CM + Team Lead · Timeframe: Within 2 business days of original promise</span>
+          </div>
+
+          <div class="br no">
+            <div class="br-tag">No — Third attempt, still no contact</div>
+            Escalate to Consultant: patient was promised resolution, cannot be reached, need remains unresolved<br>
+            Consultant determines whether home visit, on-call intervention, or GP notification is needed<br>
+            All three attempts documented in .cmutel with timestamps and outcomes
+            <br><span class="owner">Owner: Consultant · Timeframe: Decision within same business day as third failed attempt</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guideline alignment -->
+  <div class="sec-rule"><span>Guideline Alignment Check</span></div>
+
+  <div class="node">
+    <div class="node-hdr">
+      <div class="node-n">§</div>
+      <div class="node-info">
+        <div class="node-tag">Step 4 — Match tree to guidelines</div>
+        <div class="node-title">How Each Step Reflects Best Practice</div>
+      </div>
+    </div>
+    <div class="node-body">
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tree Step</th>
+              <th>Guideline It Reflects</th>
+              <th>IMH Workflow Gap It Closes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Step 1</strong><br>Log commitment before closing call</td>
+              <td class="td-gl">Joint Commission Sentinel Event Alert 58 — every handoff requires a documented action list and contingency plan</td>
+              <td class="td-gap">.cmutel has no open-commitment field. Call closes. Promise disappears. No audit trail exists.</td>
+            </tr>
+            <tr>
+              <td><strong>Step 2</strong><br>Same-day resolution with risk escalation</td>
+              <td class="td-gl">SAMHSA (2019) — 24-hour follow-up is an institutional responsibility, not a personal one</td>
+              <td class="td-gap">No same-day escalation path exists for CM commitments in either the ES Visit or Post-Discharge workflow.</td>
+            </tr>
+            <tr>
+              <td><strong>Step 3</strong><br>Weekend / EOD handover protocol</td>
+              <td class="td-gl">Joint Commission — named owner and contingency plan required before responsibility transfers at any handoff</td>
+              <td class="td-gap">No handover protocol exists for mid-call commitments in either workflow. The weekend gap is institutionally invisible.</td>
+            </tr>
+            <tr>
+              <td><strong>Step 4</strong><br>Open-commitment audit trigger</td>
+              <td class="td-gl">OMH/DOH (2026) — failed attempts must be documented and surface-visible before disengagement</td>
+              <td class="td-gap">Broken promises are never counted, never surfaced to supervisors, and generate no signal. The system cannot know they failed.</td>
+            </tr>
+            <tr>
+              <td><strong>Step 5</strong><br>3-attempt contact protocol</td>
+              <td class="td-gl">SAMHSA best effort practice — 3 attempts at different timings and days before escalation is triggered</td>
+              <td class="td-gap">Existing 3-attempt protocol applies to initial contact only. This tree extends it to resolution callbacks — closing a parallel gap.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Closing -->
+  <div class="closing">
+    <p>The current IMH workflow ends when the contact is made. This decision tree begins where that workflow ends — at the moment an obligation is created inside a completed call. Every node addresses a gap the current workflow <em>structurally cannot see</em>. The CM on a heavy caseload Friday afternoon now has a logging step, a named owner for the weekend, a patient-facing communication protocol, and an escalation path that does not depend on memory alone. That is what the guidelines required all along. The tree is the first time it has been written down.</p>
+  </div>
+
+</div>
+</body>
+</html>
